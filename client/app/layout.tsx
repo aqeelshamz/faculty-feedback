@@ -24,7 +24,7 @@ export default function RootLayout({
 			<head>
 				<link rel="icon" type="image/x-icon" href="/teacher-student.png" sizes="any" />
 			</head>
-			<body className={cn("min-h-screen bg-background font-sans antialiased", fontSans.variable)}>...</body>
+			<body className={cn("min-h-screen bg-background font-sans antialiased", fontSans.variable)}>{children}</body>
 		</html>
 	);
 }
