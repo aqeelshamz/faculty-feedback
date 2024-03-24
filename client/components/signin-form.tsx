@@ -7,7 +7,6 @@ import { Icons } from "@/components/icons";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-
 interface UserAuthFormProps extends React.HTMLAttributes<HTMLDivElement> {}
 
 export function SignInForm({ className, ...props }: UserAuthFormProps) {
@@ -54,7 +53,7 @@ export function SignInForm({ className, ...props }: UserAuthFormProps) {
 							disabled={isLoading}
 						/>
 					</div>
-					<Button disabled={isLoading}>
+					<Button disabled={isLoading} className={cn("bg-black hover:bg-black/90")}>
 						{isLoading && <Icons.spinner className="mr-2 h-4 w-4 animate-spin" />}
 						Login
 					</Button>

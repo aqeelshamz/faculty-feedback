@@ -40,7 +40,7 @@ export default function AuthenticationPage() {
 				</Link>
 				{/* TODO: Have to add a background image? Eg: public/ocean.png or https://unsplash.com/photos/body-of-water-photo-wfh8dDlNFOk */}
 				<div className="relative hidden h-full flex-col bg-muted p-10 text-white lg:flex dark:border-r">
-					<div className="absolute inset-0 bg-zinc-900" />
+					<div className="absolute inset-0 bg-black" />
 					<div className="relative z-20 flex items-center text-lg font-medium">
 						<FiFileText className="mr-2" />
 						<p className="hidden lg:flex">Faculty Feedback System</p>

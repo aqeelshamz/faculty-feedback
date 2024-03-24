@@ -54,7 +54,7 @@ export function SignUpForm({ className, ...props }: UserAuthFormProps) {
 							disabled={isLoading}
 						/>
 					</div>
-					<div className="grid gap-1">
+					<div className="grid gap-2">
 						<Label className="sr-only" htmlFor="email">
 							Password
 						</Label>
@@ -68,7 +68,7 @@ export function SignUpForm({ className, ...props }: UserAuthFormProps) {
 							disabled={isLoading}
 						/>
 					</div>
-					<div className="grid gap-1">
+					<div className="grid gap-2">
 						<Label className="sr-only" htmlFor="email">
 							Confirm Password
 						</Label>
@@ -82,7 +82,7 @@ export function SignUpForm({ className, ...props }: UserAuthFormProps) {
 							disabled={isLoading}
 						/>
 					</div>
-					<Button disabled={isLoading}>
+					<Button disabled={isLoading} className={cn("bg-black hover:bg-black/90")}>
 						{isLoading && <Icons.spinner className="mr-2 h-4 w-4 animate-spin" />}
 						Create account
 					</Button>
