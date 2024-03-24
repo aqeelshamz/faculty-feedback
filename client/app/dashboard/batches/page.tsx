@@ -1,8 +1,25 @@
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Sheet, SheetClose, SheetContent, SheetDescription, SheetFooter, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
+import {
+    Select,
+    SelectContent,
+    SelectGroup,
+    SelectItem,
+    SelectLabel,
+    SelectTrigger,
+    SelectValue,
+} from "@/components/ui/select";
+import {
+    Sheet,
+    SheetClose,
+    SheetContent,
+    SheetDescription,
+    SheetFooter,
+    SheetHeader,
+    SheetTitle,
+    SheetTrigger,
+} from "@/components/ui/sheet";
 import { FiFilter } from "react-icons/fi";
 
 export default function Page() {
@@ -17,9 +34,7 @@ export default function Page() {
                     <SheetContent side={"left"}>
                         <SheetHeader>
                             <SheetTitle>New Batch</SheetTitle>
-                            <SheetDescription>
-                                Create new batch.
-                            </SheetDescription>
+                            <SheetDescription>Create new batch.</SheetDescription>
                         </SheetHeader>
                         <div className="grid gap-4 py-4">
                             <div className="grid grid-cols-4 items-center gap-4">
@@ -88,7 +103,9 @@ export default function Page() {
                 </Sheet>
                 <div className="flex">
                     <Input className="mr-4" type="text" placeholder="Search batches..." />
-                    <Button variant="outline"><FiFilter className="mr-2" /> View</Button>
+                    <Button variant="outline">
+                        <FiFilter className="mr-2" /> View
+                    </Button>
                 </div>
             </div>
         </div>

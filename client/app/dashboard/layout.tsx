@@ -13,14 +13,13 @@ export default function Dashboard({
         <main>
             <div className="border-b">
                 <div className="flex h-16 justify-between items-center px-4">
-                    <Link href="/"><div className="w-full max-w-xs relative z-20 flex items-center text-lg font-medium">
-                        <FiFileText className="mr-2" />
-                        <p className="hidden lg:flex">Faculty Feedback System</p>
-                    </div>
+                    <Link href="/">
+                        <div className="w-full max-w-xs relative z-20 flex items-center text-lg font-medium">
+                            <FiFileText className="mr-2" />
+                            <p className="hidden lg:flex">Faculty Feedback System</p>
+                        </div>
                     </Link>
-                    <nav
-                        className={cn("flex items-center space-x-4 lg:space-x-6")}
-                    >
+                    <nav className={cn("flex items-center space-x-4 lg:space-x-6")}>
                         <Link
                             href="/dashboard"
                             className="text-sm font-medium transition-colors hover:text-primary"
