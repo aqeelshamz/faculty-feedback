@@ -1,16 +1,21 @@
 "use client";
 
-import * as React from "react";
+import { HTMLAttributes, useState } from "react";
+import { RxEyeOpen, RxEyeClosed } from "react-icons/rx";
 
 import { cn } from "@/lib/utils";
 import { Icons } from "@/components/icons";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-interface UserAuthFormProps extends React.HTMLAttributes<HTMLDivElement> {}
+interface UserAuthFormProps extends HTMLAttributes<HTMLDivElement> {}
 
 export function SignInForm({ className, ...props }: UserAuthFormProps) {
-    const [isLoading, setIsLoading] = React.useState<boolean>(false);
+    const [email, setEmail] = useState("");
+    const [pass, setPass] = useState("");
+    const [showPassword, setShowPassword] = useState(false);
+
+    const [isLoading, setIsLoading] = useState<boolean>(false);
 
     async function onSubmit(event: React.SyntheticEvent) {
         event.preventDefault();
@@ -30,8 +35,10 @@ export function SignInForm({ className, ...props }: UserAuthFormProps) {
                             Email
                         </Label>
                         <Input
+                            value={email}
+                            onChange={(e) => setEmail(e.target.value)}
                             id="email"
-                            placeholder="yourname@example.com"
+                            placeholder="Email"
                             type="email"
                             autoCapitalize="none"
                             autoComplete="email"
@@ -39,19 +46,29 @@ export function SignInForm({ className, ...props }: UserAuthFormProps) {
                             disabled={isLoading}
                         />
                     </div>
-                    <div className="grid gap-2">
-                        <Label className="sr-only" htmlFor="email">
+                    <div className="grid gap-2 relative">
+                        <Label className="sr-only" htmlFor="password">
                             Password
                         </Label>
                         <Input
+                            value={pass}
+                            onChange={(e) => setPass(e.target.value)}
                             id="password"
+                            name="password"
                             placeholder="Password"
-                            type="Password"
+                            type={showPassword ? "text" : "password"}
                             autoCapitalize="none"
                             autoComplete="none"
                             autoCorrect="off"
                             disabled={isLoading}
+                            required
                         />
+                        <div
+                            className="absolute inset-y-0 right-4 flex items-center cursor-pointer"
+                            onClick={() => setShowPassword(!showPassword)}
+                        >
+                            {showPassword ? <RxEyeClosed size={20} /> : <RxEyeOpen size={20} />}
+                        </div>
                     </div>
                     <Button disabled={isLoading} className={cn("bg-black hover:bg-black/90")}>
                         {isLoading && <Icons.spinner className="mr-2 h-4 w-4 animate-spin" />}

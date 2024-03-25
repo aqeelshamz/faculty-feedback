@@ -1,6 +1,6 @@
 "use client";
 
-import * as React from "react";
+import { HTMLAttributes, useState } from "react";
 
 import { cn } from "@/lib/utils";
 import { Icons } from "@/components/icons";
@@ -8,10 +8,18 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 
-interface UserAuthFormProps extends React.HTMLAttributes<HTMLDivElement> {}
+import { RxEyeOpen, RxEyeClosed } from "react-icons/rx";
+
+interface UserAuthFormProps extends HTMLAttributes<HTMLDivElement> {}
 
 export function SignUpForm({ className, ...props }: UserAuthFormProps) {
-    const [isLoading, setIsLoading] = React.useState<boolean>(false);
+    const [name, setName] = useState("");
+    const [email, setEmail] = useState("");
+    const [pass, setPass] = useState("");
+    const [confirmPass, setConfirmPass] = useState("");
+    const [showPassword, setShowPassword] = useState(false);
+
+    const [isLoading, setIsLoading] = useState<boolean>(false);
 
     async function onSubmit(event: React.SyntheticEvent) {
         event.preventDefault();
@@ -28,10 +36,12 @@ export function SignUpForm({ className, ...props }: UserAuthFormProps) {
                 <div className="grid gap-2">
                     <div className="grid gap-2">
                         <div className="grid gap-2">
-                            <Label className="sr-only" htmlFor="email">
+                            <Label className="sr-only" htmlFor="name">
                                 Name
                             </Label>
                             <Input
+                                value={name}
+                                onChange={(e) => setName(e.target.value)}
                                 id="email"
                                 placeholder="Name"
                                 type="text"
@@ -45,8 +55,10 @@ export function SignUpForm({ className, ...props }: UserAuthFormProps) {
                             Email
                         </Label>
                         <Input
+                            value={email}
+                            onChange={(e) => setEmail(e.target.value)}
                             id="email"
-                            placeholder="yourname@example.com"
+                            placeholder="Email"
                             type="email"
                             autoCapitalize="none"
                             autoComplete="email"
@@ -54,38 +66,55 @@ export function SignUpForm({ className, ...props }: UserAuthFormProps) {
                             disabled={isLoading}
                         />
                     </div>
-                    <div className="grid gap-2">
-                        <Label className="sr-only" htmlFor="email">
+                    <div className="grid gap-2 relative">
+                        <Label className="sr-only" htmlFor="password">
                             Password
                         </Label>
                         <Input
+                            value={pass}
+                            onChange={(e) => setPass(e.target.value)}
                             id="password"
+                            name="password"
                             placeholder="Password"
-                            type="password"
+                            type={showPassword ? "text" : "password"}
                             autoCapitalize="none"
                             autoComplete="none"
                             autoCorrect="off"
                             disabled={isLoading}
+                            required
                         />
+                        <div
+                            className="absolute inset-y-0 right-4 flex items-center cursor-pointer"
+                            onClick={() => setShowPassword(!showPassword)}
+                        >
+                            {showPassword ? <RxEyeClosed size={20} /> : <RxEyeOpen size={20} />}
+                        </div>
                     </div>
-                    <div className="grid gap-2">
-                        <Label className="sr-only" htmlFor="email">
+                    <div className="grid gap-2 relative">
+                        <Label className="sr-only" htmlFor="confirmPassword">
                             Confirm Password
                         </Label>
                         <Input
-                            id="confirm-password"
+                            value={confirmPass}
+                            onChange={(e) => setConfirmPass(e.target.value)}
+                            id="confirmPassword"
+                            name="confirmPassword"
                             placeholder="Confirm Password"
-                            type="password"
+                            type={showPassword ? "text" : "password"}
                             autoCapitalize="none"
                             autoComplete="none"
                             autoCorrect="off"
                             disabled={isLoading}
                         />
                     </div>
+
                     <Button disabled={isLoading} className={cn("bg-black hover:bg-black/90")}>
                         {isLoading && <Icons.spinner className="mr-2 h-4 w-4 animate-spin" />}
                         Create account
                     </Button>
+                    {confirmPass !== "" && confirmPass !== pass && (
+                        <p style={{ fontSize: 14, color: "red" }}>Password do not match</p>
+                    )}
                 </div>
             </form>
             {/* <div className="relative">

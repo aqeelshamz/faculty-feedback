@@ -50,10 +50,11 @@ export default function AuthenticationPage() {
                     </div>
                     <div className="relative z-20 mt-auto">
                         <blockquote className="space-y-2">
-                            <p className="text-lg">
-                                &ldquo;You should build it from scratch.&rdquo;
+                            <p className="text-md">
+                                &ldquo;Very little is needed to make a happy life; it is all within
+                                yourself, in your way of thinking.&rdquo;
                             </p>
-                            <footer className="text-sm">Dr. Ezudheen</footer>
+                            <footer className="text-sm">Marcus Aurelius</footer>
                         </blockquote>
                     </div>
                 </div>
