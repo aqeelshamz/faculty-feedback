@@ -6,7 +6,7 @@ import {
     CardHeader,
     CardTitle,
 } from "@/components/ui/card";
-import { FiFileText, FiUser, FiUsers } from "react-icons/fi";
+import { RxFileText, RxPerson } from "react-icons/rx";
 
 export default function Page() {
     return (
@@ -16,7 +16,7 @@ export default function Page() {
                 <Card className="cursor-pointer hover:shadow-md duration-75 w-full max-w-xs mr-4">
                     <div className="p-4 flex justify-between">
                         <CardTitle className="flex">Forms</CardTitle>
-                        <FiFileText className="h-6 w-6" />
+                        <RxFileText className="h-6 w-6" />
                     </div>
                     <CardContent>
                         <p className="text-4xl font-bold">13</p>
@@ -25,7 +25,7 @@ export default function Page() {
                 <Card className="cursor-pointer hover:shadow-md duration-75 w-full max-w-xs mr-4">
                     <div className="p-4 flex justify-between">
                         <CardTitle className="flex">Batches</CardTitle>
-                        <FiUsers className="h-6 w-6" />
+                        <RxPerson className="h-6 w-6" />
                     </div>
                     <CardContent>
                         <p className="text-4xl font-bold">13</p>
@@ -34,7 +34,7 @@ export default function Page() {
                 <Card className="cursor-pointer hover:shadow-md duration-75 w-full max-w-xs mr-4">
                     <div className="p-4 flex justify-between">
                         <CardTitle className="flex">Faculties</CardTitle>
-                        <FiUser className="h-6 w-6" />
+                        <RxPerson className="h-6 w-6" />
                     </div>
                     <CardContent>
                         <p className="text-4xl font-bold">13</p>
@@ -43,7 +43,7 @@ export default function Page() {
                 <Card className="cursor-pointer hover:shadow-md duration-75 w-full max-w-xs mr-4">
                     <div className="p-4 flex justify-between">
                         <CardTitle className="flex">Students</CardTitle>
-                        <FiUser className="h-6 w-6" />
+                        <RxPerson className="h-6 w-6" />
                     </div>
                     <CardContent>
                         <p className="text-4xl font-bold">13</p>

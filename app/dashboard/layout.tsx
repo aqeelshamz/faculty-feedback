@@ -2,7 +2,18 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import Link from "next/link";
-import { FiBell, FiFileText, FiFolderMinus } from "react-icons/fi";
+import { RxBell, RxRulerSquare } from "react-icons/rx";
+
+import {
+    DropdownMenu,
+    DropdownMenuContent,
+    DropdownMenuItem,
+    DropdownMenuLabel,
+    DropdownMenuSeparator,
+    DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+
+import { Skeleton } from "@/components/ui/skeleton";
 
 export default function Dashboard({
     children,
@@ -15,7 +26,7 @@ export default function Dashboard({
                 <div className="flex h-16 justify-between items-center px-4">
                     <Link href="/">
                         <div className="w-full max-w-xs relative z-20 flex items-center text-lg font-medium">
-                            <FiFileText className="mr-2" />
+                            <RxRulerSquare className="mr-2" />
                             <p className="hidden lg:flex">Faculty Feedback System</p>
                         </div>
                     </Link>
@@ -47,12 +58,28 @@ export default function Dashboard({
                     </nav>
                     <div className="w-full max-w-xs flex justify-end items-center space-x-4">
                         <Button variant="ghost" size="icon">
-                            <FiBell className="h-4 w-4" />
+                            <RxBell className="h-4 w-4" />
                         </Button>
-                        <Avatar>
-                            <AvatarImage src="https://github.com/shadcn.png" alt="@shadcn" />
-                            <AvatarFallback>A</AvatarFallback>
-                        </Avatar>
+                        <DropdownMenu>
+                            <DropdownMenuTrigger>
+                                <Avatar>
+                                    <AvatarImage
+                                        src="https://github.com/shadcn.png"
+                                        alt="@shadcn"
+                                    />
+                                    <AvatarFallback>A</AvatarFallback>
+                                </Avatar>
+                            </DropdownMenuTrigger>
+                            <DropdownMenuContent>
+                                <DropdownMenuLabel>My Account</DropdownMenuLabel>
+                                <DropdownMenuSeparator />
+                                <DropdownMenuItem>Profile</DropdownMenuItem>
+                                <DropdownMenuItem>Billing</DropdownMenuItem>
+                                <DropdownMenuItem>Team</DropdownMenuItem>
+                                <DropdownMenuSeparator />
+                                <DropdownMenuItem>Log out</DropdownMenuItem>
+                            </DropdownMenuContent>
+                        </DropdownMenu>
                     </div>
                 </div>
             </div>

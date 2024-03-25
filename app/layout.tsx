@@ -11,7 +11,8 @@ export const fontSans = FontSans({
 
 export const metadata: Metadata = {
     title: "Faculty Feedback System",
-    description: "Enables faculties to accept feedback from students",
+    description:
+        "Enables faculties to collect feedbacks from students and analyze them effectively.",
 };
 
 export default function RootLayout({
@@ -22,7 +23,7 @@ export default function RootLayout({
     return (
         <html lang="en">
             <head>
-                <link rel="icon" type="image/x-icon" href="/teacher-student.png" sizes="any" />
+                <link rel="icon" type="image/x-icon" href="/RxRulerSquare.svg" sizes="any" />
             </head>
             <body
                 className={cn(
