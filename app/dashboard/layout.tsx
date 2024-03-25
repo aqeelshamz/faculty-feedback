@@ -1,3 +1,5 @@
+"use client";
+
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
@@ -13,7 +15,10 @@ import {
     DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 
-import { Skeleton } from "@/components/ui/skeleton";
+const logOut = () => {
+    localStorage.clear();
+    window.location.href = "/signin";
+};
 
 export default function Dashboard({
     children,
@@ -64,8 +69,8 @@ export default function Dashboard({
                             <DropdownMenuTrigger>
                                 <Avatar>
                                     <AvatarImage
-                                        src="https://github.com/shadcn.png"
-                                        alt="@shadcn"
+                                        src="https://github.com/anuragpoolakkal.png"
+                                        alt="@anuragpoolakkal"
                                     />
                                     <AvatarFallback>A</AvatarFallback>
                                 </Avatar>
@@ -77,7 +82,7 @@ export default function Dashboard({
                                 <DropdownMenuItem>Billing</DropdownMenuItem>
                                 <DropdownMenuItem>Team</DropdownMenuItem>
                                 <DropdownMenuSeparator />
-                                <DropdownMenuItem>Log out</DropdownMenuItem>
+                                <DropdownMenuItem onClick={logOut}>Log out</DropdownMenuItem>
                             </DropdownMenuContent>
                         </DropdownMenu>
                     </div>
