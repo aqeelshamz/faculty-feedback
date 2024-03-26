@@ -1,14 +1,16 @@
+"use client";
 import {
     Card,
     CardContent,
-    CardDescription,
-    CardFooter,
-    CardHeader,
     CardTitle,
 } from "@/components/ui/card";
+import { MainContext } from "@/context/context";
+import { useContext } from "react";
 import { RxFileText, RxPerson } from "react-icons/rx";
 
 export default function Page() {
+    const { fetchFeedbacks } = useContext(MainContext);
+
     return (
         <div className="w-full h-full p-7">
             <p className="font-semibold text-2xl">Overview</p>

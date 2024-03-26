@@ -80,7 +80,7 @@ const invoices = [
 export default function Page() {
     return (
         <div className="w-full h-full p-7">
-            <p className="font-semibold text-2xl mb-4">Batches</p>
+            <p className="font-semibold text-2xl mb-4">Departments</p>
             <div className="flex justify-between">
                 <Sheet>
                     <SheetTrigger asChild>
