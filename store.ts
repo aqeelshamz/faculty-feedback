@@ -1,7 +1,6 @@
 import { create } from "zustand";
 import { serverURL } from "./lib/utils";
 import axios from "axios";
-import { toast } from "sonner";
 
 type UserStore = {
     email: string;
@@ -61,13 +60,10 @@ export const useUserStore = create<UserStore>((set) => ({
 
     signIn: async (email, password) => {
         try {
-            const response = await axios.post(
-                `${serverURL}/users/login`,
-                { email, password },
-            );
+            const response = await axios.post(`${serverURL}/users/login`, { email, password });
             set({ email: response.data.email, type: response.data.type });
         } catch (err: any) {
-            toast.error(err.response.data.message);
+            alert(err.response.data.message);
         }
     },
 
@@ -85,9 +81,9 @@ export const useFeedbackStore = create<FeedbackStore>((set) => ({
         set({ feedbacks: "my feedback" });
     },
 
-    fetchFeedbacks: () => { },
+    fetchFeedbacks: () => {},
 
-    addFeedback: () => { },
+    addFeedback: () => {},
 }));
 
 export const useProgramStore = create<ProgramStore>((set) => ({
@@ -136,11 +132,11 @@ export const useProgramStore = create<ProgramStore>((set) => ({
         },
     ],
 
-    setPrograms: () => { },
+    setPrograms: () => {},
 
-    fetchPrograms: () => { },
+    fetchPrograms: () => {},
 
-    addProgram: () => { },
+    addProgram: () => {},
 }));
 
 export const useStudentStore = create<StudentStore>((set) => ({
@@ -189,11 +185,11 @@ export const useStudentStore = create<StudentStore>((set) => ({
         },
     ],
 
-    setStudents: () => { },
+    setStudents: () => {},
 
-    fetchStudents: () => { },
+    fetchStudents: () => {},
 
-    addStudent: () => { },
+    addStudent: () => {},
 }));
 
 export const useFacultyStore = create<FacultyStore>((set) => ({
@@ -242,9 +238,9 @@ export const useFacultyStore = create<FacultyStore>((set) => ({
         },
     ],
 
-    setFaculties: () => { },
+    setFaculties: () => {},
 
-    fetchFaculties: () => { },
+    fetchFaculties: () => {},
 
-    addFaculty: () => { },
+    addFaculty: () => {},
 }));
