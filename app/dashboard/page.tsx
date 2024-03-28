@@ -4,9 +4,9 @@ import { useFacultyStore, useProgramStore, useStudentStore } from "@/store";
 import { RxFileText, RxPerson } from "react-icons/rx";
 
 export default function Page() {
-    const programCount = useProgramStore((state) => state.programs).length;
-    const studentCount = useStudentStore((state) => state.students).length;
-    const facultyCount = useFacultyStore((state) => state.faculties).length;
+    const programCount = useProgramStore((state:any) => state.programs).length;
+    const studentCount = useStudentStore((state:any) => state.students).length;
+    const facultyCount = useFacultyStore((state:any) => state.faculties).length;
 
     return (
         <div className="w-full h-full p-7">

@@ -6,6 +6,7 @@ import { buttonVariants } from "@/components/ui/button";
 import { SignInForm } from "@/components/signin-form";
 
 import { RxRulerSquare } from "react-icons/rx";
+import { Toaster } from "sonner";
 
 export default function SignIn() {
     return (
@@ -86,6 +87,7 @@ export default function SignIn() {
                     </div>
                 </div>
             </div>
+            <Toaster />
         </>
     );
 }
