@@ -8,11 +8,15 @@ import { Icons } from "@/components/icons";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { useUserStore } from "@/store";
 interface UserAuthFormProps extends HTMLAttributes<HTMLDivElement> {}
 
 export function SignInForm({ className, ...props }: UserAuthFormProps) {
-    const [email, setEmail] = useState("");
-    const [pass, setPass] = useState("");
+    const email = useUserStore((state) => state.email);
+    const password = useUserStore((state) => state.password);
+
+    const signIn = useUserStore((state) => state.signIn);
+
     const [showPassword, setShowPassword] = useState(false);
 
     const [isLoading, setIsLoading] = useState<boolean>(false);
@@ -20,6 +24,8 @@ export function SignInForm({ className, ...props }: UserAuthFormProps) {
     async function onSubmit(event: React.SyntheticEvent) {
         event.preventDefault();
         setIsLoading(true);
+
+        signIn(email, password);
 
         setTimeout(() => {
             setIsLoading(false);
@@ -36,7 +42,7 @@ export function SignInForm({ className, ...props }: UserAuthFormProps) {
                         </Label>
                         <Input
                             value={email}
-                            onChange={(e) => setEmail(e.target.value)}
+                            onChange={(e) => useUserStore.setState({ email: e.target.value })}
                             id="email"
                             placeholder="Email"
                             type="email"
@@ -51,8 +57,8 @@ export function SignInForm({ className, ...props }: UserAuthFormProps) {
                             Password
                         </Label>
                         <Input
-                            value={pass}
-                            onChange={(e) => setPass(e.target.value)}
+                            value={password}
+                            onChange={(e) => useUserStore.setState({ password: e.target.value })}
                             id="password"
                             name="password"
                             placeholder="Password"
@@ -67,7 +73,7 @@ export function SignInForm({ className, ...props }: UserAuthFormProps) {
                             className="absolute inset-y-0 right-4 flex items-center cursor-pointer"
                             onClick={() => setShowPassword(!showPassword)}
                         >
-                            {showPassword ? <RxEyeClosed size={20} /> : <RxEyeOpen size={20} />}
+                            {showPassword ? <RxEyeOpen size={20} /> : <RxEyeClosed size={20} />}
                         </div>
                     </div>
                     <Button disabled={isLoading} className={cn("bg-black hover:bg-black/90")}>

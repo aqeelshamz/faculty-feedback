@@ -22,7 +22,6 @@ import {
     SheetTitle,
     SheetTrigger,
 } from "@/components/ui/sheet";
-import { LuFilter } from "react-icons/lu";
 
 import {
     Table,
@@ -34,22 +33,25 @@ import {
     TableHeader,
     TableRow,
 } from "@/components/ui/table";
-import { useFacultyStore } from "@/store";
+import { useProgramStore } from "@/store";
+
+import { LuFilter } from "react-icons/lu";
 
 export default function Page() {
-    const faculties = useFacultyStore((state) => state.faculties);
+    const programs = useProgramStore((state) => state.programs);
+
     return (
         <div className="w-full h-full p-7">
-            <p className="font-semibold text-2xl mb-4">Faculty</p>
+            <p className="font-semibold text-2xl mb-4">Programs</p>
             <div className="flex justify-between">
                 <Sheet>
                     <SheetTrigger asChild>
-                        <Button>+ New Faculty</Button>
+                        <Button>+ New Program</Button>
                     </SheetTrigger>
                     <SheetContent side={"left"}>
                         <SheetHeader>
-                            <SheetTitle>New Faculty</SheetTitle>
-                            <SheetDescription>Create new faculty.</SheetDescription>
+                            <SheetTitle>New Program</SheetTitle>
+                            <SheetDescription>Create new program.</SheetDescription>
                         </SheetHeader>
                         <div className="grid gap-4 py-4">
                             <div className="grid grid-cols-4 items-center gap-4">
@@ -59,46 +61,58 @@ export default function Page() {
                                 <Input className="col-span-3" type="text" />
                             </div>
                             <div className="grid grid-cols-4 items-center gap-4">
-                                <Label htmlFor="name" className="text-right">
+                                <Label htmlFor="username" className="text-right">
+                                    Adm. No.
+                                </Label>
+                                <Input className="col-span-3" type="text" />
+                            </div>
+                            <div className="grid grid-cols-4 items-center gap-4">
+                                <Label htmlFor="username" className="text-right">
                                     Email
                                 </Label>
                                 <Input className="col-span-3" type="email" />
                             </div>
                             <div className="grid grid-cols-4 items-center gap-4">
-                                <Label htmlFor="name" className="text-right">
-                                    Title
+                                <Label htmlFor="username" className="text-right">
+                                    Phone
                                 </Label>
-                                <Input className="col-span-3" type="text" />
+                                <Input className="col-span-3" type="tel" />
                             </div>
                             <div className="grid grid-cols-4 items-center gap-4">
-                                <Label htmlFor="name" className="text-right">
-                                    Department
+                                <Label htmlFor="username" className="text-right">
+                                    Batch
                                 </Label>
                                 <Select>
                                     <SelectTrigger className="col-span-3">
-                                        <SelectValue placeholder="Select Department" />
+                                        <SelectValue placeholder="Select Batch" />
                                     </SelectTrigger>
                                     <SelectContent>
                                         <SelectGroup>
-                                            <SelectLabel>Departments</SelectLabel>
-                                            <SelectItem value="apple">Department A</SelectItem>
-                                            <SelectItem value="apple">Department B</SelectItem>
-                                            <SelectItem value="apple">Department C</SelectItem>
-                                            <SelectItem value="apple">Department D</SelectItem>
+                                            <SelectLabel>Batches</SelectLabel>
+                                            <SelectItem value="apple">Batch A</SelectItem>
+                                            <SelectItem value="apple">Batch B</SelectItem>
+                                            <SelectItem value="apple">Batch C</SelectItem>
+                                            <SelectItem value="apple">Batch D</SelectItem>
                                         </SelectGroup>
                                     </SelectContent>
                                 </Select>
                             </div>
+                            <div className="grid grid-cols-4 items-center gap-4">
+                                <Label htmlFor="username" className="text-right">
+                                    Roll No.
+                                </Label>
+                                <Input className="col-span-3" type="number" />
+                            </div>
                         </div>
                         <SheetFooter>
                             <SheetClose asChild>
-                                <Button type="submit">Add Faculty</Button>
+                                <Button type="submit">Add program</Button>
                             </SheetClose>
                         </SheetFooter>
                     </SheetContent>
                 </Sheet>
                 <div className="flex">
-                    <Input className="mr-4" type="text" placeholder="Search faculty" />
+                    <Input className="mr-4" type="text" placeholder="Search programs" />
                     <Button variant="outline">
                         <LuFilter className="mr-2" /> View
                     </Button>
@@ -106,22 +120,22 @@ export default function Page() {
             </div>
             <div className="m-10">
                 <Table>
-                    <TableCaption>A list of your recent faculties.</TableCaption>
+                    <TableCaption>A list of your recent programs.</TableCaption>
                     <TableHeader>
                         <TableRow>
-                            <TableHead className="w-[100px]">faculty</TableHead>
+                            <TableHead className="w-[100px]">program</TableHead>
                             <TableHead>Status</TableHead>
                             <TableHead>Method</TableHead>
                             <TableHead className="text-right">Amount</TableHead>
                         </TableRow>
                     </TableHeader>
                     <TableBody>
-                        {faculties.map((faculty) => (
-                            <TableRow key={faculty.faculty}>
-                                <TableCell className="font-medium">{faculty.faculty}</TableCell>
-                                <TableCell>{faculty.paymentStatus}</TableCell>
-                                <TableCell>{faculty.paymentMethod}</TableCell>
-                                <TableCell className="text-right">{faculty.totalAmount}</TableCell>
+                        {programs.map((program) => (
+                            <TableRow key={program.program}>
+                                <TableCell className="font-medium">{program.program}</TableCell>
+                                <TableCell>{program.paymentStatus}</TableCell>
+                                <TableCell>{program.paymentMethod}</TableCell>
+                                <TableCell className="text-right">{program.totalAmount}</TableCell>
                             </TableRow>
                         ))}
                     </TableBody>

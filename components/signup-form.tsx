@@ -45,7 +45,7 @@ export function SignUpForm({ className, ...props }: UserAuthFormProps) {
                                 id="email"
                                 placeholder="Name"
                                 type="text"
-                                autoCapitalize="on"
+                                autoCapitalize="words"
                                 autoComplete="none"
                                 autoCorrect="off"
                                 disabled={isLoading}
@@ -87,7 +87,7 @@ export function SignUpForm({ className, ...props }: UserAuthFormProps) {
                             className="absolute inset-y-0 right-4 flex items-center cursor-pointer"
                             onClick={() => setShowPassword(!showPassword)}
                         >
-                            {showPassword ? <RxEyeClosed size={20} /> : <RxEyeOpen size={20} />}
+                            {showPassword ? <RxEyeOpen size={20} /> : <RxEyeClosed size={20} />}
                         </div>
                     </div>
                     <div className="grid gap-2 relative">
@@ -113,7 +113,7 @@ export function SignUpForm({ className, ...props }: UserAuthFormProps) {
                         Create account
                     </Button>
                     {confirmPass !== "" && confirmPass !== pass && (
-                        <p style={{ fontSize: 14, color: "red" }}>Password do not match</p>
+                        <p style={{ fontSize: 14, color: "red" }}>Passwords do not match</p>
                     )}
                 </div>
             </form>
