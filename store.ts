@@ -66,7 +66,7 @@ export const useUserStore = create<UserStore>((set) => ({
             localStorage.setItem("token", response.data.token);
             window.location.href = "/dashboard";
         } catch (err: any) {
-            toast(err.message);
+            toast.error(err.response.data.message);
         }
     },
 
