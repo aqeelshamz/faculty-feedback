@@ -25,11 +25,9 @@ export function SignInForm({ className, ...props }: UserAuthFormProps) {
         event.preventDefault();
         setIsLoading(true);
 
-        signIn(email, password);
+        await signIn(email, password);
 
-        setTimeout(() => {
-            setIsLoading(false);
-        }, 3000);
+        setIsLoading(false);
     }
 
     return (

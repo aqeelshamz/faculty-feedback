@@ -7,15 +7,15 @@ import StudentDashboard from "../components/StudentDashboard";
 
 export default function Page() {
     const router = useRouter();
-    const type = useUserStore((store) => store.type);
+    const role = useUserStore((store) => store.role);
 
     return (
         <>
-            {type == "admin" ? (
+            {role == "admin" ? (
                 <AdminDashboard />
-            ) : type == "faculty" ? (
+            ) : role == "faculty" ? (
                 <FacultyDashboard />
-            ) : type == "student" ? (
+            ) : role == "student" ? (
                 <StudentDashboard />
             ) : (
                 <></>

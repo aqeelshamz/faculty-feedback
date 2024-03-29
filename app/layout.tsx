@@ -10,7 +10,7 @@ export const fontSans = FontSans({
     variable: "--font-sans",
 });
 
-export const CalSans = localFont({ src: "../font/webfonts/CalSans.ttf",variable: "--cal-sans"});
+export const CalSans = localFont({ src: "../font/webfonts/CalSans.ttf", variable: "--cal-sans" });
 
 export const metadata: Metadata = {
     title: "Faculty Feedback System",

@@ -34,16 +34,15 @@ import {
     TableRow,
 } from "@/components/ui/table";
 import { useStudentStore, useUserStore } from "@/store";
-
 import { LuFilter } from "react-icons/lu";
 
 export default function Page() {
     const students = useStudentStore((state) => state.students);
-    const type = useUserStore((state) => state.type);
+    const role = useUserStore((state) => state.role);
 
     return (
         <>
-            {type == "admin" ? (
+            {role == "admin" ? (
                 <div className="w-full h-full p-7">
                     <p className="font-semibold text-2xl mb-4">Students</p>
                     <div className="flex justify-between">
@@ -61,50 +60,55 @@ export default function Page() {
                                         <Label htmlFor="name" className="text-right">
                                             Name
                                         </Label>
-                                        <Input className="col-span-3" type="text" />
+                                        <Input className="col-span-3" type="text" id="name" />
                                     </div>
                                     <div className="grid grid-cols-4 items-center gap-4">
-                                        <Label htmlFor="username" className="text-right">
+                                        <Label htmlFor="admNo" className="text-right">
                                             Adm. No.
                                         </Label>
-                                        <Input className="col-span-3" type="text" />
+                                        <Input className="col-span-3" type="text" id="admNo" />
                                     </div>
                                     <div className="grid grid-cols-4 items-center gap-4">
-                                        <Label htmlFor="username" className="text-right">
+                                        <Label htmlFor="email" className="text-right">
                                             Email
                                         </Label>
-                                        <Input className="col-span-3" type="email" />
+                                        <Input className="col-span-3" type="email" id="email" />
                                     </div>
                                     <div className="grid grid-cols-4 items-center gap-4">
-                                        <Label htmlFor="username" className="text-right">
+                                        <Label htmlFor="phone" className="text-right">
                                             Phone
                                         </Label>
-                                        <Input className="col-span-3" type="tel" />
+                                        <Input className="col-span-3" type="tel" id="phone" />
                                     </div>
                                     <div className="grid grid-cols-4 items-center gap-4">
-                                        <Label htmlFor="username" className="text-right">
-                                            Batch
+                                        <Label htmlFor="address" className="text-right">
+                                            Address
                                         </Label>
-                                        <Select>
-                                            <SelectTrigger className="col-span-3">
-                                                <SelectValue placeholder="Select Batch" />
-                                            </SelectTrigger>
-                                            <SelectContent>
-                                                <SelectGroup>
-                                                    <SelectLabel>Batches</SelectLabel>
-                                                    <SelectItem value="apple">Batch A</SelectItem>
-                                                    <SelectItem value="apple">Batch B</SelectItem>
-                                                    <SelectItem value="apple">Batch C</SelectItem>
-                                                    <SelectItem value="apple">Batch D</SelectItem>
-                                                </SelectGroup>
-                                            </SelectContent>
-                                        </Select>
+                                        <Input className="col-span-3" type="text" id="address" />
                                     </div>
                                     <div className="grid grid-cols-4 items-center gap-4">
-                                        <Label htmlFor="username" className="text-right">
+                                        <Label htmlFor="rollNo" className="text-right">
                                             Roll No.
                                         </Label>
-                                        <Input className="col-span-3" type="number" />
+                                        <Input className="col-span-3" type="text" id="rollNo" />
+                                    </div>
+                                    <div className="grid grid-cols-4 items-center gap-4">
+                                        <Label htmlFor="batchId" className="text-right">
+                                            Batch ID
+                                        </Label>
+                                        <Input className="col-span-3" type="text" id="batchId" />
+                                    </div>
+                                    <div className="grid grid-cols-4 items-center gap-4">
+                                        <Label htmlFor="collegeId" className="text-right">
+                                            College ID
+                                        </Label>
+                                        <Input className="col-span-3" type="text" id="collegeId" />
+                                    </div>
+                                    <div className="grid grid-cols-4 items-center gap-4">
+                                        <Label htmlFor="userId" className="text-right">
+                                            User ID
+                                        </Label>
+                                        <Input className="col-span-3" type="text" id="userId" />
                                     </div>
                                 </div>
                                 <SheetFooter>
@@ -126,32 +130,26 @@ export default function Page() {
                             <TableCaption>A list of students.</TableCaption>
                             <TableHeader>
                                 <TableRow>
-                                    <TableHead className="w-[100px]">student</TableHead>
-                                    <TableHead>Status</TableHead>
-                                    <TableHead>Method</TableHead>
-                                    <TableHead className="text-right">Amount</TableHead>
+                                    <TableHead className="w-[100px]">Adm. No.</TableHead>
+                                    <TableHead>Name</TableHead>
+                                    <TableHead>Email</TableHead>
+                                    <TableHead>Phone</TableHead>
+                                    <TableHead>Address</TableHead>
+                                    <TableHead>BatchId</TableHead>
                                 </TableRow>
                             </TableHeader>
                             <TableBody>
                                 {students.map((student) => (
                                     <TableRow key={student.student}>
-                                        <TableCell className="font-medium">
-                                            {student.student}
-                                        </TableCell>
-                                        <TableCell>{student.paymentStatus}</TableCell>
-                                        <TableCell>{student.paymentMethod}</TableCell>
-                                        <TableCell className="text-right">
-                                            {student.totalAmount}
-                                        </TableCell>
+                                        <TableCell>{student.admNo}</TableCell>
+                                        <TableCell>{student.name}</TableCell>
+                                        <TableCell>{student.email}</TableCell>
+                                        <TableCell>{student.phone}</TableCell>
+                                        <TableCell>{student.address}</TableCell>
+                                        <TableCell>{student.batchId}</TableCell>
                                     </TableRow>
                                 ))}
                             </TableBody>
-                            <TableFooter>
-                                <TableRow>
-                                    <TableCell colSpan={3}>Total</TableCell>
-                                    <TableCell className="text-right">$2,500.00</TableCell>
-                                </TableRow>
-                            </TableFooter>
                         </Table>
                     </div>
                 </div>

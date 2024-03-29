@@ -2,11 +2,12 @@ import { create } from "zustand";
 import { serverURL } from "./lib/utils";
 import axios from "axios";
 import { toast } from "sonner";
+import { Key } from "react";
 
 type UserStore = {
     email: string;
     password: string;
-    type: string;
+    role: string;
     signIn: (email: String, password: String) => {};
     logOut: () => void;
 };
@@ -20,10 +21,9 @@ type FeedbackStore = {
 
 type ProgramStore = {
     programs: {
-        program: string;
-        paymentStatus: string;
-        totalAmount: string;
-        paymentMethod: string;
+        [x: string]: Key | null | undefined;
+        name: string;
+        hod: string;
     }[];
     setPrograms: () => void;
     fetchPrograms: () => void;
@@ -32,22 +32,43 @@ type ProgramStore = {
 
 type StudentStore = {
     students: {
-        student: string;
-        paymentStatus: string;
-        totalAmount: string;
-        paymentMethod: string;
+        [x: string]: Key | null | undefined;
+        name: string;
+        admNo: string;
+        email: string;
+        phone: string;
+        address: string;
+        rollNo: string;
+        batchId: string;
+        collegeId: string;
+        userId: string;
     }[];
-    setStudents: () => void;
+
+    setStudents: (
+        name: string,
+        admNo: string,
+        email: string,
+        phone: string,
+        address: string,
+        rollNo: string,
+        batchId: string,
+        collegeId: string,
+        userId: string,
+    ) => void;
     fetchStudents: () => void;
     addStudent: () => void;
 };
 
 type FacultyStore = {
     faculties: {
-        faculty: string;
-        paymentStatus: string;
-        totalAmount: string;
-        paymentMethod: string;
+        [x: string]: Key | null | undefined;
+        name: string;
+        email: string;
+        title: string;
+        deptId: string;
+        role: string;
+        collegeId: string;
+        userId: string;
     }[];
     setFaculties: () => void;
     fetchFaculties: () => void;
@@ -57,12 +78,12 @@ type FacultyStore = {
 export const useUserStore = create<UserStore>((set) => ({
     email: "",
     password: "",
-    type: "admin",
+    role: "admin",
 
     signIn: async (email, password) => {
         try {
             const response = await axios.post(`${serverURL}/users/login`, { email, password });
-            set({ email: response.data.email, type: response.data.user.role });
+            set({ email: response.data.user.email, role: response.data.user.role });
             localStorage.setItem("token", response.data.token);
             window.location.href = "/dashboard";
         } catch (err: any) {
@@ -71,7 +92,7 @@ export const useUserStore = create<UserStore>((set) => ({
     },
 
     logOut: () => {
-        set({ email: "", password: "", type: "" });
+        set({ email: "", password: "", role: "" });
         localStorage.clear();
         window.location.href = "/signin";
     },
@@ -84,166 +105,279 @@ export const useFeedbackStore = create<FeedbackStore>((set) => ({
         set({ feedbacks: "my feedback" });
     },
 
-    fetchFeedbacks: () => { },
+    fetchFeedbacks: () => {},
 
-    addFeedback: () => { },
+    addFeedback: () => {},
 }));
 
 export const useProgramStore = create<ProgramStore>((set) => ({
     programs: [
         {
-            program: "INV001",
-            paymentStatus: "Paid",
-            totalAmount: "$250.00",
-            paymentMethod: "Credit Card",
+            name: "B. Tech Computer Science & Engineering",
+            hod: "Shibily Joseph",
         },
         {
-            program: "INV002",
-            paymentStatus: "Pending",
-            totalAmount: "$150.00",
-            paymentMethod: "PayPal",
+            name: "B. Tech Mechanical Engineering",
+            hod: "John Doe",
         },
         {
-            program: "INV003",
-            paymentStatus: "Unpaid",
-            totalAmount: "$350.00",
-            paymentMethod: "Bank Transfer",
+            name: "B. Tech Electrical Engineering",
+            hod: "Jane Smith",
         },
         {
-            program: "INV004",
-            paymentStatus: "Paid",
-            totalAmount: "$450.00",
-            paymentMethod: "Credit Card",
+            name: "B. Tech Civil Engineering",
+            hod: "Michael Johnson",
         },
         {
-            program: "INV005",
-            paymentStatus: "Paid",
-            totalAmount: "$550.00",
-            paymentMethod: "PayPal",
+            name: "B. Tech Information Technology",
+            hod: "Emily Brown",
         },
         {
-            program: "INV006",
-            paymentStatus: "Pending",
-            totalAmount: "$200.00",
-            paymentMethod: "Bank Transfer",
+            name: "B. Tech Electronics & Communication Engineering",
+            hod: "David Wilson",
         },
         {
-            program: "INV007",
-            paymentStatus: "Unpaid",
-            totalAmount: "$300.00",
-            paymentMethod: "Credit Card",
+            name: "B. Tech Chemical Engineering",
+            hod: "Sarah Anderson",
+        },
+        {
+            name: "B. Tech Aerospace Engineering",
+            hod: "Robert Martinez",
+        },
+        {
+            name: "B. Tech Biotechnology",
+            hod: "Maria Garcia",
+        },
+        {
+            name: "B. Tech Artificial Intelligence & Data Science",
+            hod: "Christopher Lee",
         },
     ],
 
-    setPrograms: () => { },
+    setPrograms: () => {},
 
-    fetchPrograms: () => { },
+    fetchPrograms: () => {},
 
-    addProgram: () => { },
+    addProgram: () => {},
 }));
 
 export const useStudentStore = create<StudentStore>((set) => ({
     students: [
         {
-            student: "INV001",
-            paymentStatus: "Paid",
-            totalAmount: "$250.00",
-            paymentMethod: "Credit Card",
+            name: "John Doe",
+            admNo: "2022001",
+            email: "john.doe@example.com",
+            phone: "1234567890",
+            address: "123 Main Street",
+            rollNo: "A001",
+            batchId: "61f103f06d2f3a0012345678",
+            collegeId: "61f103f06d2f3a0012345679",
+            userId: "61f103f06d2f3a001234567a",
         },
         {
-            student: "INV002",
-            paymentStatus: "Pending",
-            totalAmount: "$150.00",
-            paymentMethod: "PayPal",
+            name: "Jane Smith",
+            admNo: "2022002",
+            email: "jane.smith@example.com",
+            phone: "9876543210",
+            address: "456 Elm Street",
+            rollNo: "A002",
+            batchId: "61f103f06d2f3a0012345678",
+            collegeId: "61f103f06d2f3a0012345679",
+            userId: "61f103f06d2f3a001234567b",
         },
         {
-            student: "INV003",
-            paymentStatus: "Unpaid",
-            totalAmount: "$350.00",
-            paymentMethod: "Bank Transfer",
+            name: "Alice Johnson",
+            admNo: "2022003",
+            email: "alice.johnson@example.com",
+            phone: "5551234567",
+            address: "789 Oak Avenue",
+            rollNo: "A003",
+            batchId: "61f103f06d2f3a0012345678",
+            collegeId: "61f103f06d2f3a0012345679",
+            userId: "61f103f06d2f3a001234567c",
         },
         {
-            student: "INV004",
-            paymentStatus: "Paid",
-            totalAmount: "$450.00",
-            paymentMethod: "Credit Card",
+            name: "Bob Brown",
+            admNo: "2022004",
+            email: "bob.brown@example.com",
+            phone: "1112223333",
+            address: "321 Pine Road",
+            rollNo: "A004",
+            batchId: "61f103f06d2f3a0012345678",
+            collegeId: "61f103f06d2f3a0012345679",
+            userId: "61f103f06d2f3a001234567d",
         },
         {
-            student: "INV005",
-            paymentStatus: "Paid",
-            totalAmount: "$550.00",
-            paymentMethod: "PayPal",
+            name: "Eve Wilson",
+            admNo: "2022005",
+            email: "eve.wilson@example.com",
+            phone: "4445556666",
+            address: "555 Maple Lane",
+            rollNo: "A005",
+            batchId: "61f103f06d2f3a0012345678",
+            collegeId: "61f103f06d2f3a0012345679",
+            userId: "61f103f06d2f3a001234567e",
         },
         {
-            student: "INV006",
-            paymentStatus: "Pending",
-            totalAmount: "$200.00",
-            paymentMethod: "Bank Transfer",
+            name: "Charlie Davis",
+            admNo: "2022006",
+            email: "charlie.davis@example.com",
+            phone: "7778889999",
+            address: "777 Walnut Street",
+            rollNo: "A006",
+            batchId: "61f103f06d2f3a0012345678",
+            collegeId: "61f103f06d2f3a0012345679",
+            userId: "61f103f06d2f3a001234567f",
         },
         {
-            student: "INV007",
-            paymentStatus: "Unpaid",
-            totalAmount: "$300.00",
-            paymentMethod: "Credit Card",
+            name: "Grace Martinez",
+            admNo: "2022007",
+            email: "grace.martinez@example.com",
+            phone: "9990001111",
+            address: "999 Cedar Avenue",
+            rollNo: "A007",
+            batchId: "61f103f06d2f3a0012345678",
+            collegeId: "61f103f06d2f3a0012345679",
+            userId: "61f103f06d2f3a0012345680",
+        },
+        {
+            name: "David Clark",
+            admNo: "2022008",
+            email: "david.clark@example.com",
+            phone: "2223334444",
+            address: "222 Birch Drive",
+            rollNo: "A008",
+            batchId: "61f103f06d2f3a0012345678",
+            collegeId: "61f103f06d2f3a0012345679",
+            userId: "61f103f06d2f3a0012345681",
+        },
+        {
+            name: "Sarah Lee",
+            admNo: "2022009",
+            email: "sarah.lee@example.com",
+            phone: "6667778888",
+            address: "666 Pineapple Avenue",
+            rollNo: "A009",
+            batchId: "61f103f06d2f3a0012345678",
+            collegeId: "61f103f06d2f3a0012345679",
+            userId: "61f103f06d2f3a0012345682",
+        },
+        {
+            name: "Michael Adams",
+            admNo: "2022010",
+            email: "michael.adams@example.com",
+            phone: "8889990000",
+            address: "888 Orange Street",
+            rollNo: "A010",
+            batchId: "61f103f06d2f3a0012345678",
+            collegeId: "61f103f06d2f3a0012345679",
+            userId: "61f103f06d2f3a0012345683",
         },
     ],
+    setStudents: () => {},
 
-    setStudents: () => { },
+    fetchStudents: () => {},
 
-    fetchStudents: () => { },
-
-    addStudent: () => { },
+    addStudent: () => {},
 }));
 
 export const useFacultyStore = create<FacultyStore>((set) => ({
     faculties: [
         {
-            faculty: "INV001",
-            paymentStatus: "Paid",
-            totalAmount: "$250.00",
-            paymentMethod: "Credit Card",
+            name: "John Doe",
+            email: "john.doe@example.com",
+            title: "Professor",
+            deptId: "613fc8f4e363996d1b2c5e0d",
+            role: "teacher",
+            collegeId: "613fc8f4e363996d1b2c5e0e",
+            userId: "613fc8f4e363996d1b2c5e0f",
         },
         {
-            faculty: "INV002",
-            paymentStatus: "Pending",
-            totalAmount: "$150.00",
-            paymentMethod: "PayPal",
+            name: "Jane Smith",
+            email: "jane.smith@example.com",
+            title: "Associate Professor",
+            deptId: "613fc8f4e363996d1b2c5e0d",
+            role: "teacher",
+            collegeId: "613fc8f4e363996d1b2c5e0e",
+            userId: "613fc8f4e363996d1b2c5e10",
         },
         {
-            faculty: "INV003",
-            paymentStatus: "Unpaid",
-            totalAmount: "$350.00",
-            paymentMethod: "Bank Transfer",
+            name: "Alice Johnson",
+            email: "alice.johnson@example.com",
+            title: "Assistant Professor",
+            deptId: "613fc8f4e363996d1b2c5e0d",
+            role: "teacher",
+            collegeId: "613fc8f4e363996d1b2c5e0e",
+            userId: "613fc8f4e363996d1b2c5e11",
         },
         {
-            faculty: "INV004",
-            paymentStatus: "Paid",
-            totalAmount: "$450.00",
-            paymentMethod: "Credit Card",
+            name: "Bob Brown",
+            email: "bob.brown@example.com",
+            title: "Lecturer",
+            deptId: "613fc8f4e363996d1b2c5e0d",
+            role: "teacher",
+            collegeId: "613fc8f4e363996d1b2c5e0e",
+            userId: "613fc8f4e363996d1b2c5e12",
         },
         {
-            faculty: "INV005",
-            paymentStatus: "Paid",
-            totalAmount: "$550.00",
-            paymentMethod: "PayPal",
+            name: "Eve Williams",
+            email: "eve.williams@example.com",
+            title: "Professor",
+            deptId: "613fc8f4e363996d1b2c5e0d",
+            role: "teacher",
+            collegeId: "613fc8f4e363996d1b2c5e0e",
+            userId: "613fc8f4e363996d1b2c5e13",
         },
         {
-            faculty: "INV006",
-            paymentStatus: "Pending",
-            totalAmount: "$200.00",
-            paymentMethod: "Bank Transfer",
+            name: "Michael Davis",
+            email: "michael.davis@example.com",
+            title: "Professor",
+            deptId: "613fc8f4e363996d1b2c5e0d",
+            role: "hod",
+            collegeId: "613fc8f4e363996d1b2c5e0e",
+            userId: "613fc8f4e363996d1b2c5e14",
         },
         {
-            faculty: "INV007",
-            paymentStatus: "Unpaid",
-            totalAmount: "$300.00",
-            paymentMethod: "Credit Card",
+            name: "Sarah Wilson",
+            email: "sarah.wilson@example.com",
+            title: "Associate Professor",
+            deptId: "613fc8f4e363996d1b2c5e0d",
+            role: "hod",
+            collegeId: "613fc8f4e363996d1b2c5e0e",
+            userId: "613fc8f4e363996d1b2c5e15",
+        },
+        {
+            name: "David Martinez",
+            email: "david.martinez@example.com",
+            title: "Professor",
+            deptId: "613fc8f4e363996d1b2c5e0d",
+            role: "hod",
+            collegeId: "613fc8f4e363996d1b2c5e0e",
+            userId: "613fc8f4e363996d1b2c5e16",
+        },
+        {
+            name: "Linda Lee",
+            email: "linda.lee@example.com",
+            title: "Professor",
+            deptId: "613fc8f4e363996d1b2c5e0d",
+            role: "tutor",
+            collegeId: "613fc8f4e363996d1b2c5e0e",
+            userId: "613fc8f4e363996d1b2c5e17",
+        },
+        {
+            name: "Steven Garcia",
+            email: "steven.garcia@example.com",
+            title: "Assistant Professor",
+            deptId: "613fc8f4e363996d1b2c5e0d",
+            role: "tutor",
+            collegeId: "613fc8f4e363996d1b2c5e0e",
+            userId: "613fc8f4e363996d1b2c5e18",
         },
     ],
 
-    setFaculties: () => { },
+    setFaculties: () => {},
 
-    fetchFaculties: () => { },
+    fetchFaculties: () => {},
 
-    addFaculty: () => { },
+    addFaculty: () => {},
 }));

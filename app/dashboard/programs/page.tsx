@@ -39,11 +39,11 @@ import { LuFilter } from "react-icons/lu";
 
 export default function Page() {
     const programs = useProgramStore((state) => state.programs);
-    const type = useUserStore((state) => state.type);
+    const role = useUserStore((state) => state.role);
 
     return (
         <>
-            {type == "admin" ? (
+            {role == "admin" ? (
                 <div className="w-full h-full p-7">
                     <p className="font-semibold text-2xl mb-4">Programs</p>
                     <div className="flex justify-between">
@@ -64,47 +64,10 @@ export default function Page() {
                                         <Input className="col-span-3" type="text" />
                                     </div>
                                     <div className="grid grid-cols-4 items-center gap-4">
-                                        <Label htmlFor="username" className="text-right">
-                                            Adm. No.
+                                        <Label htmlFor="hod" className="text-right">
+                                            HOD
                                         </Label>
                                         <Input className="col-span-3" type="text" />
-                                    </div>
-                                    <div className="grid grid-cols-4 items-center gap-4">
-                                        <Label htmlFor="username" className="text-right">
-                                            Email
-                                        </Label>
-                                        <Input className="col-span-3" type="email" />
-                                    </div>
-                                    <div className="grid grid-cols-4 items-center gap-4">
-                                        <Label htmlFor="username" className="text-right">
-                                            Phone
-                                        </Label>
-                                        <Input className="col-span-3" type="tel" />
-                                    </div>
-                                    <div className="grid grid-cols-4 items-center gap-4">
-                                        <Label htmlFor="username" className="text-right">
-                                            Batch
-                                        </Label>
-                                        <Select>
-                                            <SelectTrigger className="col-span-3">
-                                                <SelectValue placeholder="Select Batch" />
-                                            </SelectTrigger>
-                                            <SelectContent>
-                                                <SelectGroup>
-                                                    <SelectLabel>Batches</SelectLabel>
-                                                    <SelectItem value="apple">Batch A</SelectItem>
-                                                    <SelectItem value="apple">Batch B</SelectItem>
-                                                    <SelectItem value="apple">Batch C</SelectItem>
-                                                    <SelectItem value="apple">Batch D</SelectItem>
-                                                </SelectGroup>
-                                            </SelectContent>
-                                        </Select>
-                                    </div>
-                                    <div className="grid grid-cols-4 items-center gap-4">
-                                        <Label htmlFor="username" className="text-right">
-                                            Roll No.
-                                        </Label>
-                                        <Input className="col-span-3" type="number" />
                                     </div>
                                 </div>
                                 <SheetFooter>
@@ -126,32 +89,18 @@ export default function Page() {
                             <TableCaption>A list of programs.</TableCaption>
                             <TableHeader>
                                 <TableRow>
-                                    <TableHead className="w-[100px]">program</TableHead>
-                                    <TableHead>Status</TableHead>
-                                    <TableHead>Method</TableHead>
-                                    <TableHead className="text-right">Amount</TableHead>
+                                    <TableHead>Name</TableHead>
+                                    <TableHead>HOD</TableHead>
                                 </TableRow>
                             </TableHeader>
                             <TableBody>
                                 {programs.map((program) => (
                                     <TableRow key={program.program}>
-                                        <TableCell className="font-medium">
-                                            {program.program}
-                                        </TableCell>
-                                        <TableCell>{program.paymentStatus}</TableCell>
-                                        <TableCell>{program.paymentMethod}</TableCell>
-                                        <TableCell className="text-right">
-                                            {program.totalAmount}
-                                        </TableCell>
+                                        <TableCell>{program.name}</TableCell>
+                                        <TableCell>{program.hod}</TableCell>
                                     </TableRow>
                                 ))}
                             </TableBody>
-                            <TableFooter>
-                                <TableRow>
-                                    <TableCell colSpan={3}>Total</TableCell>
-                                    <TableCell className="text-right">$2,500.00</TableCell>
-                                </TableRow>
-                            </TableFooter>
                         </Table>
                     </div>
                 </div>
