@@ -6,7 +6,7 @@ import { buttonVariants } from "@/components/ui/button";
 import { SignInForm } from "@/components/signin-form";
 
 import { RxRulerSquare } from "react-icons/rx";
-import { Toaster } from "sonner";
+import { Toaster } from "@/components/ui/sonner";
 
 export default function SignIn() {
     return (
@@ -28,7 +28,7 @@ export default function SignIn() {
                 />
             </div>
             <div className="container relative hidden h-screen flex-col items-center justify-center md:grid lg:max-w-none lg:grid-cols-2 lg:px-0">
-                <Link
+                {/* <Link
                     href="/signup"
                     className={cn(
                         buttonVariants({ variant: "ghost" }),
@@ -36,7 +36,7 @@ export default function SignIn() {
                     )}
                 >
                     Create an account
-                </Link>
+                </Link> */}
                 <div className="relative hidden h-full flex-col bg-muted p-10 text-white lg:flex dark:border-r">
                     {/* For true black background: <div className="absolute inset-0 bg-black" /> */}
                     <div className="absolute inset-0 lg:block">

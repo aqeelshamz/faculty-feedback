@@ -17,6 +17,9 @@ import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { useUserStore } from "@/store";
 import { RxRulerSquare } from "react-icons/rx";
 import { usePathname } from "next/navigation";
+import { AdminNav } from "../components/AdminNav";
+import { StudentNav } from "../components/StudentNav";
+import { FacultyNav } from "../components/FacultyNav";
 
 export default function Dashboard({
     children,
@@ -24,16 +27,17 @@ export default function Dashboard({
     children: React.ReactNode;
 }>) {
     const pathname = usePathname();
+    const type = useUserStore((state) => state.type);
 
     return (
         <div className="grid min-h-screen w-full md:grid-cols-[220px_1fr] lg:grid-cols-[280px_1fr]">
             <div className="hidden border-r bg-muted/40 md:block">
                 <div className="flex h-full max-h-screen flex-col gap-2">
                     <div className="flex h-14 items-center border-b px-4 lg:h-[60px] lg:px-6">
-                        <Link href="/" className="flex items-center gap-2 font-semibold">
+                        <div className="flex items-center gap-2 font-extrabold text-xl">
                             <RxRulerSquare className="mr-2" />
-                            <p className="hidden lg:flex">Admin</p>
-                        </Link>
+                            <p className="hidden lg:flex">Dashboard</p>
+                        </div>
                         <Button variant="outline" size="icon" className="ml-auto h-8 w-8">
                             <Bell className="h-4 w-4" />
                             <span className="sr-only">Toggle notifications</span>
@@ -41,43 +45,15 @@ export default function Dashboard({
                     </div>
                     <div className="flex-1">
                         <nav className="grid items-start px-2 text-sm font-medium lg:px-4">
-                            <Link
-                                href="/dashboard"
-                                className={`flex items-center gap-3 rounded-lg px-3 py-2 transition-all hover:text-primary ${pathname === "/dashboard" ? "bg-muted text-primary" : "text-muted-foreground"}`}
-                            >
-                                <Home className="h-4 w-4" />
-                                Dashboard
-                            </Link>
-                            <Link
-                                href="/dashboard/programs"
-                                className={`flex items-center gap-3 rounded-lg px-3 py-2 transition-all hover:text-primary ${pathname === "/dashboard/programs" ? "bg-muted text-primary" : "text-muted-foreground"}`}
-                            >
-                                <GraduationCap className="h-4 w-4" />
-                                Programs
-                                {/* <Badge className="ml-auto flex h-6 w-6 shrink-0 items-center justify-center rounded-full">
-                                    {useProgramStore((state) => state.programs).length}
-                                </Badge> */}
-                            </Link>
-                            <Link
-                                href="/dashboard/faculty"
-                                className={`flex items-center gap-3 rounded-lg px-3 py-2 transition-all hover:text-primary ${pathname === "/dashboard/faculty" ? "bg-muted text-primary" : "text-muted-foreground"}`}
-                            >
-                                <User className="h-4 w-4" />
-                                Faculty
-                                {/* <Badge className="ml-auto flex h-6 w-6 shrink-0 items-center justify-center rounded-full">
-                                    {useFacultyStore((state) => state.faculties).length}
-                                </Badge> */}
-                            </Link>
-                            <Link
-                                href="/dashboard/students"
-                                className={`flex items-center gap-3 rounded-lg px-3 py-2 transition-all hover:text-primary ${pathname === "/dashboard/students" ? "bg-muted text-primary" : "text-muted-foreground"}`}
-                            >
-                                <Users className="h-4 w-4" />
-                                Students
-                                {/* <Badge className="ml-auto flex h-6 w-6 shrink-0 items-center justify-center rounded-full">
-                                    {useStudentStore((state) => state.students).length}
-                                </Badge> */}
-                            </Link>
+                            {type == "admin" ? (
+                                <AdminNav />
+                            ) : type == "faculty" ? (
+                                <FacultyNav />
+                            ) : type == "student" ? (
+                                <StudentNav />
+                            ) : (
+                                <></>
+                            )}
                         </nav>
                     </div>
                     {/* <div className="mt-auto p-4">
@@ -109,45 +85,17 @@ export default function Dashboard({
                         </SheetTrigger>
                         <SheetContent side="left" className="flex flex-col">
                             <nav className="grid gap-2 text-lg font-medium">
-                                <Link
-                                    href="/dashboard"
-                                    className={`flex items-center gap-3 rounded-lg px-3 py-2 transition-all hover:text-primary ${pathname === "/dashboard" ? "bg-muted text-primary" : "text-muted-foreground"}`}
-                                >
-                                    <Home className="h-4 w-4" />
-                                    Dashboard
-                                </Link>
-                                <Link
-                                    href="/dashboard/programs"
-                                    className={`flex items-center gap-3 rounded-lg px-3 py-2 transition-all hover:text-primary ${pathname === "/dashboard/programs" ? "bg-muted text-primary" : "text-muted-foreground"}`}
-                                >
-                                    <GraduationCap className="h-4 w-4" />
-                                    Programs
-                                    {/* <Badge className="ml-auto flex h-6 w-6 shrink-0 items-center justify-center rounded-full">
-                                    {useProgramStore((state) => state.programs).length}
-                                </Badge> */}
-                                </Link>
-                                <Link
-                                    href="/dashboard/faculty"
-                                    className={`flex items-center gap-3 rounded-lg px-3 py-2 transition-all hover:text-primary ${pathname === "/dashboard/faculty" ? "bg-muted text-primary" : "text-muted-foreground"}`}
-                                >
-                                    <User className="h-4 w-4" />
-                                    Faculty
-                                    {/* <Badge className="ml-auto flex h-6 w-6 shrink-0 items-center justify-center rounded-full">
-                                    {useFacultyStore((state) => state.faculties).length}
-                                </Badge> */}
-                                </Link>
-                                <Link
-                                    href="/dashboard/students"
-                                    className={`flex items-center gap-3 rounded-lg px-3 py-2 transition-all hover:text-primary ${pathname === "/dashboard/students" ? "bg-muted text-primary" : "text-muted-foreground"}`}
-                                >
-                                    <Users className="h-4 w-4" />
-                                    Students
-                                    {/* <Badge className="ml-auto flex h-6 w-6 shrink-0 items-center justify-center rounded-full">
-                                    {useStudentStore((state) => state.students).length}
-                                </Badge> */}
-                                </Link>
+                                {type == "admin" ? (
+                                    <AdminNav />
+                                ) : type == "faculty" ? (
+                                    <FacultyNav />
+                                ) : type == "student" ? (
+                                    <StudentNav />
+                                ) : (
+                                    <></>
+                                )}
                             </nav>
-                            <div className="mt-auto">
+                            {/* <div className="mt-auto">
                                 <Card>
                                     <CardHeader>
                                         <CardTitle>Upgrade to Pro</CardTitle>
@@ -162,7 +110,7 @@ export default function Dashboard({
                                         </Button>
                                     </CardContent>
                                 </Card>
-                            </div>
+                            </div> */}
                         </SheetContent>
                     </Sheet>
                     <div className="w-full flex-1">

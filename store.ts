@@ -1,6 +1,7 @@
 import { create } from "zustand";
 import { serverURL } from "./lib/utils";
 import axios from "axios";
+import { toast } from "sonner";
 
 type UserStore = {
     email: string;
@@ -56,14 +57,14 @@ type FacultyStore = {
 export const useUserStore = create<UserStore>((set) => ({
     email: "",
     password: "",
-    type: "",
+    type: "admin",
 
     signIn: async (email, password) => {
         try {
             const response = await axios.post(`${serverURL}/users/login`, { email, password });
             set({ email: response.data.email, type: response.data.type });
         } catch (err: any) {
-            alert(err.response.data.message);
+            toast(err.message);
         }
     },
 
