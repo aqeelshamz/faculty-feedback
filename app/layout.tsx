@@ -5,12 +5,12 @@ import localFont from "next/font/local";
 
 import { cn } from "@/lib/utils";
 
-export const fontSans = FontSans({
+const fontSans = FontSans({
     subsets: ["latin"],
     variable: "--font-sans",
 });
 
-export const CalSans = localFont({ src: "../font/webfonts/CalSans.ttf", variable: "--cal-sans" });
+// const CalSans = localFont({ src: "../font/webfonts/CalSans.ttf", variable: "--cal-sans" });
 
 export const metadata: Metadata = {
     title: "Faculty Feedback System",
