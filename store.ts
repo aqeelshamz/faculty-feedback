@@ -18,7 +18,6 @@ type FeedbackStore = {
     fetchFeedbacks: () => void;
     addFeedback: () => void;
 };
-
 type ProgramStore = {
     programs: {
         [x: string]: Key | null | undefined;
@@ -32,7 +31,6 @@ type ProgramStore = {
 
 type StudentStore = {
     students: {
-        [x: string]: Key | null | undefined;
         name: string;
         admNo: string;
         email: string;
@@ -61,7 +59,6 @@ type StudentStore = {
 
 type FacultyStore = {
     faculties: {
-        [x: string]: Key | null | undefined;
         name: string;
         email: string;
         title: string;
@@ -261,6 +258,94 @@ export const useStudentStore = create<StudentStore>((set) => ({
             batchId: "61f103f06d2f3a0012345678",
             collegeId: "61f103f06d2f3a0012345679",
             userId: "61f103f06d2f3a0012345682",
+        },
+        {
+            name: "Michael Adams",
+            admNo: "2022010",
+            email: "michael.adams@example.com",
+            phone: "8889990000",
+            address: "888 Orange Street",
+            rollNo: "A010",
+            batchId: "61f103f06d2f3a0012345678",
+            collegeId: "61f103f06d2f3a0012345679",
+            userId: "61f103f06d2f3a0012345683",
+        },
+        {
+            name: "Michael Adams",
+            admNo: "2022010",
+            email: "michael.adams@example.com",
+            phone: "8889990000",
+            address: "888 Orange Street",
+            rollNo: "A010",
+            batchId: "61f103f06d2f3a0012345678",
+            collegeId: "61f103f06d2f3a0012345679",
+            userId: "61f103f06d2f3a0012345683",
+        },
+        {
+            name: "Michael Adams",
+            admNo: "2022010",
+            email: "michael.adams@example.com",
+            phone: "8889990000",
+            address: "888 Orange Street",
+            rollNo: "A010",
+            batchId: "61f103f06d2f3a0012345678",
+            collegeId: "61f103f06d2f3a0012345679",
+            userId: "61f103f06d2f3a0012345683",
+        },
+        {
+            name: "Michael Adams",
+            admNo: "2022010",
+            email: "michael.adams@example.com",
+            phone: "8889990000",
+            address: "888 Orange Street",
+            rollNo: "A010",
+            batchId: "61f103f06d2f3a0012345678",
+            collegeId: "61f103f06d2f3a0012345679",
+            userId: "61f103f06d2f3a0012345683",
+        },
+        {
+            name: "Michael Adams",
+            admNo: "2022010",
+            email: "michael.adams@example.com",
+            phone: "8889990000",
+            address: "888 Orange Street",
+            rollNo: "A010",
+            batchId: "61f103f06d2f3a0012345678",
+            collegeId: "61f103f06d2f3a0012345679",
+            userId: "61f103f06d2f3a0012345683",
+        },
+        {
+            name: "Michael Adams",
+            admNo: "2022010",
+            email: "michael.adams@example.com",
+            phone: "8889990000",
+            address: "888 Orange Street",
+            rollNo: "A010",
+            batchId: "61f103f06d2f3a0012345678",
+            collegeId: "61f103f06d2f3a0012345679",
+            userId: "61f103f06d2f3a0012345683",
+        },
+        {
+            name: "Michael Adams",
+            admNo: "2022010",
+            email: "michael.adams@example.com",
+            phone: "8889990000",
+            address: "888 Orange Street",
+            rollNo: "A010",
+            batchId: "61f103f06d2f3a0012345678",
+            collegeId: "61f103f06d2f3a0012345679",
+            userId: "61f103f06d2f3a0012345683",
+        },
+        {
+            name: "Michael Adams",
+            admNo: "2022010",
+            email: "michael.adams@example.com",
+            phone: "8889990000",
+            address: "888 Orange Street",
+            rollNo: "A010",
+            batchId: "61f103f06d2f3a0012345678",
+            collegeId: "61f103f06d2f3a0012345679",
+            userId: "61f103f06d2f3a0012345683",
         },
         {
             name: "Michael Adams",

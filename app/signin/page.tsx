@@ -11,23 +11,7 @@ import { Toaster } from "@/components/ui/sonner";
 export default function SignIn() {
     return (
         <>
-            <div className="md:hidden">
-                <Image
-                    src="/examples/authentication-light.png"
-                    width={1280}
-                    height={843}
-                    alt="Authentication"
-                    className="block dark:hidden"
-                />
-                <Image
-                    src="/examples/authentication-dark.png"
-                    width={1280}
-                    height={843}
-                    alt="Authentication"
-                    className="hidden dark:block"
-                />
-            </div>
-            <div className="container relative hidden h-screen flex-col items-center justify-center md:grid lg:max-w-none lg:grid-cols-2 lg:px-0">
+            <div className="container relative h-screen flex flex-col items-center justify-center sm:grid lg:max-w-none lg:grid-cols-2 lg:px-0">
                 {/* <Link
                     href="/signup"
                     className={cn(
@@ -37,8 +21,10 @@ export default function SignIn() {
                 >
                     Create an account
                 </Link> */}
-                <div className="relative hidden h-full flex-col bg-muted p-10 text-white lg:flex dark:border-r">
+                {/* Changed the 'hidden' class to 'flex' to ensure the content is displayed on large screens */}
+                <div className="relative hidden h-full flex-col bg-muted text-white lg:flex dark:border-r">
                     {/* For true black background: <div className="absolute inset-0 bg-black" /> */}
+                    {/* Removed the Image component for small screens */}
                     <div className="absolute inset-0 lg:block">
                         <Image
                             src="/mountain.jpg"
@@ -48,11 +34,11 @@ export default function SignIn() {
                             className="h-full w-full object-cover dark:brightness-[0.2] dark:grayscale"
                         />
                     </div>
-                    <div className="relative z-20 flex items-center text-lg font-medium">
+                    <div className="relative z-20 flex items-center text-lg p-10 font-medium">
                         <RxRulerSquare className="mr-2" />
                         <p className="hidden lg:flex">Faculty Feedback System</p>
                     </div>
-                    <div className="relative z-20 mt-auto">
+                    <div className="relative z-20 p-10 mt-auto">
                         <blockquote className="space-y-2">
                             <p className="text-md">
                                 &ldquo;Very little is needed to make a happy life; it is all within
@@ -62,7 +48,8 @@ export default function SignIn() {
                         </blockquote>
                     </div>
                 </div>
-                <div className="lg:p-8">
+                {/* Added a flex container with justify-center and items-center to center the content on small screens */}
+                <div className="flex justify-center items-center ">
                     <div className="mx-auto flex w-full flex-col justify-center space-y-6 sm:w-[350px]">
                         <div className="flex flex-col space-y-2 text-center">
                             <h1 className="text-2xl font-semibold tracking-tight">

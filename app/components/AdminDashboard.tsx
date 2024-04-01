@@ -1,7 +1,16 @@
 "use client";
 import { Card, CardContent, CardTitle } from "@/components/ui/card";
 import { useFacultyStore, useProgramStore, useStudentStore } from "@/store";
-import { GraduationCap, StickyNote, User, Users } from "lucide-react";
+import {
+    BookOpen,
+    Building,
+    Calendar,
+    GraduationCap,
+    Group,
+    StickyNote,
+    User,
+    Users,
+} from "lucide-react";
 import { useRouter } from "next/navigation";
 
 export default function AdminDashboard() {
@@ -10,7 +19,10 @@ export default function AdminDashboard() {
     return (
         <div className="w-full h-full p-7">
             <div className="grid gap-4 md:grid-cols-2 md:gap-8 lg:grid-cols-4">
-                <Card className="cursor-pointer hover:shadow-md duration-75 w-full max-w-xs mr-4">
+                <Card
+                    onClick={() => router.push("/dashboard/feedbacks")}
+                    className="cursor-pointer hover:shadow-md duration-75 w-full max-w-xs mr-4"
+                >
                     <div className="p-4 flex justify-between">
                         <CardTitle className="flex">Surveys</CardTitle>
                         <StickyNote className="h-6 w-6" />
@@ -30,6 +42,62 @@ export default function AdminDashboard() {
                     <CardContent>
                         <p className="text-4xl font-bold">
                             {useProgramStore((state) => state.programs).length}
+                        </p>
+                    </CardContent>
+                </Card>
+                <Card
+                    onClick={() => router.push("/dashboard/courses")}
+                    className="cursor-pointer hover:shadow-md duration-75 w-full max-w-xs mr-4"
+                >
+                    <div className="p-4 flex justify-between">
+                        <CardTitle className="flex">Courses</CardTitle>
+                        <BookOpen className="h-6 w-6" />
+                    </div>
+                    <CardContent>
+                        <p className="text-4xl font-bold">
+                            {useStudentStore((state) => state.students).length}
+                        </p>
+                    </CardContent>
+                </Card>
+                <Card
+                    onClick={() => router.push("/dashboard/departments")}
+                    className="cursor-pointer hover:shadow-md duration-75 w-full max-w-xs mr-4"
+                >
+                    <div className="p-4 flex justify-between">
+                        <CardTitle className="flex">Departments</CardTitle>
+                        <Building className="h-6 w-6" />
+                    </div>
+                    <CardContent>
+                        <p className="text-4xl font-bold">
+                            {useStudentStore((state) => state.students).length}
+                        </p>
+                    </CardContent>
+                </Card>
+                <Card
+                    onClick={() => router.push("/dashboard/batches")}
+                    className="cursor-pointer hover:shadow-md duration-75 w-full max-w-xs mr-4"
+                >
+                    <div className="p-4 flex justify-between">
+                        <CardTitle className="flex">Batches</CardTitle>
+                        <Group className="h-6 w-6" />
+                    </div>
+                    <CardContent>
+                        <p className="text-4xl font-bold">
+                            {useStudentStore((state) => state.students).length}
+                        </p>
+                    </CardContent>
+                </Card>
+                <Card
+                    onClick={() => router.push("/dashboard/semesters")}
+                    className="cursor-pointer hover:shadow-md duration-75 w-full max-w-xs mr-4"
+                >
+                    <div className="p-4 flex justify-between">
+                        <CardTitle className="flex">Semesters</CardTitle>
+                        <Calendar className="h-6 w-6" />
+                    </div>
+                    <CardContent>
+                        <p className="text-4xl font-bold">
+                            {useStudentStore((state) => state.students).length}
                         </p>
                     </CardContent>
                 </Card>
