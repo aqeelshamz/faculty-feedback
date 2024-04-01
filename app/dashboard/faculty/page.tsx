@@ -44,7 +44,7 @@ export default function Page() {
     return (
         <>
             {role == "admin" ? (
-                <div className="w-full h-full p-7">
+                <div className="w-full h-screen p-7 overflow-y-auto">
                     <p className="font-semibold text-2xl mb-4">Faculty</p>
                     <div className="flex justify-between">
                         <Sheet>
