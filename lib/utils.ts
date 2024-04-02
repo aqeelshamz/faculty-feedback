@@ -5,5 +5,5 @@ export function cn(...inputs: ClassValue[]) {
     return twMerge(clsx(inputs));
 }
 
-const serverURL = "http://localhost:5000"; // https://campusapi.vercel.app
+const serverURL = "http://localhost:8080"; // https://campusapi.vercel.app
 export { serverURL };

@@ -3,19 +3,32 @@
 import { HTMLAttributes, useState } from "react";
 import { RxEyeOpen, RxEyeClosed } from "react-icons/rx";
 
-import { cn } from "@/lib/utils";
+import { cn, serverURL } from "@/lib/utils";
 import { Icons } from "@/components/icons";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useUserStore } from "@/store";
-interface UserAuthFormProps extends HTMLAttributes<HTMLDivElement> {}
+import axios from "axios";
+import { toast } from "sonner";
+interface UserAuthFormProps extends HTMLAttributes<HTMLDivElement> { }
 
 export function SignInForm({ className, ...props }: UserAuthFormProps) {
     const email = useUserStore((state) => state.email);
     const password = useUserStore((state) => state.password);
+    const setData = useUserStore((state) => state.setData);
 
-    const signIn = useUserStore((state) => state.signIn);
+    const signIn = async () => {
+        try {
+            const response = await axios.post(`${serverURL}/users/login`, { email, password });
+            //set role
+            setData("email", "", "student");
+            localStorage.setItem("token", response.data.token);
+            // window.location.href = "/dashboard";
+        } catch (err: any) {
+            toast.error(err.response.data.message);
+        }
+    }
 
     const [showPassword, setShowPassword] = useState(false);
 
@@ -25,7 +38,7 @@ export function SignInForm({ className, ...props }: UserAuthFormProps) {
         event.preventDefault();
         setIsLoading(true);
 
-        await signIn(email, password);
+        await signIn();
 
         setIsLoading(false);
     }

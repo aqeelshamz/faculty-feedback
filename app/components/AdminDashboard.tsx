@@ -1,6 +1,6 @@
 "use client";
 import { Card, CardContent, CardTitle } from "@/components/ui/card";
-import { useFacultyStore, useProgramStore, useStudentStore } from "@/store";
+import { useFacultyStore, useProgramStore, useStudentStore, useUserStore } from "@/store";
 import {
     BookOpen,
     Building,
@@ -15,6 +15,7 @@ import { useRouter } from "next/navigation";
 
 export default function AdminDashboard() {
     const router = useRouter();
+    const role = useUserStore((state) => state.role);
 
     return (
         <div className="w-full h-full p-7">

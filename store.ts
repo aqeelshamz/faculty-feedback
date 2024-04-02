@@ -1,15 +1,12 @@
 import { create } from "zustand";
-import { serverURL } from "./lib/utils";
-import axios from "axios";
-import { toast } from "sonner";
 import { Key } from "react";
 
 type UserStore = {
     email: string;
     password: string;
     role: string;
-    signIn: (email: String, password: String) => {};
     logOut: () => void;
+    setData: (email: string, password: string, role: string) => void;
 };
 
 type FeedbackStore = {
@@ -72,26 +69,19 @@ type FacultyStore = {
     addFaculty: () => void;
 };
 
-export const useUserStore = create<UserStore>((set) => ({
+export const useUserStore = create<UserStore>((set, get) => ({
     email: "",
     password: "",
     role: "admin",
-
-    signIn: async (email, password) => {
-        try {
-            const response = await axios.post(`${serverURL}/users/login`, { email, password });
-            set({ email: response.data.user.email, role: response.data.user.role });
-            localStorage.setItem("token", response.data.token);
-            window.location.href = "/dashboard";
-        } catch (err: any) {
-            toast.error(err.response.data.message);
-        }
-    },
-
     logOut: () => {
-        set({ email: "", password: "", role: "" });
+        set(() => ({ email: "", password: "", role: "" }));
         localStorage.clear();
         window.location.href = "/signin";
+    },
+    setData: (email, password, role) => {
+        set((prevState) => ({ ...prevState, email, password, role: "student" }));
+        console.log("set role")
+        console.log(get().role);
     },
 }));
 
@@ -102,9 +92,9 @@ export const useFeedbackStore = create<FeedbackStore>((set) => ({
         set({ feedbacks: "my feedback" });
     },
 
-    fetchFeedbacks: () => {},
+    fetchFeedbacks: () => { },
 
-    addFeedback: () => {},
+    addFeedback: () => { },
 }));
 
 export const useProgramStore = create<ProgramStore>((set) => ({
@@ -151,11 +141,11 @@ export const useProgramStore = create<ProgramStore>((set) => ({
         },
     ],
 
-    setPrograms: () => {},
+    setPrograms: () => { },
 
-    fetchPrograms: () => {},
+    fetchPrograms: () => { },
 
-    addProgram: () => {},
+    addProgram: () => { },
 }));
 
 export const useStudentStore = create<StudentStore>((set) => ({
@@ -359,11 +349,11 @@ export const useStudentStore = create<StudentStore>((set) => ({
             userId: "61f103f06d2f3a0012345683",
         },
     ],
-    setStudents: () => {},
+    setStudents: () => { },
 
-    fetchStudents: () => {},
+    fetchStudents: () => { },
 
-    addStudent: () => {},
+    addStudent: () => { },
 }));
 
 export const useFacultyStore = create<FacultyStore>((set) => ({
@@ -460,9 +450,9 @@ export const useFacultyStore = create<FacultyStore>((set) => ({
         },
     ],
 
-    setFaculties: () => {},
+    setFaculties: () => { },
 
-    fetchFaculties: () => {},
+    fetchFaculties: () => { },
 
-    addFaculty: () => {},
+    addFaculty: () => { },
 }));
