@@ -94,8 +94,8 @@ export default function Page() {
                                 </TableRow>
                             </TableHeader>
                             <TableBody>
-                                {programs.map((program) => (
-                                    <TableRow key={program.program}>
+                                {programs.map((program, index: number) => (
+                                    <TableRow key={index}>
                                         <TableCell>{program.name}</TableCell>
                                         <TableCell>{program.hod}</TableCell>
                                     </TableRow>

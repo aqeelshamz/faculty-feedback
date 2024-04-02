@@ -139,8 +139,8 @@ export default function Page() {
                                 </TableRow>
                             </TableHeader>
                             <TableBody>
-                                {students.map((student) => (
-                                    <TableRow key={student.student}>
+                                {students.map((student, index: number) => (
+                                    <TableRow key={index}>
                                         <TableCell>{student.admNo}</TableCell>
                                         <TableCell>{student.name}</TableCell>
                                         <TableCell>{student.email}</TableCell>

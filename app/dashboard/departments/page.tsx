@@ -108,8 +108,8 @@ export default function Page() {
                                 </TableRow>
                             </TableHeader>
                             <TableBody>
-                                {faculties.map((faculty) => (
-                                    <TableRow key={faculty.faculty}>
+                                {faculties.map((faculty: any, index: number) => (
+                                    <TableRow key={index}>
                                         <TableCell>{faculty.name}</TableCell>
                                         <TableCell>{faculty.email}</TableCell>
                                         <TableCell>{faculty.title}</TableCell>
