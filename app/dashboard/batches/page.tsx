@@ -49,12 +49,12 @@ export default function Page() {
                     <div className="flex justify-between">
                         <Sheet>
                             <SheetTrigger asChild>
-                                <Button>+ New Faculty</Button>
+                                <Button>+ New Batch</Button>
                             </SheetTrigger>
                             <SheetContent side={"left"}>
                                 <SheetHeader>
-                                    <SheetTitle>New Faculty</SheetTitle>
-                                    <SheetDescription>Create new faculty.</SheetDescription>
+                                    <SheetTitle>New Batch</SheetTitle>
+                                    <SheetDescription>Create new batch.</SheetDescription>
                                 </SheetHeader>
                                 <div className="grid gap-4 py-4">
                                     <div className="grid grid-cols-4 items-center gap-4">
@@ -84,13 +84,13 @@ export default function Page() {
                                 </div>
                                 <SheetFooter>
                                     <SheetClose asChild>
-                                        <Button type="submit">Add Faculty</Button>
+                                        <Button type="submit">Add Batch</Button>
                                     </SheetClose>
                                 </SheetFooter>
                             </SheetContent>
                         </Sheet>
                         <div className="flex">
-                            <Input className="mr-4" type="text" placeholder="Search faculty" />
+                            <Input className="mr-4" type="text" placeholder="Search batch" />
                             <Button variant="outline">
                                 <LuFilter className="mr-2" /> View
                             </Button>
@@ -98,7 +98,7 @@ export default function Page() {
                     </div>
                     <div className="m-10">
                         <Table>
-                            <TableCaption>A list of faculties.</TableCaption>
+                            <TableCaption>A list of batches.</TableCaption>
                             <TableHeader>
                                 <TableRow>
                                     <TableHead>Name</TableHead>

@@ -35,26 +35,28 @@ import {
     TableRow,
 } from "@/components/ui/table";
 import { useFacultyStore, useUserStore } from "@/store";
-import { useRouter } from "next/navigation";
+import { Edit, Trash } from "lucide-react";
+import { useState } from "react";
 
 export default function Page() {
     const faculties = useFacultyStore((state) => state.faculties);
     const role = useUserStore((state) => state.role);
+    const [search, setSearch] = useState("");
 
     return (
         <>
             {role == "admin" ? (
-                <div className="w-full h-full p-7">
+                <div className="w-full h-screen p-7 overflow-y-auto">
                     <p className="font-semibold text-2xl mb-4">Courses</p>
                     <div className="flex justify-between">
                         <Sheet>
                             <SheetTrigger asChild>
-                                <Button>+ New Faculty</Button>
+                                <Button>+ New Course</Button>
                             </SheetTrigger>
                             <SheetContent side={"left"}>
                                 <SheetHeader>
-                                    <SheetTitle>New Faculty</SheetTitle>
-                                    <SheetDescription>Create new faculty.</SheetDescription>
+                                    <SheetTitle>New Course</SheetTitle>
+                                    <SheetDescription>Create new course.</SheetDescription>
                                 </SheetHeader>
                                 <div className="grid gap-4 py-4">
                                     <div className="grid grid-cols-4 items-center gap-4">
@@ -84,13 +86,13 @@ export default function Page() {
                                 </div>
                                 <SheetFooter>
                                     <SheetClose asChild>
-                                        <Button type="submit">Add Faculty</Button>
+                                        <Button type="submit">Add Course</Button>
                                     </SheetClose>
                                 </SheetFooter>
                             </SheetContent>
                         </Sheet>
                         <div className="flex">
-                            <Input className="mr-4" type="text" placeholder="Search faculty" />
+                            <Input className="mr-4" type="text" placeholder="Search course" />
                             <Button variant="outline">
                                 <LuFilter className="mr-2" /> View
                             </Button>
@@ -98,24 +100,47 @@ export default function Page() {
                     </div>
                     <div className="m-10">
                         <Table>
-                            <TableCaption>A list of faculties.</TableCaption>
+                            <TableCaption>A list of courses.</TableCaption>
                             <TableHeader>
                                 <TableRow>
                                     <TableHead>Name</TableHead>
                                     <TableHead>Email</TableHead>
                                     <TableHead>Title</TableHead>
                                     <TableHead>Role</TableHead>
+                                    <TableHead>Edit</TableHead>
+                                    <TableHead>Delete</TableHead>
                                 </TableRow>
                             </TableHeader>
                             <TableBody>
-                                {faculties.map((faculty: any, index: number) => (
-                                    <TableRow key={index}>
-                                        <TableCell>{faculty.name}</TableCell>
-                                        <TableCell>{faculty.email}</TableCell>
-                                        <TableCell>{faculty.title}</TableCell>
-                                        <TableCell>{faculty.role}</TableCell>
-                                    </TableRow>
-                                ))}
+                                {faculties.map((faculty, index: number) =>
+                                    !faculty.name
+                                        .toString()
+                                        .toLowerCase()
+                                        .includes(search.toLowerCase()) &&
+                                    !faculty.title
+                                        .toString()
+                                        .toLowerCase()
+                                        .includes(search.toLowerCase()) ? (
+                                        ""
+                                    ) : (
+                                        <TableRow key={index}>
+                                            <TableCell>{faculty.name}</TableCell>
+                                            <TableCell>{faculty.email}</TableCell>
+                                            <TableCell>{faculty.title}</TableCell>
+                                            <TableCell>{faculty.role}</TableCell>
+                                            <TableCell>
+                                                <Button variant={"outline"} size={"icon"}>
+                                                    <Edit />
+                                                </Button>
+                                            </TableCell>
+                                            <TableCell>
+                                                <Button variant={"outline"} size={"icon"}>
+                                                    <Trash />
+                                                </Button>
+                                            </TableCell>
+                                        </TableRow>
+                                    ),
+                                )}
                             </TableBody>
                         </Table>
                     </div>

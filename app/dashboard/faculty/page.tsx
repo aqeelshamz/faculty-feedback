@@ -35,10 +35,13 @@ import {
     TableRow,
 } from "@/components/ui/table";
 import { useFacultyStore, useUserStore } from "@/store";
+import { Edit, Trash } from "lucide-react";
+import { useState } from "react";
 
 export default function Page() {
     const faculties = useFacultyStore((state) => state.faculties);
     const role = useUserStore((state) => state.role);
+    const [search, setSearch] = useState("");
 
     return (
         <>
@@ -104,17 +107,40 @@ export default function Page() {
                                     <TableHead>Email</TableHead>
                                     <TableHead>Title</TableHead>
                                     <TableHead>Role</TableHead>
+                                    <TableHead>Edit</TableHead>
+                                    <TableHead>Delete</TableHead>
                                 </TableRow>
                             </TableHeader>
                             <TableBody>
-                                {faculties.map((faculty, index: number) => (
-                                    <TableRow key={index}>
-                                        <TableCell>{faculty.name}</TableCell>
-                                        <TableCell>{faculty.email}</TableCell>
-                                        <TableCell>{faculty.title}</TableCell>
-                                        <TableCell>{faculty.role}</TableCell>
-                                    </TableRow>
-                                ))}
+                                {faculties.map((faculty, index: number) =>
+                                    !faculty.name
+                                        .toString()
+                                        .toLowerCase()
+                                        .includes(search.toLowerCase()) &&
+                                    !faculty.title
+                                        .toString()
+                                        .toLowerCase()
+                                        .includes(search.toLowerCase()) ? (
+                                        ""
+                                    ) : (
+                                        <TableRow key={index}>
+                                            <TableCell>{faculty.name}</TableCell>
+                                            <TableCell>{faculty.email}</TableCell>
+                                            <TableCell>{faculty.title}</TableCell>
+                                            <TableCell>{faculty.role}</TableCell>
+                                            <TableCell>
+                                                <Button variant={"outline"} size={"icon"}>
+                                                    <Edit />
+                                                </Button>
+                                            </TableCell>
+                                            <TableCell>
+                                                <Button variant={"outline"} size={"icon"}>
+                                                    <Trash />
+                                                </Button>
+                                            </TableCell>
+                                        </TableRow>
+                                    ),
+                                )}
                             </TableBody>
                         </Table>
                     </div>

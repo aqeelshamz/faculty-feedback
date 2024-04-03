@@ -1,7 +1,13 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
-import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem } from "@/components/ui/command";
+import {
+    Command,
+    CommandEmpty,
+    CommandGroup,
+    CommandInput,
+    CommandItem,
+} from "@/components/ui/command";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
@@ -48,8 +54,8 @@ export default function Page() {
     const role = useUserStore((state) => state.role);
     const [search, setSearch] = useState("");
 
-    const [open, setOpen] = useState(false)
-    const [value, setValue] = useState("")
+    const [open, setOpen] = useState(false);
+    const [value, setValue] = useState("");
 
     return (
         <>
@@ -84,11 +90,18 @@ export default function Page() {
                                             <SelectContent>
                                                 <SelectGroup>
                                                     <SelectLabel>Departments</SelectLabel>
-                                                    {
-                                                        departments?.map((department: any, index: number) => {
-                                                            return <SelectItem value={department?.name}>{department?.name}</SelectItem>
-                                                        })
-                                                    }
+                                                    {departments?.map(
+                                                        (department: any, index: number) => {
+                                                            return (
+                                                                <SelectItem
+                                                                    key={index}
+                                                                    value={department?.name}
+                                                                >
+                                                                    {department?.name}
+                                                                </SelectItem>
+                                                            );
+                                                        },
+                                                    )}
                                                 </SelectGroup>
                                             </SelectContent>
                                         </Select>
@@ -102,7 +115,12 @@ export default function Page() {
                             </SheetContent>
                         </Sheet>
                         <div className="flex">
-                            <Input className="mr-4" type="text" placeholder="Search programs" onChange={(e) => setSearch(e.target.value)} />
+                            <Input
+                                className="mr-4"
+                                type="text"
+                                placeholder="Search programs"
+                                onChange={(e) => setSearch(e.target.value)}
+                            />
                             <Button variant="outline">
                                 <LuFilter className="mr-2" /> View
                             </Button>
@@ -120,14 +138,33 @@ export default function Page() {
                                 </TableRow>
                             </TableHeader>
                             <TableBody>
-                                {programs.map((program, index: number) => (
-                                    !program.name.toString().toLowerCase().includes(search.toLowerCase()) && !program.hod.toString().toLowerCase().includes(search.toLowerCase()) ? "" : <TableRow key={index}>
-                                        <TableCell>{program.name}</TableCell>
-                                        <TableCell>{program.hod}</TableCell>
-                                        <TableCell><Button variant={"outline"} size={"icon"}><Edit /></Button></TableCell>
-                                        <TableCell><Button variant={"outline"} size={"icon"}><Trash /></Button></TableCell>
-                                    </TableRow>
-                                ))}
+                                {programs.map((program, index: number) =>
+                                    !program.name
+                                        .toString()
+                                        .toLowerCase()
+                                        .includes(search.toLowerCase()) &&
+                                    !program.hod
+                                        .toString()
+                                        .toLowerCase()
+                                        .includes(search.toLowerCase()) ? (
+                                        ""
+                                    ) : (
+                                        <TableRow key={index}>
+                                            <TableCell>{program.name}</TableCell>
+                                            <TableCell>{program.hod}</TableCell>
+                                            <TableCell>
+                                                <Button variant={"outline"} size={"icon"}>
+                                                    <Edit />
+                                                </Button>
+                                            </TableCell>
+                                            <TableCell>
+                                                <Button variant={"outline"} size={"icon"}>
+                                                    <Trash />
+                                                </Button>
+                                            </TableCell>
+                                        </TableRow>
+                                    ),
+                                )}
                             </TableBody>
                         </Table>
                     </div>
