@@ -47,7 +47,8 @@ import { useState } from "react";
 export default function Page() {
     const faculties = useFacultyStore((state) => state.faculties);
     const role = useUserStore((state) => state.role);
-    const [date, setDate] = useState<Date>()
+    const [startDate, setStartDate] = useState<Date>()
+    const [endDate, setEndDate] = useState<Date>()
 
     return (
         <>
@@ -134,19 +135,19 @@ export default function Page() {
                                                 <Button
                                                     variant={"outline"}
                                                     className={cn(
-                                                        "w-[280px] justify-start text-left font-normal",
-                                                        !date && "text-muted-foreground"
+                                                        "col-span-3 justify-start text-left font-normal",
+                                                        !startDate && "text-muted-foreground"
                                                     )}
                                                 >
                                                     <CalendarIcon className="mr-2 h-4 w-4" />
-                                                    {date ? format(date, "PPP") : <span>Pick a date</span>}
+                                                    {startDate ? format(startDate, "PPP") : <span>Pick a date</span>}
                                                 </Button>
                                             </PopoverTrigger>
                                             <PopoverContent className="w-auto p-0">
                                                 <Calendar
                                                     mode="single"
-                                                    selected={date}
-                                                    onSelect={setDate}
+                                                    selected={startDate}
+                                                    onSelect={setStartDate}
                                                     initialFocus
                                                 />
                                             </PopoverContent>
@@ -156,7 +157,28 @@ export default function Page() {
                                         <Label htmlFor="role" className="text-right">
                                             End Date
                                         </Label>
-                                        <Input className="col-span-3" type="text" />
+                                        <Popover>
+                                            <PopoverTrigger asChild>
+                                                <Button
+                                                    variant={"outline"}
+                                                    className={cn(
+                                                        "col-span-3 justify-start text-left font-normal",
+                                                        !endDate && "text-muted-foreground"
+                                                    )}
+                                                >
+                                                    <CalendarIcon className="mr-2 h-4 w-4" />
+                                                    {endDate ? format(endDate, "PPP") : <span>Pick a date</span>}
+                                                </Button>
+                                            </PopoverTrigger>
+                                            <PopoverContent className="w-auto p-0">
+                                                <Calendar
+                                                    mode="single"
+                                                    selected={endDate}
+                                                    onSelect={setEndDate}
+                                                    initialFocus
+                                                />
+                                            </PopoverContent>
+                                        </Popover>
                                     </div>
                                 </div>
                                 <SheetFooter>
