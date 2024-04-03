@@ -75,6 +75,12 @@ export default function Page() {
                                         <Input className="col-span-3" type="email" id="email" />
                                     </div>
                                     <div className="grid grid-cols-4 items-center gap-4">
+                                        <Label htmlFor="password" className="text-right">
+                                            Password
+                                        </Label>
+                                        <Input className="col-span-3" type="password" id="password" />
+                                    </div>
+                                    <div className="grid grid-cols-4 items-center gap-4">
                                         <Label htmlFor="phone" className="text-right">
                                             Phone
                                         </Label>
@@ -94,19 +100,13 @@ export default function Page() {
                                     </div>
                                     <div className="grid grid-cols-4 items-center gap-4">
                                         <Label htmlFor="batchId" className="text-right">
-                                            Batch ID
+                                            Batch
                                         </Label>
                                         <Input className="col-span-3" type="text" id="batchId" />
                                     </div>
                                     <div className="grid grid-cols-4 items-center gap-4">
-                                        <Label htmlFor="collegeId" className="text-right">
-                                            College ID
-                                        </Label>
-                                        <Input className="col-span-3" type="text" id="collegeId" />
-                                    </div>
-                                    <div className="grid grid-cols-4 items-center gap-4">
                                         <Label htmlFor="userId" className="text-right">
-                                            User ID
+                                            User
                                         </Label>
                                         <Input className="col-span-3" type="text" id="userId" />
                                     </div>
