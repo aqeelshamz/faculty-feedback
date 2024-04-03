@@ -37,6 +37,7 @@ import {
 import { useFacultyStore, useUserStore } from "@/store";
 import { Edit, Trash } from "lucide-react";
 import { useState } from "react";
+import { Textarea } from "@/components/ui/textarea";
 
 export default function Page() {
     const faculties = useFacultyStore((state) => state.faculties);
@@ -67,21 +68,15 @@ export default function Page() {
                                     </div>
                                     <div className="grid grid-cols-4 items-center gap-4">
                                         <Label htmlFor="email" className="text-right">
-                                            Email
+                                            Vision
                                         </Label>
-                                        <Input className="col-span-3" type="email" />
+                                        <Textarea className="col-span-3" />
                                     </div>
                                     <div className="grid grid-cols-4 items-center gap-4">
                                         <Label htmlFor="title" className="text-right">
-                                            Title
+                                            Mission
                                         </Label>
-                                        <Input className="col-span-3" type="text" />
-                                    </div>
-                                    <div className="grid grid-cols-4 items-center gap-4">
-                                        <Label htmlFor="role" className="text-right">
-                                            Role
-                                        </Label>
-                                        <Input className="col-span-3" type="text" />
+                                        <Textarea className="col-span-3" />
                                     </div>
                                 </div>
                                 <SheetFooter>

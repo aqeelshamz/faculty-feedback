@@ -49,7 +49,7 @@ export default function Page() {
                 <div className="w-full h-screen p-7 overflow-y-auto">
                     <p className="font-semibold text-2xl mb-4">Feedbacks</p>
                     <div className="flex justify-between">
-                        <Sheet>
+                        {/* <Sheet>
                             <SheetTrigger asChild>
                                 <Button>+ New Feedback</Button>
                             </SheetTrigger>
@@ -90,7 +90,7 @@ export default function Page() {
                                     </SheetClose>
                                 </SheetFooter>
                             </SheetContent>
-                        </Sheet>
+                        </Sheet> */}
                         <div className="flex">
                             <Input
                                 className="mr-4"

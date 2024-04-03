@@ -37,6 +37,7 @@ import {
 import { useFacultyStore, useUserStore } from "@/store";
 import { Edit, Trash } from "lucide-react";
 import { useState } from "react";
+import { semesters } from "@/lib/data";
 
 export default function Page() {
     const faculties = useFacultyStore((state) => state.faculties);
@@ -66,20 +67,35 @@ export default function Page() {
                                         <Input className="col-span-3" type="text" />
                                     </div>
                                     <div className="grid grid-cols-4 items-center gap-4">
-                                        <Label htmlFor="email" className="text-right">
-                                            Email
+                                        <Label htmlFor="semester" className="text-right">
+                                            Semester
                                         </Label>
-                                        <Input className="col-span-3" type="email" />
+                                        <Select>
+                                            <SelectTrigger className="col-span-3">
+                                                <SelectValue placeholder="Select semester" />
+                                            </SelectTrigger>
+                                            <SelectContent>
+                                                <SelectGroup>
+                                                    <SelectLabel>Semesters</SelectLabel>
+                                                    {semesters?.map(
+                                                        (semester: any, index: number) => {
+                                                            return (
+                                                                <SelectItem
+                                                                    key={index}
+                                                                    value={semester?.name}
+                                                                >
+                                                                    {semester?.name}
+                                                                </SelectItem>
+                                                            );
+                                                        },
+                                                    )}
+                                                </SelectGroup>
+                                            </SelectContent>
+                                        </Select>
                                     </div>
                                     <div className="grid grid-cols-4 items-center gap-4">
                                         <Label htmlFor="title" className="text-right">
-                                            Title
-                                        </Label>
-                                        <Input className="col-span-3" type="text" />
-                                    </div>
-                                    <div className="grid grid-cols-4 items-center gap-4">
-                                        <Label htmlFor="role" className="text-right">
-                                            Role
+                                            Course Code
                                         </Label>
                                         <Input className="col-span-3" type="text" />
                                     </div>
@@ -122,10 +138,10 @@ export default function Page() {
                                         .toString()
                                         .toLowerCase()
                                         .includes(search.toLowerCase()) &&
-                                    !faculty.title
-                                        .toString()
-                                        .toLowerCase()
-                                        .includes(search.toLowerCase()) ? (
+                                        !faculty.title
+                                            .toString()
+                                            .toLowerCase()
+                                            .includes(search.toLowerCase()) ? (
                                         ""
                                     ) : (
                                         <TableRow key={index}>

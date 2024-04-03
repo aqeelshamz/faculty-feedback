@@ -72,6 +72,12 @@ export default function Page() {
                                         <Input className="col-span-3" type="email" />
                                     </div>
                                     <div className="grid grid-cols-4 items-center gap-4">
+                                        <Label htmlFor="password" className="text-right">
+                                            Password
+                                        </Label>
+                                        <Input className="col-span-3" type="password" />
+                                    </div>
+                                    <div className="grid grid-cols-4 items-center gap-4">
                                         <Label htmlFor="title" className="text-right">
                                             Title
                                         </Label>
@@ -81,7 +87,28 @@ export default function Page() {
                                         <Label htmlFor="role" className="text-right">
                                             Role
                                         </Label>
-                                        <Input className="col-span-3" type="text" />
+                                        <Select>
+                                            <SelectTrigger className="col-span-3">
+                                                <SelectValue placeholder="Select role" />
+                                            </SelectTrigger>
+                                            <SelectContent>
+                                                <SelectGroup>
+                                                    <SelectLabel>Role</SelectLabel>
+                                                    {["HOD", "Tutor", "Teacher"]?.map(
+                                                        (role: any, index: number) => {
+                                                            return (
+                                                                <SelectItem
+                                                                    key={index}
+                                                                    value={role}
+                                                                >
+                                                                    {role}
+                                                                </SelectItem>
+                                                            );
+                                                        },
+                                                    )}
+                                                </SelectGroup>
+                                            </SelectContent>
+                                        </Select>
                                     </div>
                                 </div>
                                 <SheetFooter>
@@ -122,10 +149,10 @@ export default function Page() {
                                         .toString()
                                         .toLowerCase()
                                         .includes(search.toLowerCase()) &&
-                                    !faculty.title
-                                        .toString()
-                                        .toLowerCase()
-                                        .includes(search.toLowerCase()) ? (
+                                        !faculty.title
+                                            .toString()
+                                            .toLowerCase()
+                                            .includes(search.toLowerCase()) ? (
                                         ""
                                     ) : (
                                         <TableRow key={index}>

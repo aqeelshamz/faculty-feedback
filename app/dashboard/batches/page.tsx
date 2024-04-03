@@ -23,6 +23,7 @@ import {
     SheetTrigger,
 } from "@/components/ui/sheet";
 import { LuFilter } from "react-icons/lu";
+import { format } from "date-fns"
 
 import {
     Table,
@@ -36,10 +37,18 @@ import {
 } from "@/components/ui/table";
 import { useFacultyStore, useUserStore } from "@/store";
 import { useRouter } from "next/navigation";
+import { departments, programs } from "@/lib/data";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import { cn } from "@/lib/utils";
+import { CalendarIcon } from "lucide-react";
+import { Calendar } from "@/components/ui/calendar";
+import { useState } from "react";
 
 export default function Page() {
     const faculties = useFacultyStore((state) => state.faculties);
     const role = useUserStore((state) => state.role);
+    const [startDate, setStartDate] = useState<Date>()
+    const [endDate, setEndDate] = useState<Date>()
 
     return (
         <>
@@ -65,21 +74,111 @@ export default function Page() {
                                     </div>
                                     <div className="grid grid-cols-4 items-center gap-4">
                                         <Label htmlFor="email" className="text-right">
-                                            Email
+                                            Department
                                         </Label>
-                                        <Input className="col-span-3" type="email" />
+                                        <Select>
+                                            <SelectTrigger className="col-span-3">
+                                                <SelectValue placeholder="Select department" />
+                                            </SelectTrigger>
+                                            <SelectContent>
+                                                <SelectGroup>
+                                                    <SelectLabel>Depatrments</SelectLabel>
+                                                    {departments?.map(
+                                                        (department: any, index: number) => {
+                                                            return (
+                                                                <SelectItem
+                                                                    key={index}
+                                                                    value={department?.name}
+                                                                >
+                                                                    {department?.name}
+                                                                </SelectItem>
+                                                            );
+                                                        },
+                                                    )}
+                                                </SelectGroup>
+                                            </SelectContent>
+                                        </Select>
+                                    </div>
+                                    <div className="grid grid-cols-4 items-center gap-4">
+                                        <Label htmlFor="email" className="text-right">
+                                            Program
+                                        </Label>
+                                        <Select>
+                                            <SelectTrigger className="col-span-3">
+                                                <SelectValue placeholder="Select program" />
+                                            </SelectTrigger>
+                                            <SelectContent>
+                                                <SelectGroup>
+                                                    <SelectLabel>Programs</SelectLabel>
+                                                    {programs?.map(
+                                                        (program: any, index: number) => {
+                                                            return (
+                                                                <SelectItem
+                                                                    key={index}
+                                                                    value={program?.name}
+                                                                >
+                                                                    {program?.name}
+                                                                </SelectItem>
+                                                            );
+                                                        },
+                                                    )}
+                                                </SelectGroup>
+                                            </SelectContent>
+                                        </Select>
                                     </div>
                                     <div className="grid grid-cols-4 items-center gap-4">
                                         <Label htmlFor="title" className="text-right">
-                                            Title
+                                            Start Date
                                         </Label>
-                                        <Input className="col-span-3" type="text" />
+                                        <Popover>
+                                            <PopoverTrigger asChild>
+                                                <Button
+                                                    variant={"outline"}
+                                                    className={cn(
+                                                        "col-span-3 justify-start text-left font-normal",
+                                                        !startDate && "text-muted-foreground"
+                                                    )}
+                                                >
+                                                    <CalendarIcon className="mr-2 h-4 w-4" />
+                                                    {startDate ? format(startDate, "PPP") : <span>Pick a date</span>}
+                                                </Button>
+                                            </PopoverTrigger>
+                                            <PopoverContent className="w-auto p-0">
+                                                <Calendar
+                                                    mode="single"
+                                                    selected={startDate}
+                                                    onSelect={setStartDate}
+                                                    initialFocus
+                                                />
+                                            </PopoverContent>
+                                        </Popover>
                                     </div>
                                     <div className="grid grid-cols-4 items-center gap-4">
                                         <Label htmlFor="role" className="text-right">
-                                            Role
+                                            End Date
                                         </Label>
-                                        <Input className="col-span-3" type="text" />
+                                        <Popover>
+                                            <PopoverTrigger asChild>
+                                                <Button
+                                                    variant={"outline"}
+                                                    className={cn(
+                                                        "col-span-3 justify-start text-left font-normal",
+                                                        !endDate && "text-muted-foreground"
+                                                    )}
+                                                >
+                                                    <CalendarIcon className="mr-2 h-4 w-4" />
+                                                    {endDate ? format(endDate, "PPP") : <span>Pick a date</span>}
+                                                </Button>
+                                            </PopoverTrigger>
+                                            <PopoverContent className="w-auto p-0">
+                                                <Calendar
+                                                    mode="single"
+                                                    selected={endDate}
+                                                    onSelect={setEndDate}
+                                                    initialFocus
+                                                />
+                                            </PopoverContent>
+                                        </Popover>
                                     </div>
                                 </div>
                                 <SheetFooter>

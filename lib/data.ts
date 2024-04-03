@@ -91,4 +91,85 @@ const departments = [
     }
 ];
 
-export { departments };
+const semesters = [
+    {
+        "name": "Semester 1",
+        "number": 1,
+        "collegeId": "6173b3a38eae680022000001",
+        "createdAt": "2024-04-03T12:00:00.000Z",
+        "updatedAt": "2024-04-03T12:00:00.000Z"
+    },
+    {
+        "name": "Semester 2",
+        "number": 2,
+        "collegeId": "6173b3a38eae680022000001",
+        "createdAt": "2024-04-03T12:00:00.000Z",
+        "updatedAt": "2024-04-03T12:00:00.000Z"
+    },
+    {
+        "name": "Semester 3",
+        "number": 3,
+        "collegeId": "6173b3a38eae680022000001",
+        "createdAt": "2024-04-03T12:00:00.000Z",
+        "updatedAt": "2024-04-03T12:00:00.000Z"
+    },
+    {
+        "name": "Semester 4",
+        "number": 4,
+        "collegeId": "6173b3a38eae680022000001",
+        "createdAt": "2024-04-03T12:00:00.000Z",
+        "updatedAt": "2024-04-03T12:00:00.000Z"
+    },
+    {
+        "name": "Semester 5",
+        "number": 5,
+        "collegeId": "6173b3a38eae680022000001",
+        "createdAt": "2024-04-03T12:00:00.000Z",
+        "updatedAt": "2024-04-03T12:00:00.000Z"
+    }
+];
+
+const programs = [
+    {
+        name: "B. Tech Computer Science & Engineering",
+        hod: "Shibily Joseph",
+    },
+    {
+        name: "B. Tech Mechanical Engineering",
+        hod: "John Doe",
+    },
+    {
+        name: "B. Tech Electrical Engineering",
+        hod: "Jane Smith",
+    },
+    {
+        name: "B. Tech Civil Engineering",
+        hod: "Michael Johnson",
+    },
+    {
+        name: "B. Tech Information Technology",
+        hod: "Emily Brown",
+    },
+    {
+        name: "B. Tech Electronics & Communication Engineering",
+        hod: "David Wilson",
+    },
+    {
+        name: "B. Tech Chemical Engineering",
+        hod: "Sarah Anderson",
+    },
+    {
+        name: "B. Tech Aerospace Engineering",
+        hod: "Robert Martinez",
+    },
+    {
+        name: "B. Tech Biotechnology",
+        hod: "Maria Garcia",
+    },
+    {
+        name: "B. Tech Artificial Intelligence & Data Science",
+        hod: "Christopher Lee",
+    },
+];
+
+export { departments, semesters, programs };
