@@ -1,8 +1,10 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
+import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem } from "@/components/ui/command";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import {
     Select,
     SelectContent,
@@ -33,8 +35,10 @@ import {
     TableHeader,
     TableRow,
 } from "@/components/ui/table";
+import { departments } from "@/lib/data";
+import { cn } from "@/lib/utils";
 import { useProgramStore, useUserStore } from "@/store";
-import { Edit, Trash } from "lucide-react";
+import { Check, ChevronsUpDown, Edit, Trash } from "lucide-react";
 import { useState } from "react";
 
 import { LuFilter } from "react-icons/lu";
@@ -43,6 +47,9 @@ export default function Page() {
     const programs = useProgramStore((state) => state.programs);
     const role = useUserStore((state) => state.role);
     const [search, setSearch] = useState("");
+
+    const [open, setOpen] = useState(false)
+    const [value, setValue] = useState("")
 
     return (
         <>
@@ -68,9 +75,23 @@ export default function Page() {
                                     </div>
                                     <div className="grid grid-cols-4 items-center gap-4">
                                         <Label htmlFor="hod" className="text-right">
-                                            HOD
+                                            Department
                                         </Label>
-                                        <Input className="col-span-3" type="text" />
+                                        <Select>
+                                            <SelectTrigger className="col-span-3">
+                                                <SelectValue placeholder="Select department" />
+                                            </SelectTrigger>
+                                            <SelectContent>
+                                                <SelectGroup>
+                                                    <SelectLabel>Departments</SelectLabel>
+                                                    {
+                                                        departments?.map((department: any, index: number) => {
+                                                            return <SelectItem value={department?.name}>{department?.name}</SelectItem>
+                                                        })
+                                                    }
+                                                </SelectGroup>
+                                            </SelectContent>
+                                        </Select>
                                     </div>
                                 </div>
                                 <SheetFooter>
@@ -81,7 +102,7 @@ export default function Page() {
                             </SheetContent>
                         </Sheet>
                         <div className="flex">
-                            <Input className="mr-4" type="text" placeholder="Search programs" onChange={(e)=>setSearch(e.target.value)} />
+                            <Input className="mr-4" type="text" placeholder="Search programs" onChange={(e) => setSearch(e.target.value)} />
                             <Button variant="outline">
                                 <LuFilter className="mr-2" /> View
                             </Button>
@@ -103,8 +124,8 @@ export default function Page() {
                                     !program.name.toString().toLowerCase().includes(search.toLowerCase()) && !program.hod.toString().toLowerCase().includes(search.toLowerCase()) ? "" : <TableRow key={index}>
                                         <TableCell>{program.name}</TableCell>
                                         <TableCell>{program.hod}</TableCell>
-                                        <TableCell><Button variant={"outline"} size={"icon"}><Edit/></Button></TableCell>
-                                        <TableCell><Button variant={"outline"} size={"icon"}><Trash/></Button></TableCell>
+                                        <TableCell><Button variant={"outline"} size={"icon"}><Edit /></Button></TableCell>
+                                        <TableCell><Button variant={"outline"} size={"icon"}><Trash /></Button></TableCell>
                                     </TableRow>
                                 ))}
                             </TableBody>
