@@ -35,12 +35,14 @@ import {
 } from "@/components/ui/table";
 import { useProgramStore, useUserStore } from "@/store";
 import { Edit, Trash } from "lucide-react";
+import { useState } from "react";
 
 import { LuFilter } from "react-icons/lu";
 
 export default function Page() {
     const programs = useProgramStore((state) => state.programs);
     const role = useUserStore((state) => state.role);
+    const [search, setSearch] = useState("");
 
     return (
         <>
@@ -79,7 +81,7 @@ export default function Page() {
                             </SheetContent>
                         </Sheet>
                         <div className="flex">
-                            <Input className="mr-4" type="text" placeholder="Search programs" />
+                            <Input className="mr-4" type="text" placeholder="Search programs" onChange={(e)=>setSearch(e.target.value)} />
                             <Button variant="outline">
                                 <LuFilter className="mr-2" /> View
                             </Button>
@@ -98,7 +100,7 @@ export default function Page() {
                             </TableHeader>
                             <TableBody>
                                 {programs.map((program, index: number) => (
-                                    <TableRow key={index}>
+                                    !program.name.toString().toLowerCase().includes(search.toLowerCase()) && !program.hod.toString().toLowerCase().includes(search.toLowerCase()) ? "" : <TableRow key={index}>
                                         <TableCell>{program.name}</TableCell>
                                         <TableCell>{program.hod}</TableCell>
                                         <TableCell><Button variant={"outline"} size={"icon"}><Edit/></Button></TableCell>
