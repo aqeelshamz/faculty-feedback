@@ -49,12 +49,12 @@ export default function Page() {
                     <div className="flex justify-between">
                         <Sheet>
                             <SheetTrigger asChild>
-                                <Button>+ New Faculty</Button>
+                                <Button>+ New Batch</Button>
                             </SheetTrigger>
                             <SheetContent side={"left"}>
                                 <SheetHeader>
-                                    <SheetTitle>New Faculty</SheetTitle>
-                                    <SheetDescription>Create new faculty.</SheetDescription>
+                                    <SheetTitle>New Batch</SheetTitle>
+                                    <SheetDescription>Create new batch.</SheetDescription>
                                 </SheetHeader>
                                 <div className="grid gap-4 py-4">
                                     <div className="grid grid-cols-4 items-center gap-4">

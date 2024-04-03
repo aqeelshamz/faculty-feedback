@@ -36,6 +36,7 @@ import {
 } from "@/components/ui/table";
 import { useFacultyStore, useUserStore } from "@/store";
 import { useRouter } from "next/navigation";
+import { Textarea } from "@/components/ui/textarea";
 
 export default function Page() {
     const faculties = useFacultyStore((state) => state.faculties);
@@ -49,12 +50,12 @@ export default function Page() {
                     <div className="flex justify-between">
                         <Sheet>
                             <SheetTrigger asChild>
-                                <Button>+ New Faculty</Button>
+                                <Button>+ New Department</Button>
                             </SheetTrigger>
                             <SheetContent side={"left"}>
                                 <SheetHeader>
-                                    <SheetTitle>New Faculty</SheetTitle>
-                                    <SheetDescription>Create new faculty.</SheetDescription>
+                                    <SheetTitle>New Department</SheetTitle>
+                                    <SheetDescription>Create new department.</SheetDescription>
                                 </SheetHeader>
                                 <div className="grid gap-4 py-4">
                                     <div className="grid grid-cols-4 items-center gap-4">
@@ -65,26 +66,20 @@ export default function Page() {
                                     </div>
                                     <div className="grid grid-cols-4 items-center gap-4">
                                         <Label htmlFor="email" className="text-right">
-                                            Email
+                                            Vision
                                         </Label>
-                                        <Input className="col-span-3" type="email" />
+                                        <Textarea className="col-span-3" />
                                     </div>
                                     <div className="grid grid-cols-4 items-center gap-4">
                                         <Label htmlFor="title" className="text-right">
-                                            Title
+                                            Mission
                                         </Label>
-                                        <Input className="col-span-3" type="text" />
-                                    </div>
-                                    <div className="grid grid-cols-4 items-center gap-4">
-                                        <Label htmlFor="role" className="text-right">
-                                            Role
-                                        </Label>
-                                        <Input className="col-span-3" type="text" />
+                                        <Textarea className="col-span-3" />
                                     </div>
                                 </div>
                                 <SheetFooter>
                                     <SheetClose asChild>
-                                        <Button type="submit">Add Faculty</Button>
+                                        <Button type="submit">Add Department</Button>
                                     </SheetClose>
                                 </SheetFooter>
                             </SheetContent>
