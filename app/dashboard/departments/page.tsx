@@ -35,17 +35,19 @@ import {
     TableRow,
 } from "@/components/ui/table";
 import { useFacultyStore, useUserStore } from "@/store";
-import { useRouter } from "next/navigation";
+import { Edit, Trash } from "lucide-react";
+import { useState } from "react";
 import { Textarea } from "@/components/ui/textarea";
 
 export default function Page() {
     const faculties = useFacultyStore((state) => state.faculties);
     const role = useUserStore((state) => state.role);
+    const [search, setSearch] = useState("");
 
     return (
         <>
             {role == "admin" ? (
-                <div className="w-full h-full p-7">
+                <div className="w-full h-screen p-7 overflow-y-auto">
                     <p className="font-semibold text-2xl mb-4">Departments</p>
                     <div className="flex justify-between">
                         <Sheet>
@@ -85,7 +87,7 @@ export default function Page() {
                             </SheetContent>
                         </Sheet>
                         <div className="flex">
-                            <Input className="mr-4" type="text" placeholder="Search faculty" />
+                            <Input className="mr-4" type="text" placeholder="Search department" />
                             <Button variant="outline">
                                 <LuFilter className="mr-2" /> View
                             </Button>
@@ -93,24 +95,47 @@ export default function Page() {
                     </div>
                     <div className="m-10">
                         <Table>
-                            <TableCaption>A list of faculties.</TableCaption>
+                            <TableCaption>A list of departments.</TableCaption>
                             <TableHeader>
                                 <TableRow>
                                     <TableHead>Name</TableHead>
                                     <TableHead>Email</TableHead>
                                     <TableHead>Title</TableHead>
                                     <TableHead>Role</TableHead>
+                                    <TableHead>Edit</TableHead>
+                                    <TableHead>Delete</TableHead>
                                 </TableRow>
                             </TableHeader>
                             <TableBody>
-                                {faculties.map((faculty: any, index: number) => (
-                                    <TableRow key={index}>
-                                        <TableCell>{faculty.name}</TableCell>
-                                        <TableCell>{faculty.email}</TableCell>
-                                        <TableCell>{faculty.title}</TableCell>
-                                        <TableCell>{faculty.role}</TableCell>
-                                    </TableRow>
-                                ))}
+                                {faculties.map((faculty, index: number) =>
+                                    !faculty.name
+                                        .toString()
+                                        .toLowerCase()
+                                        .includes(search.toLowerCase()) &&
+                                    !faculty.title
+                                        .toString()
+                                        .toLowerCase()
+                                        .includes(search.toLowerCase()) ? (
+                                        ""
+                                    ) : (
+                                        <TableRow key={index}>
+                                            <TableCell>{faculty.name}</TableCell>
+                                            <TableCell>{faculty.email}</TableCell>
+                                            <TableCell>{faculty.title}</TableCell>
+                                            <TableCell>{faculty.role}</TableCell>
+                                            <TableCell>
+                                                <Button variant={"outline"} size={"icon"}>
+                                                    <Edit />
+                                                </Button>
+                                            </TableCell>
+                                            <TableCell>
+                                                <Button variant={"outline"} size={"icon"}>
+                                                    <Trash />
+                                                </Button>
+                                            </TableCell>
+                                        </TableRow>
+                                    ),
+                                )}
                             </TableBody>
                         </Table>
                     </div>

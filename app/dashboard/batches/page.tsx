@@ -84,13 +84,13 @@ export default function Page() {
                                 </div>
                                 <SheetFooter>
                                     <SheetClose asChild>
-                                        <Button type="submit">Add Faculty</Button>
+                                        <Button type="submit">Add Batch</Button>
                                     </SheetClose>
                                 </SheetFooter>
                             </SheetContent>
                         </Sheet>
                         <div className="flex">
-                            <Input className="mr-4" type="text" placeholder="Search faculty" />
+                            <Input className="mr-4" type="text" placeholder="Search batch" />
                             <Button variant="outline">
                                 <LuFilter className="mr-2" /> View
                             </Button>
@@ -98,7 +98,7 @@ export default function Page() {
                     </div>
                     <div className="m-10">
                         <Table>
-                            <TableCaption>A list of faculties.</TableCaption>
+                            <TableCaption>A list of batches.</TableCaption>
                             <TableHeader>
                                 <TableRow>
                                     <TableHead>Name</TableHead>
