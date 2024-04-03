@@ -49,7 +49,7 @@ export default function Page() {
                     <div className="flex justify-between">
                         <Sheet>
                             <SheetTrigger asChild>
-                                <Button>+ New Faculty</Button>
+                                <Button>+ New Course</Button>
                             </SheetTrigger>
                             <SheetContent side={"left"}>
                                 <SheetHeader>
