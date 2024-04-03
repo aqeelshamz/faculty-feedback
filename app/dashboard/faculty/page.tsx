@@ -92,7 +92,12 @@ export default function Page() {
                             </SheetContent>
                         </Sheet>
                         <div className="flex">
-                            <Input className="mr-4" type="text" placeholder="Search faculty" />
+                            <Input
+                                className="mr-4"
+                                type="text"
+                                placeholder="Search faculty"
+                                onChange={(e) => setSearch(e.target.value)}
+                            />
                             <Button variant="outline">
                                 <LuFilter className="mr-2" /> View
                             </Button>
