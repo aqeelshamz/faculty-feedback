@@ -87,7 +87,7 @@ export function SignInForm({ className, ...props }: UserAuthFormProps) {
                             {showPassword ? <RxEyeOpen size={20} /> : <RxEyeClosed size={20} />}
                         </div>
                     </div>
-                    <Button disabled={isLoading} className={cn("bg-black hover:bg-black/90")}>
+                    <Button disabled={isLoading}>
                         {isLoading && <Icons.spinner className="mr-2 h-4 w-4 animate-spin" />}
                         Login
                     </Button>

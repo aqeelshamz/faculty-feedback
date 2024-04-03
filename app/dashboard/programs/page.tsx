@@ -34,6 +34,7 @@ import {
     TableRow,
 } from "@/components/ui/table";
 import { useProgramStore, useUserStore } from "@/store";
+import { Edit, Trash } from "lucide-react";
 
 import { LuFilter } from "react-icons/lu";
 
@@ -91,6 +92,8 @@ export default function Page() {
                                 <TableRow>
                                     <TableHead>Name</TableHead>
                                     <TableHead>HOD</TableHead>
+                                    <TableHead>Edit</TableHead>
+                                    <TableHead>Delete</TableHead>
                                 </TableRow>
                             </TableHeader>
                             <TableBody>
@@ -98,6 +101,8 @@ export default function Page() {
                                     <TableRow key={index}>
                                         <TableCell>{program.name}</TableCell>
                                         <TableCell>{program.hod}</TableCell>
+                                        <TableCell><Button variant={"outline"} size={"icon"}><Edit/></Button></TableCell>
+                                        <TableCell><Button variant={"outline"} size={"icon"}><Trash/></Button></TableCell>
                                     </TableRow>
                                 ))}
                             </TableBody>
