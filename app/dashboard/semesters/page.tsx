@@ -45,7 +45,7 @@ export default function Page() {
         <>
             {role == "admin" ? (
                 <div className="w-full h-full p-7">
-                    <p className="font-semibold text-2xl mb-4">Faculty</p>
+                    <p className="font-semibold text-2xl mb-4">Semesters</p>
                     <div className="flex justify-between">
                         <Sheet>
                             <SheetTrigger asChild>

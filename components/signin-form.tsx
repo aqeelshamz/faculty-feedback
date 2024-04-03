@@ -22,9 +22,9 @@ export function SignInForm({ className, ...props }: UserAuthFormProps) {
         try {
             const response = await axios.post(`${serverURL}/users/login`, { email, password });
             //set role
-            setData("email", "", "student");
+            setData("email", "", response.data.user.role);
             localStorage.setItem("token", response.data.token);
-            // window.location.href = "/dashboard";
+            window.location.href = "/dashboard";
         } catch (err: any) {
             toast.error(err.response.data.message);
         }

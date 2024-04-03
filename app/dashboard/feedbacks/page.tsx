@@ -1,17 +1,7 @@
 "use client";
-
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import {
-    Select,
-    SelectContent,
-    SelectGroup,
-    SelectItem,
-    SelectLabel,
-    SelectTrigger,
-    SelectValue,
-} from "@/components/ui/select";
 import {
     Sheet,
     SheetClose,
@@ -35,7 +25,6 @@ import {
     TableRow,
 } from "@/components/ui/table";
 import { useFacultyStore, useUserStore } from "@/store";
-import { useRouter } from "next/navigation";
 
 export default function Page() {
     const faculties = useFacultyStore((state) => state.faculties);
@@ -45,7 +34,7 @@ export default function Page() {
         <>
             {role == "admin" ? (
                 <div className="w-full h-full p-7">
-                    <p className="font-semibold text-2xl mb-4">Faculty</p>
+                    <p className="font-semibold text-2xl mb-4">Feedbacks</p>
                     <div className="flex justify-between">
                         <Sheet>
                             <SheetTrigger asChild>
