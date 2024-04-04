@@ -37,7 +37,8 @@ import {
 import { useFacultyStore, useUserStore } from "@/store";
 import { Edit, Trash } from "lucide-react";
 import { useState } from "react";
-import { programs, semesters } from "@/lib/data";
+import { Textarea } from "@/components/ui/textarea";
+import { departments, programs } from "@/lib/data";
 import { Checkbox } from "@/components/ui/checkbox";
 
 export default function Page() {
@@ -49,49 +50,64 @@ export default function Page() {
         <>
             {role == "admin" ? (
                 <div className="w-full h-screen p-7 overflow-y-auto">
-                    <p className="font-semibold text-2xl mb-4">Courses</p>
+                    <p className="font-semibold text-2xl mb-4">HODs</p>
                     <div className="flex justify-between">
                         <Sheet>
                             <SheetTrigger asChild>
-                                <Button>+ New Course</Button>
+                                <Button>+ New HOD</Button>
                             </SheetTrigger>
                             <SheetContent side={"left"}>
                                 <SheetHeader>
-                                    <SheetTitle>New Course</SheetTitle>
-                                    <SheetDescription>Create new course.</SheetDescription>
+                                    <SheetTitle>New HOD</SheetTitle>
+                                    <SheetDescription>Create new HOD.</SheetDescription>
                                 </SheetHeader>
                                 <div className="grid gap-4 py-4">
                                     <div className="grid grid-cols-4 items-center gap-4">
                                         <Label htmlFor="name" className="text-right">
-                                            Name
-                                        </Label>
-                                        <Input className="col-span-3" type="text" />
-                                    </div>
-                                    <div className="grid grid-cols-4 items-center gap-4">
-                                        <Label htmlFor="title" className="text-right">
-                                            Course Code
-                                        </Label>
-                                        <Input className="col-span-3" type="text" />
-                                    </div>
-                                    <div className="grid grid-cols-4 items-center gap-4">
-                                        <Label htmlFor="semester" className="text-right">
-                                            Semester
+                                            Faculty
                                         </Label>
                                         <Select>
                                             <SelectTrigger className="col-span-3">
-                                                <SelectValue placeholder="Select semester" />
+                                                <SelectValue placeholder="Select faculty" />
                                             </SelectTrigger>
                                             <SelectContent>
                                                 <SelectGroup>
-                                                    <SelectLabel>Semesters</SelectLabel>
-                                                    {semesters?.map(
-                                                        (semester: any, index: number) => {
+                                                    <SelectLabel>Faculties</SelectLabel>
+                                                    {[]?.map(
+                                                        (department: any, index: number) => {
                                                             return (
                                                                 <SelectItem
                                                                     key={index}
-                                                                    value={semester?.name}
+                                                                    value={department?.name}
                                                                 >
-                                                                    {semester?.name}
+                                                                    {department?.name}
+                                                                </SelectItem>
+                                                            );
+                                                        },
+                                                    )}
+                                                </SelectGroup>
+                                            </SelectContent>
+                                        </Select>
+                                    </div>
+                                    <div className="grid grid-cols-4 items-center gap-4">
+                                        <Label htmlFor="name" className="text-right">
+                                            Department
+                                        </Label>
+                                        <Select>
+                                            <SelectTrigger className="col-span-3">
+                                                <SelectValue placeholder="Select department" />
+                                            </SelectTrigger>
+                                            <SelectContent>
+                                                <SelectGroup>
+                                                    <SelectLabel>Departments</SelectLabel>
+                                                    {departments?.map(
+                                                        (department: any, index: number) => {
+                                                            return (
+                                                                <SelectItem
+                                                                    key={index}
+                                                                    value={department?.name}
+                                                                >
+                                                                    {department?.name}
                                                                 </SelectItem>
                                                             );
                                                         },
@@ -102,7 +118,7 @@ export default function Page() {
                                     </div>
                                     <div className="items-center gap-4">
                                         <Label htmlFor="name" className="text-right">
-                                            Faculties
+                                            Programs
                                         </Label>
                                         {
                                             programs.map((program, index) => {
@@ -112,7 +128,7 @@ export default function Page() {
                                                         htmlFor={program + index.toString()}
                                                         className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
                                                     >
-                                                        {program.hod}
+                                                        {program.name}
                                                     </label>
                                                 </div>
                                             })
@@ -121,13 +137,13 @@ export default function Page() {
                                 </div>
                                 <SheetFooter>
                                     <SheetClose asChild>
-                                        <Button type="submit">Add Course</Button>
+                                        <Button type="submit">Add HOD</Button>
                                     </SheetClose>
                                 </SheetFooter>
                             </SheetContent>
                         </Sheet>
                         <div className="flex">
-                            <Input className="mr-4" type="text" placeholder="Search course" />
+                            <Input className="mr-4" type="text" placeholder="Search HOD" />
                             <Button variant="outline">
                                 <LuFilter className="mr-2" /> View
                             </Button>
@@ -135,7 +151,7 @@ export default function Page() {
                     </div>
                     <div className="m-10">
                         <Table>
-                            <TableCaption>A list of courses.</TableCaption>
+                            <TableCaption>A list of hod.</TableCaption>
                             <TableHeader>
                                 <TableRow>
                                     <TableHead>Name</TableHead>

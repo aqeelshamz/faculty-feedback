@@ -33,6 +33,7 @@ import {
     TableHeader,
     TableRow,
 } from "@/components/ui/table";
+import { batches } from "@/lib/data";
 import { useStudentStore, useUserStore } from "@/store";
 import { LuFilter } from "react-icons/lu";
 
@@ -63,12 +64,6 @@ export default function Page() {
                                         <Input className="col-span-3" type="text" id="name" />
                                     </div>
                                     <div className="grid grid-cols-4 items-center gap-4">
-                                        <Label htmlFor="admNo" className="text-right">
-                                            Adm. No.
-                                        </Label>
-                                        <Input className="col-span-3" type="text" id="admNo" />
-                                    </div>
-                                    <div className="grid grid-cols-4 items-center gap-4">
                                         <Label htmlFor="email" className="text-right">
                                             Email
                                         </Label>
@@ -79,6 +74,12 @@ export default function Page() {
                                             Password
                                         </Label>
                                         <Input className="col-span-3" type="password" id="password" />
+                                    </div>
+                                    <div className="grid grid-cols-4 items-center gap-4">
+                                        <Label htmlFor="admNo" className="text-right">
+                                            Adm. No.
+                                        </Label>
+                                        <Input className="col-span-3" type="text" id="admNo" />
                                     </div>
                                     <div className="grid grid-cols-4 items-center gap-4">
                                         <Label htmlFor="phone" className="text-right">
@@ -96,19 +97,34 @@ export default function Page() {
                                         <Label htmlFor="rollNo" className="text-right">
                                             Roll No.
                                         </Label>
-                                        <Input className="col-span-3" type="text" id="rollNo" />
+                                        <Input className="col-span-3" type="number" id="rollNo" />
                                     </div>
                                     <div className="grid grid-cols-4 items-center gap-4">
                                         <Label htmlFor="batchId" className="text-right">
                                             Batch
                                         </Label>
-                                        <Input className="col-span-3" type="text" id="batchId" />
-                                    </div>
-                                    <div className="grid grid-cols-4 items-center gap-4">
-                                        <Label htmlFor="userId" className="text-right">
-                                            User
-                                        </Label>
-                                        <Input className="col-span-3" type="text" id="userId" />
+                                        <Select>
+                                            <SelectTrigger className="col-span-3">
+                                                <SelectValue placeholder="Select batch" />
+                                            </SelectTrigger>
+                                            <SelectContent>
+                                                <SelectGroup>
+                                                    <SelectLabel>Batches</SelectLabel>
+                                                    {batches?.map(
+                                                        (batch: any, index: number) => {
+                                                            return (
+                                                                <SelectItem
+                                                                    key={index}
+                                                                    value={batch?.name}
+                                                                >
+                                                                    {batch?.name} {batch?.program}
+                                                                </SelectItem>
+                                                            );
+                                                        },
+                                                    )}
+                                                </SelectGroup>
+                                            </SelectContent>
+                                        </Select>
                                     </div>
                                 </div>
                                 <SheetFooter>

@@ -172,4 +172,87 @@ const programs = [
     },
 ];
 
-export { departments, semesters, programs };
+const batches = [
+    {
+        name: "2025",
+        program: "B. Tech Computer Science & Engineering"
+    },
+    {
+        name: "2024",
+        program: "B. Tech Computer Science & Engineering"
+    },
+    {
+        name: "2025",
+        program: "B. Tech Mechanical Engineering"
+    },
+    {
+        name: "2024",
+        program: "B. Tech Mechanical Engineering"
+    },
+    {
+        name: "2025",
+        program: "B. Tech Electrical Engineering"
+    },
+    {
+        name: "2024",
+        program: "B. Tech Electrical Engineering"
+    },
+    {
+        name: "2025",
+        program: "B. Tech Civil Engineering"
+    },
+    {
+        name: "2024",
+        program: "B. Tech Civil Engineering"
+    },
+    {
+        name: "2025",
+        program: "B. Tech Information Technology"
+    },
+    {
+        name: "2024",
+        program: "B. Tech Information Technology"
+    },
+    {
+        name: "2025",
+        program: "B. Tech Electronics & Communication Engineering"
+    },
+    {
+        name: "2024",
+        program: "B. Tech Electronics & Communication Engineering"
+    },
+    {
+        name: "2025",
+        program: "B. Tech Chemical Engineering"
+    },
+    {
+        name: "2024",
+        program: "B. Tech Chemical Engineering"
+    },
+    {
+        name: "2025",
+        program: "B. Tech Aerospace Engineering"
+    },
+    {
+        name: "2024",
+        program: "B. Tech Aerospace Engineering"
+    },
+    {
+        name: "2025",
+        program: "B. Tech Biotechnology"
+    },
+    {
+        name: "2024",
+        program: "B. Tech Biotechnology"
+    },
+    {
+        name: "2025",
+        program: "B. Tech Artificial Intelligence & Data Science"
+    },
+    {
+        name: "2024",
+        program: "B. Tech Artificial Intelligence & Data Science"
+    },
+];
+
+export { departments, semesters, programs, batches };
