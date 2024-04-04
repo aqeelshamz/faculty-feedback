@@ -1,21 +1,19 @@
 "use client";
-import { useUserStore } from "@/store";
-import { useRouter } from "next/navigation";
+import { useUserStore } from "@/providers/user-store-provider";
 import AdminDashboard from "../components/AdminDashboard";
 import FacultyDashboard from "../components/FacultyDashboard";
 import StudentDashboard from "../components/StudentDashboard";
 
 export default function Page() {
-    const router = useRouter();
-    const userStore = useUserStore();
+    const { role } = useUserStore((state) => state);
 
     return (
         <>
-            {userStore.role == "admin" ? (
+            {role == "admin" ? (
                 <AdminDashboard />
-            ) : userStore.role == "faculty" ? (
+            ) : role == "faculty" ? (
                 <FacultyDashboard />
-            ) : userStore.role == "student" ? (
+            ) : role == "student" ? (
                 <StudentDashboard />
             ) : (
                 <></>
