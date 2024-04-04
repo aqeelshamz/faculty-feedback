@@ -1,6 +1,5 @@
 "use client";
 
-import Link from "next/link";
 import { Bell, CircleUser, GraduationCap, Home, Menu, User, Users } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
@@ -14,13 +13,14 @@ import {
     DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
-import { useUserStore } from "@/store";
+import { useUserStore } from "@/providers/user-store-provider";
 import { RxRulerSquare } from "react-icons/rx";
 import { usePathname } from "next/navigation";
 import { AdminNav } from "../components/AdminNav";
 import { StudentNav } from "../components/StudentNav";
 import { FacultyNav } from "../components/FacultyNav";
 import NotificationCard from "@/components/notification-card";
+import { UserStoreProvider } from "@/providers/user-store-provider";
 
 export default function Dashboard({
     children,
@@ -28,7 +28,7 @@ export default function Dashboard({
     children: React.ReactNode;
 }>) {
     const pathname = usePathname();
-    const role = useUserStore((state) => state.role);
+    const { role } = useUserStore((state) => state);
 
     return (
         <div className="grid h-screen overflow-hidden w-full md:grid-cols-[220px_1fr] lg:grid-cols-[280px_1fr]">
@@ -167,7 +167,7 @@ export default function Dashboard({
                             <Button className="mt-4">Add Product</Button>
                         </div>
                     </div> */}
-                    {children}
+                    <UserStoreProvider>{children}</UserStoreProvider>
                 </main>
             </div>
         </div>

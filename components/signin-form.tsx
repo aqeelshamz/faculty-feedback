@@ -1,6 +1,6 @@
 "use client";
 
-import { HTMLAttributes, useState } from "react";
+import { HTMLAttributes, useState, SyntheticEvent } from "react";
 import { RxEyeOpen, RxEyeClosed } from "react-icons/rx";
 
 import { cn, serverURL } from "@/lib/utils";
@@ -11,34 +11,34 @@ import { Label } from "@/components/ui/label";
 import { useUserStore } from "@/store";
 import axios from "axios";
 import { toast } from "sonner";
-interface UserAuthFormProps extends HTMLAttributes<HTMLDivElement> { }
+interface UserAuthFormProps extends HTMLAttributes<HTMLDivElement> {}
 
 export function SignInForm({ className, ...props }: UserAuthFormProps) {
     const email = useUserStore((state) => state.email);
     const password = useUserStore((state) => state.password);
-    const setData = useUserStore((state) => state.setData);
+    const signIn = useUserStore((state) => state.signIn);
 
-    const signIn = async () => {
-        try {
-            const response = await axios.post(`${serverURL}/users/login`, { email, password });
-            //set role
-            setData("email", "", response.data.user.role);
-            localStorage.setItem("token", response.data.token);
-            window.location.href = "/dashboard";
-        } catch (err: any) {
-            toast.error(err.response.data.message);
-        }
-    }
+    // const signIn = async () => {
+    //     try {
+    //         const response = await axios.post(`${serverURL}/users/login`, { email, password });
+    //         setData(response.data.user.email, response.data.user.role);
+    //         role.setState(response.data.user.role)
+    //         localStorage.setItem("token", response.data.token);
+    //         window.location.href = "/dashboard";
+    //     } catch (err: any) {
+    //         toast.error(err.response?.data?.message);
+    //     }
+    // };
 
     const [showPassword, setShowPassword] = useState(false);
 
     const [isLoading, setIsLoading] = useState<boolean>(false);
 
-    async function onSubmit(event: React.SyntheticEvent) {
+    async function onSubmit(event: SyntheticEvent) {
         event.preventDefault();
         setIsLoading(true);
 
-        await signIn();
+        signIn(email, password);
 
         setIsLoading(false);
     }

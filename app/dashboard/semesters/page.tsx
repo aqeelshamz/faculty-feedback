@@ -34,14 +34,15 @@ import {
     TableHeader,
     TableRow,
 } from "@/components/ui/table";
-import { useFacultyStore, useUserStore } from "@/store";
+import { useUserStore } from "@/providers/user-store-provider";
 import { Edit, Trash } from "lucide-react";
 import { useState } from "react";
 import { departments, programs } from "@/lib/data";
+import { useFacultyStore } from "@/store";
 
 export default function Page() {
     const faculties = useFacultyStore((state) => state.faculties);
-    const role = useUserStore((state) => state.role);
+    const { role } = useUserStore((state) => state);
     const [search, setSearch] = useState("");
 
     return (
@@ -135,7 +136,12 @@ export default function Page() {
                             </SheetContent>
                         </Sheet>
                         <div className="flex">
-                            <Input className="mr-4" type="text" placeholder="Search semesters" />
+                            <Input
+                                className="mr-4"
+                                type="text"
+                                placeholder="Search semesters"
+                                onChange={(e) => setSearch(e.target.value)}
+                            />
                             <Button variant="outline">
                                 <LuFilter className="mr-2" /> View
                             </Button>
@@ -160,10 +166,10 @@ export default function Page() {
                                         .toString()
                                         .toLowerCase()
                                         .includes(search.toLowerCase()) &&
-                                        !faculty.title
-                                            .toString()
-                                            .toLowerCase()
-                                            .includes(search.toLowerCase()) ? (
+                                    !faculty.title
+                                        .toString()
+                                        .toLowerCase()
+                                        .includes(search.toLowerCase()) ? (
                                         ""
                                     ) : (
                                         <TableRow key={index}>
