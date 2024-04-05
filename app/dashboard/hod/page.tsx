@@ -122,7 +122,7 @@ export default function Page() {
                                         </Label>
                                         {
                                             programs.map((program, index) => {
-                                                return <div className="flex items-center space-x-2 my-4">
+                                                return <div className="flex items-center space-x-2 my-4" key={index}>
                                                     <Checkbox id={program + index.toString()} />
                                                     <label
                                                         htmlFor={program + index.toString()}

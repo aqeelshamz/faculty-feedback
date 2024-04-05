@@ -49,6 +49,7 @@ export default function Page() {
     const role = useUserStore((state) => state.role);
     const [startDate, setStartDate] = useState<Date>()
     const [endDate, setEndDate] = useState<Date>()
+    const [search, setSearch] = useState("");
 
     return (
         <>
