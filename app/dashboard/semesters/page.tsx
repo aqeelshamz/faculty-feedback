@@ -37,12 +37,10 @@ import {
 import { useUserStore } from "@/providers/user-store-provider";
 import { Edit, Trash } from "lucide-react";
 import { useState } from "react";
-import { departments, programs } from "@/lib/data";
-import { useFacultyStore } from "@/store";
+import { departments, semesters } from "@/lib/data";
 
 export default function Page() {
-    const faculties = useFacultyStore((state) => state.faculties);
-    const { role } = useUserStore((state) => state);
+    const role = useUserStore((state) => state.role);
     const [search, setSearch] = useState("");
 
     return (
@@ -83,7 +81,7 @@ export default function Page() {
                                             </SelectTrigger>
                                             <SelectContent>
                                                 <SelectGroup>
-                                                    <SelectLabel>Depatrments</SelectLabel>
+                                                    <SelectLabel>Departments</SelectLabel>
                                                     {departments?.map(
                                                         (department: any, index: number) => {
                                                             return (
@@ -102,23 +100,23 @@ export default function Page() {
                                     </div>
                                     <div className="grid grid-cols-4 items-center gap-4">
                                         <Label htmlFor="email" className="text-right">
-                                            Program
+                                            Semester
                                         </Label>
                                         <Select>
                                             <SelectTrigger className="col-span-3">
-                                                <SelectValue placeholder="Select program" />
+                                                <SelectValue placeholder="Select semester" />
                                             </SelectTrigger>
                                             <SelectContent>
                                                 <SelectGroup>
-                                                    <SelectLabel>Programs</SelectLabel>
-                                                    {programs?.map(
-                                                        (program: any, index: number) => {
+                                                    <SelectLabel>Semesters</SelectLabel>
+                                                    {semesters?.map(
+                                                        (semester: any, index: number) => {
                                                             return (
                                                                 <SelectItem
                                                                     key={index}
-                                                                    value={program?.name}
+                                                                    value={semester?.name}
                                                                 >
-                                                                    {program?.name}
+                                                                    {semester?.name}
                                                                 </SelectItem>
                                                             );
                                                         },
@@ -153,30 +151,26 @@ export default function Page() {
                             <TableHeader>
                                 <TableRow>
                                     <TableHead>Name</TableHead>
-                                    <TableHead>Email</TableHead>
-                                    <TableHead>Title</TableHead>
-                                    <TableHead>Role</TableHead>
+                                    <TableHead>Number</TableHead>
                                     <TableHead>Edit</TableHead>
                                     <TableHead>Delete</TableHead>
                                 </TableRow>
                             </TableHeader>
                             <TableBody>
-                                {faculties.map((faculty, index: number) =>
-                                    !faculty.name
+                                {semesters.map((semester, index: number) =>
+                                    !semester.name
                                         .toString()
                                         .toLowerCase()
                                         .includes(search.toLowerCase()) &&
-                                    !faculty.title
+                                    !semester.number
                                         .toString()
                                         .toLowerCase()
                                         .includes(search.toLowerCase()) ? (
                                         ""
                                     ) : (
                                         <TableRow key={index}>
-                                            <TableCell>{faculty.name}</TableCell>
-                                            <TableCell>{faculty.email}</TableCell>
-                                            <TableCell>{faculty.title}</TableCell>
-                                            <TableCell>{faculty.role}</TableCell>
+                                            <TableCell>{semester.name}</TableCell>
+                                            <TableCell>{semester.number}</TableCell>
                                             <TableCell>
                                                 <Button variant={"outline"} size={"icon"}>
                                                     <Edit />

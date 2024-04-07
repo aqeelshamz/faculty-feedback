@@ -37,6 +37,7 @@ import {
 import { useFacultyStore, useUserStore } from "@/store";
 import { Edit, Trash } from "lucide-react";
 import { useState } from "react";
+import { feedbacks } from "@/lib/data";
 
 export default function Page() {
     const faculties = useFacultyStore((state) => state.faculties);
@@ -49,6 +50,7 @@ export default function Page() {
                 <div className="w-full h-screen p-7 overflow-y-auto">
                     <p className="font-semibold text-2xl mb-4">Feedbacks</p>
                     <div className="flex justify-between">
+                        <div />
                         {/* <Sheet>
                             <SheetTrigger asChild>
                                 <Button>+ New Feedback</Button>
@@ -108,31 +110,39 @@ export default function Page() {
                             <TableCaption>A list of feedback.</TableCaption>
                             <TableHeader>
                                 <TableRow>
-                                    <TableHead>Name</TableHead>
-                                    <TableHead>Email</TableHead>
                                     <TableHead>Title</TableHead>
-                                    <TableHead>Role</TableHead>
+                                    <TableHead>Desciption</TableHead>
+                                    <TableHead>Course</TableHead>
+                                    <TableHead>Created by</TableHead>
                                     <TableHead>Edit</TableHead>
                                     <TableHead>Delete</TableHead>
                                 </TableRow>
                             </TableHeader>
                             <TableBody>
-                                {faculties.map((faculty, index: number) =>
-                                    !faculty.name
+                                {feedbacks.map((feedback, index: number) =>
+                                    !feedback.title
                                         .toString()
                                         .toLowerCase()
                                         .includes(search.toLowerCase()) &&
-                                    !faculty.title
+                                    !feedback.course
+                                        .toString()
+                                        .toLowerCase()
+                                        .includes(search.toLowerCase()) &&
+                                    !feedback.createdby
+                                        .toString()
+                                        .toLowerCase()
+                                        .includes(search.toLowerCase()) &&
+                                    !feedback.description
                                         .toString()
                                         .toLowerCase()
                                         .includes(search.toLowerCase()) ? (
                                         ""
                                     ) : (
                                         <TableRow key={index}>
-                                            <TableCell>{faculty.name}</TableCell>
-                                            <TableCell>{faculty.email}</TableCell>
-                                            <TableCell>{faculty.title}</TableCell>
-                                            <TableCell>{faculty.role}</TableCell>
+                                            <TableCell>{feedback.title}</TableCell>
+                                            <TableCell>{feedback.description}</TableCell>
+                                            <TableCell>{feedback.course}</TableCell>
+                                            <TableCell>{feedback.createdby}</TableCell>
                                             <TableCell>
                                                 <Button variant={"outline"} size={"icon"}>
                                                     <Edit />

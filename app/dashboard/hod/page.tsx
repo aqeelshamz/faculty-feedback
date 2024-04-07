@@ -73,14 +73,14 @@ export default function Page() {
                                             <SelectContent>
                                                 <SelectGroup>
                                                     <SelectLabel>Faculties</SelectLabel>
-                                                    {[]?.map(
-                                                        (department: any, index: number) => {
+                                                    {faculties?.map(
+                                                        (faculty: any, index: number) => {
                                                             return (
                                                                 <SelectItem
                                                                     key={index}
-                                                                    value={department?.name}
+                                                                    value={faculty?.name}
                                                                 >
-                                                                    {department?.name}
+                                                                    {faculty?.name}
                                                                 </SelectItem>
                                                             );
                                                         },

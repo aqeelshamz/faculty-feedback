@@ -1,132 +1,133 @@
 const departments = [
     {
-        "name": "Computer Science",
-        "collegeId": "6173b3a38eae680022000001",
-        "vision": "To be a leader in computer science education and research.",
-        "mission": "To provide high-quality education and research opportunities in computer science.",
-        "createdBy": "6173b4658eae680022000002",
-        "createdAt": "2024-04-03T12:00:00.000Z",
-        "updatedAt": "2024-04-03T12:00:00.000Z"
+        name: "Computer Science",
+        collegeId: "6173b3a38eae680022000001",
+        vision: "To be a leader in computer science education and research.",
+        mission:
+            "To provide high-quality education and research opportunities in computer science.",
+        createdBy: "6173b4658eae680022000002",
+        createdAt: "2024-04-03T12:00:00.000Z",
+        updatedAt: "2024-04-03T12:00:00.000Z",
     },
     {
-        "name": "Electrical Engineering",
-        "collegeId": "6173b3a38eae680022000001",
-        "vision": "To excel in electrical engineering education and innovation.",
-        "mission": "To prepare students for successful careers in electrical engineering.",
-        "createdBy": "6173b4658eae680022000002",
-        "createdAt": "2024-04-03T12:00:00.000Z",
-        "updatedAt": "2024-04-03T12:00:00.000Z"
+        name: "Electrical Engineering",
+        collegeId: "6173b3a38eae680022000001",
+        vision: "To excel in electrical engineering education and innovation.",
+        mission: "To prepare students for successful careers in electrical engineering.",
+        createdBy: "6173b4658eae680022000002",
+        createdAt: "2024-04-03T12:00:00.000Z",
+        updatedAt: "2024-04-03T12:00:00.000Z",
     },
     {
-        "name": "Mechanical Engineering",
-        "collegeId": "6173b3a38eae680022000001",
-        "vision": "To be a center of excellence in mechanical engineering.",
-        "mission": "To provide a comprehensive education in mechanical engineering.",
-        "createdBy": "6173b4658eae680022000002",
-        "createdAt": "2024-04-03T12:00:00.000Z",
-        "updatedAt": "2024-04-03T12:00:00.000Z"
+        name: "Mechanical Engineering",
+        collegeId: "6173b3a38eae680022000001",
+        vision: "To be a center of excellence in mechanical engineering.",
+        mission: "To provide a comprehensive education in mechanical engineering.",
+        createdBy: "6173b4658eae680022000002",
+        createdAt: "2024-04-03T12:00:00.000Z",
+        updatedAt: "2024-04-03T12:00:00.000Z",
     },
     {
-        "name": "Business Administration",
-        "collegeId": "6173b3a38eae680022000001",
-        "vision": "To produce future business leaders with integrity and innovation.",
-        "mission": "To provide high-quality business education and foster entrepreneurial spirit.",
-        "createdBy": "6173b4658eae680022000002",
-        "createdAt": "2024-04-03T12:00:00.000Z",
-        "updatedAt": "2024-04-03T12:00:00.000Z"
+        name: "Business Administration",
+        collegeId: "6173b3a38eae680022000001",
+        vision: "To produce future business leaders with integrity and innovation.",
+        mission: "To provide high-quality business education and foster entrepreneurial spirit.",
+        createdBy: "6173b4658eae680022000002",
+        createdAt: "2024-04-03T12:00:00.000Z",
+        updatedAt: "2024-04-03T12:00:00.000Z",
     },
     {
-        "name": "Chemistry",
-        "collegeId": "6173b3a38eae680022000001",
-        "vision": "To advance knowledge in chemistry through research and education.",
-        "mission": "To provide outstanding education in chemistry and conduct impactful research.",
-        "createdBy": "6173b4658eae680022000002",
-        "createdAt": "2024-04-03T12:00:00.000Z",
-        "updatedAt": "2024-04-03T12:00:00.000Z"
+        name: "Chemistry",
+        collegeId: "6173b3a38eae680022000001",
+        vision: "To advance knowledge in chemistry through research and education.",
+        mission: "To provide outstanding education in chemistry and conduct impactful research.",
+        createdBy: "6173b4658eae680022000002",
+        createdAt: "2024-04-03T12:00:00.000Z",
+        updatedAt: "2024-04-03T12:00:00.000Z",
     },
     {
-        "name": "English Literature",
-        "collegeId": "6173b3a38eae680022000001",
-        "vision": "To foster a deep understanding and appreciation of literature.",
-        "mission": "To provide students with a comprehensive education in English literature.",
-        "createdBy": "6173b4658eae680022000002",
-        "createdAt": "2024-04-03T12:00:00.000Z",
-        "updatedAt": "2024-04-03T12:00:00.000Z"
+        name: "English Literature",
+        collegeId: "6173b3a38eae680022000001",
+        vision: "To foster a deep understanding and appreciation of literature.",
+        mission: "To provide students with a comprehensive education in English literature.",
+        createdBy: "6173b4658eae680022000002",
+        createdAt: "2024-04-03T12:00:00.000Z",
+        updatedAt: "2024-04-03T12:00:00.000Z",
     },
     {
-        "name": "Physics",
-        "collegeId": "6173b3a38eae680022000001",
-        "vision": "To explore the fundamental laws of nature through research and education.",
-        "mission": "To provide high-quality education in physics and conduct cutting-edge research.",
-        "createdBy": "6173b4658eae680022000002",
-        "createdAt": "2024-04-03T12:00:00.000Z",
-        "updatedAt": "2024-04-03T12:00:00.000Z"
+        name: "Physics",
+        collegeId: "6173b3a38eae680022000001",
+        vision: "To explore the fundamental laws of nature through research and education.",
+        mission: "To provide high-quality education in physics and conduct cutting-edge research.",
+        createdBy: "6173b4658eae680022000002",
+        createdAt: "2024-04-03T12:00:00.000Z",
+        updatedAt: "2024-04-03T12:00:00.000Z",
     },
     {
-        "name": "Civil Engineering",
-        "collegeId": "6173b3a38eae680022000001",
-        "vision": "To be a global leader in civil engineering education and research.",
-        "mission": "To prepare students to address the challenges of the built environment.",
-        "createdBy": "6173b4658eae680022000002",
-        "createdAt": "2024-04-03T12:00:00.000Z",
-        "updatedAt": "2024-04-03T12:00:00.000Z"
+        name: "Civil Engineering",
+        collegeId: "6173b3a38eae680022000001",
+        vision: "To be a global leader in civil engineering education and research.",
+        mission: "To prepare students to address the challenges of the built environment.",
+        createdBy: "6173b4658eae680022000002",
+        createdAt: "2024-04-03T12:00:00.000Z",
+        updatedAt: "2024-04-03T12:00:00.000Z",
     },
     {
-        "name": "Biology",
-        "collegeId": "6173b3a38eae680022000001",
-        "vision": "To advance understanding of living organisms through education and research.",
-        "mission": "To provide students with a strong foundation in biological sciences.",
-        "createdBy": "6173b4658eae680022000002",
-        "createdAt": "2024-04-03T12:00:00.000Z",
-        "updatedAt": "2024-04-03T12:00:00.000Z"
+        name: "Biology",
+        collegeId: "6173b3a38eae680022000001",
+        vision: "To advance understanding of living organisms through education and research.",
+        mission: "To provide students with a strong foundation in biological sciences.",
+        createdBy: "6173b4658eae680022000002",
+        createdAt: "2024-04-03T12:00:00.000Z",
+        updatedAt: "2024-04-03T12:00:00.000Z",
     },
     {
-        "name": "Psychology",
-        "collegeId": "6173b3a38eae680022000001",
-        "vision": "To unravel the mysteries of the human mind through research and education.",
-        "mission": "To provide students with a comprehensive understanding of psychology.",
-        "createdBy": "6173b4658eae680022000002",
-        "createdAt": "2024-04-03T12:00:00.000Z",
-        "updatedAt": "2024-04-03T12:00:00.000Z"
-    }
+        name: "Psychology",
+        collegeId: "6173b3a38eae680022000001",
+        vision: "To unravel the mysteries of the human mind through research and education.",
+        mission: "To provide students with a comprehensive understanding of psychology.",
+        createdBy: "6173b4658eae680022000002",
+        createdAt: "2024-04-03T12:00:00.000Z",
+        updatedAt: "2024-04-03T12:00:00.000Z",
+    },
 ];
 
 const semesters = [
     {
-        "name": "Semester 1",
-        "number": 1,
-        "collegeId": "6173b3a38eae680022000001",
-        "createdAt": "2024-04-03T12:00:00.000Z",
-        "updatedAt": "2024-04-03T12:00:00.000Z"
+        name: "Semester 1",
+        number: 1,
+        collegeId: "6173b3a38eae680022000001",
+        createdAt: "2024-04-03T12:00:00.000Z",
+        updatedAt: "2024-04-03T12:00:00.000Z",
     },
     {
-        "name": "Semester 2",
-        "number": 2,
-        "collegeId": "6173b3a38eae680022000001",
-        "createdAt": "2024-04-03T12:00:00.000Z",
-        "updatedAt": "2024-04-03T12:00:00.000Z"
+        name: "Semester 2",
+        number: 2,
+        collegeId: "6173b3a38eae680022000001",
+        createdAt: "2024-04-03T12:00:00.000Z",
+        updatedAt: "2024-04-03T12:00:00.000Z",
     },
     {
-        "name": "Semester 3",
-        "number": 3,
-        "collegeId": "6173b3a38eae680022000001",
-        "createdAt": "2024-04-03T12:00:00.000Z",
-        "updatedAt": "2024-04-03T12:00:00.000Z"
+        name: "Semester 3",
+        number: 3,
+        collegeId: "6173b3a38eae680022000001",
+        createdAt: "2024-04-03T12:00:00.000Z",
+        updatedAt: "2024-04-03T12:00:00.000Z",
     },
     {
-        "name": "Semester 4",
-        "number": 4,
-        "collegeId": "6173b3a38eae680022000001",
-        "createdAt": "2024-04-03T12:00:00.000Z",
-        "updatedAt": "2024-04-03T12:00:00.000Z"
+        name: "Semester 4",
+        number: 4,
+        collegeId: "6173b3a38eae680022000001",
+        createdAt: "2024-04-03T12:00:00.000Z",
+        updatedAt: "2024-04-03T12:00:00.000Z",
     },
     {
-        "name": "Semester 5",
-        "number": 5,
-        "collegeId": "6173b3a38eae680022000001",
-        "createdAt": "2024-04-03T12:00:00.000Z",
-        "updatedAt": "2024-04-03T12:00:00.000Z"
-    }
+        name: "Semester 5",
+        number: 5,
+        collegeId: "6173b3a38eae680022000001",
+        createdAt: "2024-04-03T12:00:00.000Z",
+        updatedAt: "2024-04-03T12:00:00.000Z",
+    },
 ];
 
 const programs = [
@@ -174,85 +175,374 @@ const programs = [
 
 const batches = [
     {
-        name: "2025",
-        program: "B. Tech Computer Science & Engineering"
+        name: "Batch A",
+        department: "Computer Science",
+        program: "B.Tech",
+        startDate: "2022-09-01",
+        endDate: "2023-06-30",
     },
     {
-        name: "2024",
-        program: "B. Tech Computer Science & Engineering"
+        name: "Batch B",
+        department: "Electrical Engineering",
+        program: "M.Tech",
+        startDate: "2021-08-15",
+        endDate: "2022-05-31",
     },
     {
-        name: "2025",
-        program: "B. Tech Mechanical Engineering"
+        name: "Batch C",
+        department: "Mechanical Engineering",
+        program: "Ph.D.",
+        startDate: "2023-01-01",
+        endDate: "2025-12-31",
     },
     {
-        name: "2024",
-        program: "B. Tech Mechanical Engineering"
+        name: "Batch D",
+        department: "Civil Engineering",
+        program: "B.Arch",
+        startDate: "2022-03-10",
+        endDate: "2027-02-28",
     },
     {
-        name: "2025",
-        program: "B. Tech Electrical Engineering"
+        name: "Batch E",
+        department: "Chemical Engineering",
+        program: "M.Sc",
+        startDate: "2021-11-20",
+        endDate: "2023-10-31",
     },
     {
-        name: "2024",
-        program: "B. Tech Electrical Engineering"
+        name: "Batch F",
+        department: "Electronics and Communication",
+        program: "B.Tech",
+        startDate: "2023-07-01",
+        endDate: "2027-04-30",
     },
     {
-        name: "2025",
-        program: "B. Tech Civil Engineering"
+        name: "Batch G",
+        department: "Computer Science",
+        program: "M.Tech",
+        startDate: "2022-05-01",
+        endDate: "2023-12-31",
     },
     {
-        name: "2024",
-        program: "B. Tech Civil Engineering"
+        name: "Batch H",
+        department: "Electrical Engineering",
+        program: "B.Tech",
+        startDate: "2021-09-05",
+        endDate: "2025-08-31",
     },
     {
-        name: "2025",
-        program: "B. Tech Information Technology"
+        name: "Batch I",
+        department: "Mechanical Engineering",
+        program: "Ph.D.",
+        startDate: "2022-02-15",
+        endDate: "2024-12-31",
     },
     {
-        name: "2024",
-        program: "B. Tech Information Technology"
-    },
-    {
-        name: "2025",
-        program: "B. Tech Electronics & Communication Engineering"
-    },
-    {
-        name: "2024",
-        program: "B. Tech Electronics & Communication Engineering"
-    },
-    {
-        name: "2025",
-        program: "B. Tech Chemical Engineering"
-    },
-    {
-        name: "2024",
-        program: "B. Tech Chemical Engineering"
-    },
-    {
-        name: "2025",
-        program: "B. Tech Aerospace Engineering"
-    },
-    {
-        name: "2024",
-        program: "B. Tech Aerospace Engineering"
-    },
-    {
-        name: "2025",
-        program: "B. Tech Biotechnology"
-    },
-    {
-        name: "2024",
-        program: "B. Tech Biotechnology"
-    },
-    {
-        name: "2025",
-        program: "B. Tech Artificial Intelligence & Data Science"
-    },
-    {
-        name: "2024",
-        program: "B. Tech Artificial Intelligence & Data Science"
+        name: "Batch J",
+        department: "Civil Engineering",
+        program: "M.Tech",
+        startDate: "2021-12-01",
+        endDate: "2023-11-30",
     },
 ];
 
-export { departments, semesters, programs, batches };
+const courses = [
+    {
+        name: "Computer Science",
+        courseCode: "CS101",
+        programId: "61550b8741e0a341cc370e61",
+        semesterId: "61550b8741e0a341cc370e62",
+        collegeId: "61550b8741e0a341cc370e63",
+        faculties: ["61550b8741e0a341cc370e64", "61550b8741e0a341cc370e65"],
+        createdBy: "61550b8741e0a341cc370e66",
+    },
+    {
+        name: "Electrical Engineering",
+        courseCode: "EE101",
+        programId: "61550b8741e0a341cc370e61",
+        semesterId: "61550b8741e0a341cc370e62",
+        collegeId: "61550b8741e0a341cc370e63",
+        faculties: ["61550b8741e0a341cc370e67", "61550b8741e0a341cc370e68"],
+        createdBy: "61550b8741e0a341cc370e69",
+    },
+    {
+        name: "Mechanical Engineering",
+        courseCode: "ME101",
+        programId: "61550b8741e0a341cc370e61",
+        semesterId: "61550b8741e0a341cc370e62",
+        collegeId: "61550b8741e0a341cc370e63",
+        faculties: ["61550b8741e0a341cc370e6a", "61550b8741e0a341cc370e6b"],
+        createdBy: "61550b8741e0a341cc370e6c",
+    },
+    {
+        name: "Civil Engineering",
+        courseCode: "CE101",
+        programId: "61550b8741e0a341cc370e61",
+        semesterId: "61550b8741e0a341cc370e62",
+        collegeId: "61550b8741e0a341cc370e63",
+        faculties: ["61550b8741e0a341cc370e6d", "61550b8741e0a341cc370e6e"],
+        createdBy: "61550b8741e0a341cc370e6f",
+    },
+    {
+        name: "Mathematics",
+        courseCode: "MA101",
+        programId: "61550b8741e0a341cc370e70",
+        semesterId: "61550b8741e0a341cc370e71",
+        collegeId: "61550b8741e0a341cc370e72",
+        faculties: ["61550b8741e0a341cc370e73", "61550b8741e0a341cc370e74"],
+        createdBy: "61550b8741e0a341cc370e75",
+    },
+    {
+        name: "Physics",
+        courseCode: "PH101",
+        programId: "61550b8741e0a341cc370e70",
+        semesterId: "61550b8741e0a341cc370e71",
+        collegeId: "61550b8741e0a341cc370e72",
+        faculties: ["61550b8741e0a341cc370e76", "61550b8741e0a341cc370e77"],
+        createdBy: "61550b8741e0a341cc370e78",
+    },
+    {
+        name: "Chemistry",
+        courseCode: "CH101",
+        programId: "61550b8741e0a341cc370e70",
+        semesterId: "61550b8741e0a341cc370e71",
+        collegeId: "61550b8741e0a341cc370e72",
+        faculties: ["61550b8741e0a341cc370e79", "61550b8741e0a341cc370e7a"],
+        createdBy: "61550b8741e0a341cc370e7b",
+    },
+    {
+        name: "Biology",
+        courseCode: "BI101",
+        programId: "61550b8741e0a341cc370e70",
+        semesterId: "61550b8741e0a341cc370e71",
+        collegeId: "61550b8741e0a341cc370e72",
+        faculties: ["61550b8741e0a341cc370e7c", "61550b8741e0a341cc370e7d"],
+        createdBy: "61550b8741e0a341cc370e7e",
+    },
+    {
+        name: "History",
+        courseCode: "HI101",
+        programId: "61550b8741e0a341cc370e7f",
+        semesterId: "61550b8741e0a341cc370e80",
+        collegeId: "61550b8741e0a341cc370e81",
+        faculties: ["61550b8741e0a341cc370e82", "61550b8741e0a341cc370e83"],
+        createdBy: "61550b8741e0a341cc370e84",
+    },
+    {
+        name: "Geography",
+        courseCode: "GE101",
+        programId: "61550b8741e0a341cc370e7f",
+        semesterId: "61550b8741e0a341cc370e80",
+        collegeId: "61550b8741e0a341cc370e81",
+        faculties: ["61550b8741e0a341cc370e85", "61550b8741e0a341cc370e86"],
+        createdBy: "61550b8741e0a341cc370e87",
+    },
+];
+
+const faculties = [
+    {
+        name: "John Doe",
+        email: "john.doe@example.com",
+        title: "Professor",
+        deptId: "613fc8f4e363996d1b2c5e0d",
+        role: "teacher",
+        collegeId: "613fc8f4e363996d1b2c5e0e",
+        userId: "613fc8f4e363996d1b2c5e0f",
+    },
+    {
+        name: "Jane Smith",
+        email: "jane.smith@example.com",
+        title: "Associate Professor",
+        deptId: "613fc8f4e363996d1b2c5e0d",
+        role: "teacher",
+        collegeId: "613fc8f4e363996d1b2c5e0e",
+        userId: "613fc8f4e363996d1b2c5e10",
+    },
+    {
+        name: "Alice Johnson",
+        email: "alice.johnson@example.com",
+        title: "Assistant Professor",
+        deptId: "613fc8f4e363996d1b2c5e0d",
+        role: "teacher",
+        collegeId: "613fc8f4e363996d1b2c5e0e",
+        userId: "613fc8f4e363996d1b2c5e11",
+    },
+    {
+        name: "Bob Brown",
+        email: "bob.brown@example.com",
+        title: "Lecturer",
+        deptId: "613fc8f4e363996d1b2c5e0d",
+        role: "teacher",
+        collegeId: "613fc8f4e363996d1b2c5e0e",
+        userId: "613fc8f4e363996d1b2c5e12",
+    },
+    {
+        name: "Eve Williams",
+        email: "eve.williams@example.com",
+        title: "Professor",
+        deptId: "613fc8f4e363996d1b2c5e0d",
+        role: "teacher",
+        collegeId: "613fc8f4e363996d1b2c5e0e",
+        userId: "613fc8f4e363996d1b2c5e13",
+    },
+    {
+        name: "Michael Davis",
+        email: "michael.davis@example.com",
+        title: "Professor",
+        deptId: "613fc8f4e363996d1b2c5e0d",
+        role: "hod",
+        collegeId: "613fc8f4e363996d1b2c5e0e",
+        userId: "613fc8f4e363996d1b2c5e14",
+    },
+    {
+        name: "Sarah Wilson",
+        email: "sarah.wilson@example.com",
+        title: "Associate Professor",
+        deptId: "613fc8f4e363996d1b2c5e0d",
+        role: "hod",
+        collegeId: "613fc8f4e363996d1b2c5e0e",
+        userId: "613fc8f4e363996d1b2c5e15",
+    },
+    {
+        name: "David Martinez",
+        email: "david.martinez@example.com",
+        title: "Professor",
+        deptId: "613fc8f4e363996d1b2c5e0d",
+        role: "hod",
+        collegeId: "613fc8f4e363996d1b2c5e0e",
+        userId: "613fc8f4e363996d1b2c5e16",
+    },
+    {
+        name: "Linda Lee",
+        email: "linda.lee@example.com",
+        title: "Professor",
+        deptId: "613fc8f4e363996d1b2c5e0d",
+        role: "tutor",
+        collegeId: "613fc8f4e363996d1b2c5e0e",
+        userId: "613fc8f4e363996d1b2c5e17",
+    },
+    {
+        name: "Steven Garcia",
+        email: "steven.garcia@example.com",
+        title: "Assistant Professor",
+        deptId: "613fc8f4e363996d1b2c5e0d",
+        role: "tutor",
+        collegeId: "613fc8f4e363996d1b2c5e0e",
+        userId: "613fc8f4e363996d1b2c5e18",
+    },
+];
+
+const feedbacks = [
+    {
+        title: "Course Feedback Survey 1",
+        description: "Please provide feedback on the course.",
+        course: "Industrial Economics",
+        questions: [
+            "How satisfied are you with the course material?",
+            "Did the course meet your expectations?",
+            "Would you recommend this course to others?",
+        ],
+        createdby: "John Doe",
+    },
+    {
+        title: "Course Feedback Survey 2",
+        description: "Your feedback is important to us.",
+        course: "Compiler Design",
+        questions: [
+            "Were the lectures engaging and informative?",
+            "How useful were the assignments and projects?",
+            "Any suggestions for improving the course?",
+        ],
+        createdby: "Jane Smith",
+    },
+    {
+        title: "Semester Feedback Survey 1",
+        description: "Please share your thoughts on the semester.",
+        course: "Computer Science",
+        questions: [
+            "How would you rate the overall organization of the semester?",
+            "Were the exams fair and reflective of the course material?",
+            "Any specific areas of improvement for the next semester?",
+        ],
+        createdby: "Alice Johnson",
+    },
+    {
+        title: "Workshop Feedback Survey 1",
+        description: "Feedback helps us improve. Thank you for participating!",
+        course: "Web Development",
+        questions: [
+            "Did the workshop meet your expectations?",
+            "What was the most valuable takeaway from the workshop?",
+            "Any suggestions for future workshops?",
+        ],
+        createdby: "Bob Brown",
+    },
+    {
+        title: "Training Feedback Survey 1",
+        description: "Your feedback will help us enhance our training programs.",
+        course: "Software Testing",
+        questions: [
+            "How satisfied were you with the training content?",
+            "Did the training meet your learning objectives?",
+            "Any additional comments or suggestions?",
+        ],
+        createdby: "Eve Williams",
+    },
+    {
+        title: "Event Feedback Survey 1",
+        description: "We hope you enjoyed the event. Please share your feedback.",
+        course: "Networking",
+        questions: [
+            "Did the event meet your expectations?",
+            "What was the highlight of the event for you?",
+            "How likely are you to attend similar events in the future?",
+        ],
+        createdby: "Michael Davis",
+    },
+    {
+        title: "Guest Lecture Feedback Survey 1",
+        description: "Your feedback is valuable. Please take a moment to share your thoughts.",
+        course: "Artificial Intelligence",
+        questions: [
+            "How informative was the guest lecture?",
+            "Did the lecture enhance your understanding of the topic?",
+            "Any suggestions for future guest lectures?",
+        ],
+        createdby: "Sarah Wilson",
+    },
+    {
+        title: "Project Presentation Feedback Survey 1",
+        description: "Please provide feedback on the project presentations.",
+        course: "Database Management",
+        questions: [
+            "How well did the presentations demonstrate understanding of the subject?",
+            "Were the presentations engaging and well-organized?",
+            "Any suggestions for improving future project presentations?",
+        ],
+        createdby: "David Martinez",
+    },
+    {
+        title: "Faculty Evaluation Survey 1",
+        description: "Your feedback helps us evaluate our faculty.",
+        course: "Programming Languages",
+        questions: [
+            "How would you rate the teaching effectiveness of the faculty?",
+            "Were the faculty members approachable and helpful?",
+            "Any specific feedback for individual faculty members?",
+        ],
+        createdby: "Linda Lee",
+    },
+    {
+        title: "Course Material Feedback Survey 1",
+        description: "Feedback on course material is important for us. Please share your thoughts.",
+        course: "Data Structures",
+        questions: [
+            "How relevant and up-to-date was the course material?",
+            "Were the learning resources adequate for understanding the concepts?",
+            "Any additional resources you would have liked to see?",
+        ],
+        createdby: "Steven Garcia",
+    },
+];
+
+export { departments, semesters, programs, batches, courses, faculties, feedbacks };

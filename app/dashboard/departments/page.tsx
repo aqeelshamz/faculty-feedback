@@ -39,8 +39,9 @@ import { Edit, Trash } from "lucide-react";
 import { useState } from "react";
 import { Textarea } from "@/components/ui/textarea";
 
+import { departments } from "@/lib/data";
+
 export default function Page() {
-    const faculties = useFacultyStore((state) => state.faculties);
     const role = useUserStore((state) => state.role);
     const [search, setSearch] = useState("");
 
@@ -104,30 +105,28 @@ export default function Page() {
                             <TableHeader>
                                 <TableRow>
                                     <TableHead>Name</TableHead>
-                                    <TableHead>Email</TableHead>
-                                    <TableHead>Title</TableHead>
-                                    <TableHead>Role</TableHead>
+                                    <TableHead>Vision</TableHead>
+                                    <TableHead>Mission</TableHead>
                                     <TableHead>Edit</TableHead>
                                     <TableHead>Delete</TableHead>
                                 </TableRow>
                             </TableHeader>
                             <TableBody>
-                                {faculties.map((faculty, index: number) =>
-                                    !faculty.name
+                                {departments.map((department, index: number) =>
+                                    !department.name
                                         .toString()
                                         .toLowerCase()
                                         .includes(search.toLowerCase()) &&
-                                    !faculty.title
+                                    !department.createdBy
                                         .toString()
                                         .toLowerCase()
                                         .includes(search.toLowerCase()) ? (
                                         ""
                                     ) : (
                                         <TableRow key={index}>
-                                            <TableCell>{faculty.name}</TableCell>
-                                            <TableCell>{faculty.email}</TableCell>
-                                            <TableCell>{faculty.title}</TableCell>
-                                            <TableCell>{faculty.role}</TableCell>
+                                            <TableCell>{department.name}</TableCell>
+                                            <TableCell>{department.vision}</TableCell>
+                                            <TableCell>{department.mission}</TableCell>
                                             <TableCell>
                                                 <Button variant={"outline"} size={"icon"}>
                                                     <Edit />

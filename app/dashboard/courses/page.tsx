@@ -37,11 +37,10 @@ import {
 import { useFacultyStore, useUserStore } from "@/store";
 import { Edit, Trash } from "lucide-react";
 import { useState } from "react";
-import { programs, semesters } from "@/lib/data";
+import { courses, faculties } from "@/lib/data";
 import { Checkbox } from "@/components/ui/checkbox";
 
 export default function Page() {
-    const faculties = useFacultyStore((state) => state.faculties);
     const role = useUserStore((state) => state.role);
     const [search, setSearch] = useState("");
 
@@ -74,7 +73,7 @@ export default function Page() {
                                         <Input className="col-span-3" type="text" />
                                     </div>
                                     <div className="grid grid-cols-4 items-center gap-4">
-                                        <Label htmlFor="semester" className="text-right">
+                                        <Label htmlFor="course" className="text-right">
                                             Semester
                                         </Label>
                                         <Select>
@@ -84,18 +83,16 @@ export default function Page() {
                                             <SelectContent>
                                                 <SelectGroup>
                                                     <SelectLabel>Semesters</SelectLabel>
-                                                    {semesters?.map(
-                                                        (semester: any, index: number) => {
-                                                            return (
-                                                                <SelectItem
-                                                                    key={index}
-                                                                    value={semester?.name}
-                                                                >
-                                                                    {semester?.name}
-                                                                </SelectItem>
-                                                            );
-                                                        },
-                                                    )}
+                                                    {courses?.map((course: any, index: number) => {
+                                                        return (
+                                                            <SelectItem
+                                                                key={index}
+                                                                value={course?.name}
+                                                            >
+                                                                {course?.name}
+                                                            </SelectItem>
+                                                        );
+                                                    })}
                                                 </SelectGroup>
                                             </SelectContent>
                                         </Select>
@@ -104,19 +101,22 @@ export default function Page() {
                                         <Label htmlFor="name" className="text-right">
                                             Faculties
                                         </Label>
-                                        {
-                                            programs.map((program, index) => {
-                                                return <div className="flex items-center space-x-2 my-4" key={index}>
-                                                    <Checkbox id={program + index.toString()} />
+                                        {faculties.map((faculty, index) => {
+                                            return (
+                                                <div
+                                                    className="flex items-center space-x-2 my-4"
+                                                    key={index}
+                                                >
+                                                    <Checkbox id={faculty + index.toString()} />
                                                     <label
-                                                        htmlFor={program + index.toString()}
+                                                        htmlFor={faculty + index.toString()}
                                                         className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
                                                     >
-                                                        {program.hod}
+                                                        {faculty.name}
                                                     </label>
                                                 </div>
-                                            })
-                                        }
+                                            );
+                                        })}
                                     </div>
                                 </div>
                                 <SheetFooter>
@@ -144,30 +144,26 @@ export default function Page() {
                             <TableHeader>
                                 <TableRow>
                                     <TableHead>Name</TableHead>
-                                    <TableHead>Email</TableHead>
-                                    <TableHead>Title</TableHead>
-                                    <TableHead>Role</TableHead>
+                                    <TableHead>Course Code</TableHead>
                                     <TableHead>Edit</TableHead>
                                     <TableHead>Delete</TableHead>
                                 </TableRow>
                             </TableHeader>
                             <TableBody>
-                                {faculties.map((faculty, index: number) =>
-                                    !faculty.name
+                                {courses.map((course, index: number) =>
+                                    !course.name
                                         .toString()
                                         .toLowerCase()
                                         .includes(search.toLowerCase()) &&
-                                        !faculty.title
-                                            .toString()
-                                            .toLowerCase()
-                                            .includes(search.toLowerCase()) ? (
+                                    !course.courseCode
+                                        .toString()
+                                        .toLowerCase()
+                                        .includes(search.toLowerCase()) ? (
                                         ""
                                     ) : (
                                         <TableRow key={index}>
-                                            <TableCell>{faculty.name}</TableCell>
-                                            <TableCell>{faculty.email}</TableCell>
-                                            <TableCell>{faculty.title}</TableCell>
-                                            <TableCell>{faculty.role}</TableCell>
+                                            <TableCell>{course.name}</TableCell>
+                                            <TableCell>{course.courseCode}</TableCell>
                                             <TableCell>
                                                 <Button variant={"outline"} size={"icon"}>
                                                     <Edit />

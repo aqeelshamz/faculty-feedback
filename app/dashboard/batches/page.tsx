@@ -23,7 +23,7 @@ import {
     SheetTrigger,
 } from "@/components/ui/sheet";
 import { LuFilter } from "react-icons/lu";
-import { format } from "date-fns"
+import { format } from "date-fns";
 
 import {
     Table,
@@ -37,24 +37,24 @@ import {
 } from "@/components/ui/table";
 import { useFacultyStore, useUserStore } from "@/store";
 import { useRouter } from "next/navigation";
-import { departments, programs } from "@/lib/data";
+import { batches, departments, programs } from "@/lib/data";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { cn } from "@/lib/utils";
-import { CalendarIcon } from "lucide-react";
+import { CalendarIcon, Edit, Trash } from "lucide-react";
 import { Calendar } from "@/components/ui/calendar";
 import { useState } from "react";
 
 export default function Page() {
     const faculties = useFacultyStore((state) => state.faculties);
     const role = useUserStore((state) => state.role);
-    const [startDate, setStartDate] = useState<Date>()
-    const [endDate, setEndDate] = useState<Date>()
+    const [startDate, setStartDate] = useState<Date>();
+    const [endDate, setEndDate] = useState<Date>();
     const [search, setSearch] = useState("");
 
     return (
         <>
             {role == "admin" ? (
-                <div className="w-full h-full p-7">
+                <div className="w-full h-screen p-7 overflow-y-auto">
                     <p className="font-semibold text-2xl mb-4">Batches</p>
                     <div className="flex justify-between">
                         <Sheet>
@@ -137,11 +137,15 @@ export default function Page() {
                                                     variant={"outline"}
                                                     className={cn(
                                                         "col-span-3 justify-start text-left font-normal",
-                                                        !startDate && "text-muted-foreground"
+                                                        !startDate && "text-muted-foreground",
                                                     )}
                                                 >
                                                     <CalendarIcon className="mr-2 h-4 w-4" />
-                                                    {startDate ? format(startDate, "PPP") : <span>Pick a date</span>}
+                                                    {startDate ? (
+                                                        format(startDate, "PPP")
+                                                    ) : (
+                                                        <span>Pick a date</span>
+                                                    )}
                                                 </Button>
                                             </PopoverTrigger>
                                             <PopoverContent className="w-auto p-0">
@@ -164,11 +168,15 @@ export default function Page() {
                                                     variant={"outline"}
                                                     className={cn(
                                                         "col-span-3 justify-start text-left font-normal",
-                                                        !endDate && "text-muted-foreground"
+                                                        !endDate && "text-muted-foreground",
                                                     )}
                                                 >
                                                     <CalendarIcon className="mr-2 h-4 w-4" />
-                                                    {endDate ? format(endDate, "PPP") : <span>Pick a date</span>}
+                                                    {endDate ? (
+                                                        format(endDate, "PPP")
+                                                    ) : (
+                                                        <span>Pick a date</span>
+                                                    )}
                                                 </Button>
                                             </PopoverTrigger>
                                             <PopoverContent className="w-auto p-0">
@@ -207,20 +215,45 @@ export default function Page() {
                             <TableHeader>
                                 <TableRow>
                                     <TableHead>Name</TableHead>
-                                    <TableHead>Email</TableHead>
-                                    <TableHead>Title</TableHead>
-                                    <TableHead>Role</TableHead>
+                                    <TableHead>Department</TableHead>
+                                    <TableHead>Program</TableHead>
+                                    <TableHead>Start Date</TableHead>
+                                    <TableHead>End Date</TableHead>
+                                    <TableHead>Edit</TableHead>
+                                    <TableHead>Delete</TableHead>
                                 </TableRow>
                             </TableHeader>
                             <TableBody>
-                                {faculties.map((faculty: any, index: number) => (
-                                    <TableRow key={index}>
-                                        <TableCell>{faculty.name}</TableCell>
-                                        <TableCell>{faculty.email}</TableCell>
-                                        <TableCell>{faculty.title}</TableCell>
-                                        <TableCell>{faculty.role}</TableCell>
-                                    </TableRow>
-                                ))}
+                                {batches.map((batch, index: number) =>
+                                    !batch.name
+                                        .toString()
+                                        .toLowerCase()
+                                        .includes(search.toLowerCase()) &&
+                                    !batch.department
+                                        .toString()
+                                        .toLowerCase()
+                                        .includes(search.toLowerCase()) ? (
+                                        ""
+                                    ) : (
+                                        <TableRow key={index}>
+                                            <TableCell>{batch.name}</TableCell>
+                                            <TableCell>{batch.department}</TableCell>
+                                            <TableCell>{batch.program}</TableCell>
+                                            <TableCell>{batch.startDate}</TableCell>
+                                            <TableCell>{batch.endDate}</TableCell>
+                                            <TableCell>
+                                                <Button variant={"outline"} size={"icon"}>
+                                                    <Edit />
+                                                </Button>
+                                            </TableCell>
+                                            <TableCell>
+                                                <Button variant={"outline"} size={"icon"}>
+                                                    <Trash />
+                                                </Button>
+                                            </TableCell>
+                                        </TableRow>
+                                    ),
+                                )}
                             </TableBody>
                         </Table>
                     </div>
