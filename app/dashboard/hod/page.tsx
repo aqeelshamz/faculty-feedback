@@ -34,17 +34,95 @@ import {
     TableHeader,
     TableRow,
 } from "@/components/ui/table";
-import { useFacultyStore, useUserStore } from "@/store";
+import { useUserStore } from "@/store";
+import { faculties } from "@/lib/data";
 import { Edit, Trash } from "lucide-react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Textarea } from "@/components/ui/textarea";
 import { departments, programs } from "@/lib/data";
 import { Checkbox } from "@/components/ui/checkbox";
+import { serverURL } from "@/lib/utils";
+import axios from "axios";
+import { toast } from "sonner";
 
 export default function Page() {
-    const faculties = useFacultyStore((state) => state.faculties);
     const role = useUserStore((state) => state.role);
     const [search, setSearch] = useState("");
+    {
+        /* const [hods, setHods] = useState<any>([]);
+
+    const createHod = async () => {
+        const config = {
+            method: "POST",
+            url: `${serverURL}/hod/`,
+            headers: {
+                Authorization: `Bearer ${localStorage.getItem("token")}`,
+                "Content-Type": "application/json",
+            },
+            data: {
+                name: name,
+                vision: vision,
+                mission: mission,
+            },
+        };
+
+        axios(config)
+            .then((response) => {
+                toast.success(response.data.message);
+                setName("");
+                setVision("");
+                setMission("");
+                getHods();
+            })
+            .catch((err) => {
+                toast.error(err.response?.data?.message);
+            });
+    };
+
+    const deleteHod = async (id: string) => {
+        const config = {
+            method: "DELETE",
+            url: `${serverURL}/hod/${id}`,
+            headers: {
+                Authorization: `Bearer ${localStorage.getItem("token")}`,
+                "Content-Type": "application/json",
+            },
+        };
+
+        axios(config)
+            .then((response) => {
+                toast(response?.data?.message);
+                getHods();
+            })
+            .catch((err) => {
+                toast.error(err.response?.data?.message);
+            });
+    };
+
+    const getHods = async () => {
+        const config = {
+            method: "GET",
+            url: `${serverURL}/hod/`,
+            headers: {
+                Authorization: `Bearer ${localStorage.getItem("token")}`,
+                "Content-Type": "application/json",
+            },
+        };
+
+        axios(config)
+            .then((response) => {
+                setHods(response?.data?.data);
+            })
+            .catch((err) => {
+                toast.error(err.response?.data?.message);
+            });
+    };
+
+    useEffect(() => {
+        getHods();
+    }, [hods]);
+*/
+    }
 
     return (
         <>

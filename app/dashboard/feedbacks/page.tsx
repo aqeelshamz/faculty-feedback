@@ -34,39 +34,38 @@ import {
     TableHeader,
     TableRow,
 } from "@/components/ui/table";
-import { useFacultyStore, useUserStore } from "@/store";
-import { Edit, Trash } from "lucide-react";
+import { useUserStore } from "@/store";
 import { useEffect, useState } from "react";
 import { serverURL } from "@/lib/utils";
 import axios from "axios";
 import { toast } from "sonner";
 
 export default function Page() {
-    const faculties = useFacultyStore((state) => state.faculties);
     const role = useUserStore((state) => state.role);
     const [search, setSearch] = useState("");
     const [feedbacks, setFeedbacks] = useState<any>([]);
 
-    useEffect(() => {
-        const fetchData = async () => {
-            const config = {
-                method: "GET",
-                url: `${serverURL}/feedback/`,
-                headers: {
-                    Authorization: `Bearer ${localStorage.getItem("token")}`,
-                    "Content-Type": "application/json",
-                },
-            };
-
-            axios(config)
-                .then((response) => {
-                    setFeedbacks(response?.data?.data);
-                })
-                .catch((err) => {
-                    toast.error(err.response?.data?.message);
-                });
+    const getFeedbacks = async () => {
+        const config = {
+            method: "GET",
+            url: `${serverURL}/feedback/`,
+            headers: {
+                Authorization: `Bearer ${localStorage.getItem("token")}`,
+                "Content-Type": "application/json",
+            },
         };
-        fetchData();
+
+        axios(config)
+            .then((response) => {
+                setFeedbacks(response?.data?.data);
+            })
+            .catch((err) => {
+                toast.error(err.response?.data?.message);
+            });
+    };
+
+    useEffect(() => {
+        getFeedbacks();
     }, [feedbacks]);
 
     return (

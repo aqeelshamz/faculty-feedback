@@ -1,6 +1,6 @@
 "use client";
 
-import { Button } from "@/components/ui/button";
+import { Button, buttonVariants } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import {
@@ -22,7 +22,17 @@ import {
     SheetTitle,
     SheetTrigger,
 } from "@/components/ui/sheet";
-
+import {
+    AlertDialog,
+    AlertDialogAction,
+    AlertDialogCancel,
+    AlertDialogContent,
+    AlertDialogDescription,
+    AlertDialogFooter,
+    AlertDialogHeader,
+    AlertDialogTitle,
+    AlertDialogTrigger,
+} from "@/components/ui/alert-dialog";
 import {
     Table,
     TableBody,
@@ -33,13 +43,90 @@ import {
     TableHeader,
     TableRow,
 } from "@/components/ui/table";
-import { batches } from "@/lib/data";
-import { useStudentStore, useUserStore } from "@/store";
+import { cn, serverURL } from "@/lib/utils";
+import { useUserStore } from "@/store";
+import axios from "axios";
+import { useEffect, useState } from "react";
 import { LuFilter } from "react-icons/lu";
+import { toast } from "sonner";
+import { Edit, Trash } from "lucide-react";
 
 export default function Page() {
-    const students = useStudentStore((state) => state.students);
     const role = useUserStore((state) => state.role);
+    const [students, setStudents] = useState<any>([]);
+    const [batches, setBatches] = useState<any>([]);
+
+    const [name, setName] = useState("");
+    const [email, seEmail] = useState("");
+    const [password, setPassword] = useState("");
+    const [admNo, setAdmNo] = useState("");
+    const [rollNo, setRollNo] = useState("");
+    const [address, setAddress] = useState("");
+    const [phone, setPhone] = useState("");
+    const [batch, setBatch] = useState("");
+
+    const getStudents = async () => {
+        const config = {
+            method: "GET",
+            url: `${serverURL}/student/`,
+            headers: {
+                Authorization: `Bearer ${localStorage.getItem("token")}`,
+                "Content-Type": "application/json",
+            },
+        };
+
+        axios(config)
+            .then((response) => {
+                setStudents(response?.data?.data);
+            })
+            .catch((err) => {
+                toast.error(err.response?.data?.message);
+            });
+    };
+
+    const getBatches = async () => {
+        const config = {
+            method: "GET",
+            url: `${serverURL}/batch/`,
+            headers: {
+                Authorization: `Bearer ${localStorage.getItem("token")}`,
+                "Content-Type": "application/json",
+            },
+        };
+
+        axios(config)
+            .then((response) => {
+                setBatches(response?.data?.data);
+            })
+            .catch((err) => {
+                toast.error(err.response?.data?.message);
+            });
+    };
+
+    const deleteStudent = async (id: string) => {
+        const config = {
+            method: "DELETE",
+            url: `${serverURL}/student/${id}`,
+            headers: {
+                Authorization: `Bearer ${localStorage.getItem("token")}`,
+                "Content-Type": "application/json",
+            },
+        };
+
+        axios(config)
+            .then((response) => {
+                toast(response?.data?.message);
+                getStudents();
+            })
+            .catch((err) => {
+                toast.error(err.response?.data?.message);
+            });
+    };
+
+    useEffect(() => {
+        getStudents();
+        getBatches();
+    }, [students, batches]);
 
     return (
         <>
@@ -145,7 +232,7 @@ export default function Page() {
                     </div>
                     <div className="m-10">
                         <Table>
-                            <TableCaption>A list of students.</TableCaption>
+                            <TableCaption>{students.length} students</TableCaption>
                             <TableHeader>
                                 <TableRow>
                                     <TableHead className="w-[100px]">Adm. No.</TableHead>
@@ -154,10 +241,12 @@ export default function Page() {
                                     <TableHead>Phone</TableHead>
                                     <TableHead>Address</TableHead>
                                     <TableHead>BatchId</TableHead>
+                                    <TableHead>Edit</TableHead>
+                                    <TableHead>Delete</TableHead>
                                 </TableRow>
                             </TableHeader>
                             <TableBody>
-                                {students.map((student, index: number) => (
+                                {students.map((student: any, index: number) => (
                                     <TableRow key={index}>
                                         <TableCell>{student.admNo}</TableCell>
                                         <TableCell>{student.name}</TableCell>
@@ -165,6 +254,49 @@ export default function Page() {
                                         <TableCell>{student.phone}</TableCell>
                                         <TableCell>{student.address}</TableCell>
                                         <TableCell>{student.batchId}</TableCell>
+                                        <TableCell>
+                                            <Button variant={"outline"} size={"icon"}>
+                                                <Edit />
+                                            </Button>
+                                        </TableCell>
+                                        <TableCell>
+                                            <AlertDialog>
+                                                <AlertDialogTrigger asChild>
+                                                    <Button variant={"outline"} size={"icon"}>
+                                                        <Trash />
+                                                    </Button>
+                                                </AlertDialogTrigger>
+                                                <AlertDialogContent>
+                                                    <AlertDialogHeader>
+                                                        <AlertDialogTitle>
+                                                            Delete {student.name} from faculties?
+                                                        </AlertDialogTitle>
+                                                        <AlertDialogDescription>
+                                                            This action cannot be undone. This will
+                                                            permanently delete {student.name} from
+                                                            deparment list.
+                                                        </AlertDialogDescription>
+                                                    </AlertDialogHeader>
+                                                    <AlertDialogFooter>
+                                                        <AlertDialogCancel>
+                                                            Cancel
+                                                        </AlertDialogCancel>
+                                                        <AlertDialogAction
+                                                            className={cn(
+                                                                buttonVariants({
+                                                                    variant: "destructive",
+                                                                }),
+                                                            )}
+                                                            onClick={() =>
+                                                                deleteStudent(student._id)
+                                                            }
+                                                        >
+                                                            Delete
+                                                        </AlertDialogAction>
+                                                    </AlertDialogFooter>
+                                                </AlertDialogContent>
+                                            </AlertDialog>
+                                        </TableCell>
                                     </TableRow>
                                 ))}
                             </TableBody>

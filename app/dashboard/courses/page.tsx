@@ -34,7 +34,7 @@ import {
     TableHeader,
     TableRow,
 } from "@/components/ui/table";
-import { useFacultyStore, useUserStore } from "@/store";
+import { useUserStore } from "@/store";
 import { Edit, Trash } from "lucide-react";
 import { useState } from "react";
 import { courses, faculties } from "@/lib/data";

@@ -34,7 +34,7 @@ import {
     AlertDialogTitle,
     AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
-import { useFacultyStore, useUserStore } from "@/store";
+import { useUserStore } from "@/store";
 import { Edit, Trash } from "lucide-react";
 import { useEffect, useState } from "react";
 import { Textarea } from "@/components/ui/textarea";
@@ -74,6 +74,7 @@ export default function Page() {
                 setName("");
                 setVision("");
                 setMission("");
+                getDepartments();
             })
             .catch((err) => {
                 toast.error(err.response?.data?.message);
@@ -93,6 +94,26 @@ export default function Page() {
         axios(config)
             .then((response) => {
                 toast(response?.data?.message);
+                getDepartments();
+            })
+            .catch((err) => {
+                toast.error(err.response?.data?.message);
+            });
+    };
+
+    const getDepartments = async () => {
+        const config = {
+            method: "GET",
+            url: `${serverURL}/department/`,
+            headers: {
+                Authorization: `Bearer ${localStorage.getItem("token")}`,
+                "Content-Type": "application/json",
+            },
+        };
+
+        axios(config)
+            .then((response) => {
+                setDepartments(response?.data?.data);
             })
             .catch((err) => {
                 toast.error(err.response?.data?.message);
@@ -100,26 +121,7 @@ export default function Page() {
     };
 
     useEffect(() => {
-        const fetchData = async () => {
-            const config = {
-                method: "GET",
-                url: `${serverURL}/department/`,
-                headers: {
-                    Authorization: `Bearer ${localStorage.getItem("token")}`,
-                    "Content-Type": "application/json",
-                },
-            };
-
-            axios(config)
-                .then((response) => {
-                    setDepartments(response?.data?.data);
-                })
-                .catch((err) => {
-                    toast.error(err.response?.data?.message);
-                });
-        };
-
-        fetchData();
+        getDepartments();
     }, [departments]);
 
     return (
@@ -238,13 +240,14 @@ export default function Page() {
                                                         <AlertDialogContent>
                                                             <AlertDialogHeader>
                                                                 <AlertDialogTitle>
-                                                                    Are you absolutely sure?
+                                                                    Delete {department.name} from
+                                                                    faculties?
                                                                 </AlertDialogTitle>
                                                                 <AlertDialogDescription>
                                                                     This action cannot be undone.
-                                                                    This will permanently delete
-                                                                    your account and remove your
-                                                                    data from our servers.
+                                                                    This will permanently delete{" "}
+                                                                    {department.name} from deparment
+                                                                    list.
                                                                 </AlertDialogDescription>
                                                             </AlertDialogHeader>
                                                             <AlertDialogFooter>

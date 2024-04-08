@@ -46,7 +46,7 @@ import {
     AlertDialogTitle,
     AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
-import { useFacultyStore, useUserStore } from "@/store";
+import { useUserStore } from "@/store";
 import { useRouter } from "next/navigation";
 import { departments, programs } from "@/lib/data";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
@@ -78,6 +78,26 @@ export default function Page() {
         axios(config)
             .then((response) => {
                 toast(response?.data?.message);
+                getBatches();
+            })
+            .catch((err) => {
+                toast.error(err.response?.data?.message);
+            });
+    };
+
+    const getBatches = async () => {
+        const config = {
+            method: "GET",
+            url: `${serverURL}/batch/`,
+            headers: {
+                Authorization: `Bearer ${localStorage.getItem("token")}`,
+                "Content-Type": "application/json",
+            },
+        };
+
+        axios(config)
+            .then((response) => {
+                setBatches(response?.data?.data);
             })
             .catch((err) => {
                 toast.error(err.response?.data?.message);
@@ -85,26 +105,7 @@ export default function Page() {
     };
 
     useEffect(() => {
-        const fetchData = async () => {
-            const config = {
-                method: "GET",
-                url: `${serverURL}/batch/`,
-                headers: {
-                    Authorization: `Bearer ${localStorage.getItem("token")}`,
-                    "Content-Type": "application/json",
-                },
-            };
-
-            axios(config)
-                .then((response) => {
-                    setBatches(response?.data?.data);
-                })
-                .catch((err) => {
-                    toast.error(err.response?.data?.message);
-                });
-        };
-
-        fetchData();
+        getBatches();
     }, [batches]);
 
     return (

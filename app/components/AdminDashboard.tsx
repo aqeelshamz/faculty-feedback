@@ -1,6 +1,7 @@
 "use client";
 import { Card, CardContent, CardTitle } from "@/components/ui/card";
-import { useFacultyStore, useProgramStore, useStudentStore, useUserStore } from "@/store";
+import { useUserStore } from "@/store";
+import { programs, faculties, students } from "@/lib/data";
 import {
     BookOpen,
     Building,
@@ -41,9 +42,7 @@ export default function AdminDashboard() {
                         <GraduationCap className="h-6 w-6" />
                     </div>
                     <CardContent>
-                        <p className="text-4xl font-bold">
-                            {useProgramStore((state) => state.programs).length}
-                        </p>
+                        <p className="text-4xl font-bold">{programs.length}</p>
                     </CardContent>
                 </Card>
                 <Card
@@ -55,9 +54,7 @@ export default function AdminDashboard() {
                         <BookOpen className="h-6 w-6" />
                     </div>
                     <CardContent>
-                        <p className="text-4xl font-bold">
-                            {useStudentStore((state) => state.students).length}
-                        </p>
+                        <p className="text-4xl font-bold">{students.length}</p>
                     </CardContent>
                 </Card>
                 <Card
@@ -70,7 +67,7 @@ export default function AdminDashboard() {
                     </div>
                     <CardContent>
                         <p className="text-4xl font-bold">
-                            {useStudentStore((state) => state.students).length}
+                            {students.length}
                         </p>
                     </CardContent>
                 </Card>
@@ -84,7 +81,7 @@ export default function AdminDashboard() {
                     </div>
                     <CardContent>
                         <p className="text-4xl font-bold">
-                            {useStudentStore((state) => state.students).length}
+                             {students.length}
                         </p>
                     </CardContent>
                 </Card>
@@ -98,7 +95,7 @@ export default function AdminDashboard() {
                     </div>
                     <CardContent>
                         <p className="text-4xl font-bold">
-                            {useStudentStore((state) => state.students).length}
+                             {students.length}
                         </p>
                     </CardContent>
                 </Card>
@@ -112,7 +109,7 @@ export default function AdminDashboard() {
                     </div>
                     <CardContent>
                         <p className="text-4xl font-bold">
-                            {useFacultyStore((state) => state.faculties).length}
+                             {faculties.length}
                         </p>
                     </CardContent>
                 </Card>
@@ -126,7 +123,7 @@ export default function AdminDashboard() {
                     </div>
                     <CardContent>
                         <p className="text-4xl font-bold">
-                            {useStudentStore((state) => state.students).length}
+                             {students.length}
                         </p>
                     </CardContent>
                 </Card>

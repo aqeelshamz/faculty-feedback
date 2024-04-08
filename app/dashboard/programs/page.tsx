@@ -1,6 +1,6 @@
 "use client";
 
-import { Button } from "@/components/ui/button";
+import { Button, buttonVariants } from "@/components/ui/button";
 import {
     Command,
     CommandEmpty,
@@ -30,7 +30,17 @@ import {
     SheetTitle,
     SheetTrigger,
 } from "@/components/ui/sheet";
-
+import {
+    AlertDialog,
+    AlertDialogAction,
+    AlertDialogCancel,
+    AlertDialogContent,
+    AlertDialogDescription,
+    AlertDialogFooter,
+    AlertDialogHeader,
+    AlertDialogTitle,
+    AlertDialogTrigger,
+} from "@/components/ui/alert-dialog";
 import {
     Table,
     TableBody,
@@ -41,21 +51,92 @@ import {
     TableHeader,
     TableRow,
 } from "@/components/ui/table";
-import { departments } from "@/lib/data";
-import { cn } from "@/lib/utils";
-import { useProgramStore, useUserStore } from "@/store";
+import { cn, serverURL } from "@/lib/utils";
+import { useUserStore } from "@/store";
+import axios from "axios";
+import { departments, programs } from "@/lib/data";
 import { Check, ChevronsUpDown, Edit, Trash } from "lucide-react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 import { LuFilter } from "react-icons/lu";
+import { toast } from "sonner";
 
 export default function Page() {
-    const programs = useProgramStore((state) => state.programs);
     const role = useUserStore((state) => state.role);
     const [search, setSearch] = useState("");
 
-    const [open, setOpen] = useState(false);
-    const [value, setValue] = useState("");
+    /*  const [programs, setPrograms] = useState<any>([]);
+
+    const createProgram = async () => {
+        const config = {
+            method: "POST",
+            url: `${serverURL}/department/`,
+            headers: {
+                Authorization: `Bearer ${localStorage.getItem("token")}`,
+                "Content-Type": "application/json",
+            },
+            data: {
+                name: name,
+                vision: vision,
+                mission: mission,
+            },
+        };
+
+        axios(config)
+            .then((response) => {
+                toast.success(response.data.message);
+                setName("");
+                setVision("");
+                setMission("");
+                getPrograms();
+            })
+            .catch((err) => {
+                toast.error(err.response?.data?.message);
+            });
+    };*/
+
+    const deleteProgram = async (id: string) => {
+        const config = {
+            method: "DELETE",
+            url: `${serverURL}/department/${id}`,
+            headers: {
+                Authorization: `Bearer ${localStorage.getItem("token")}`,
+                "Content-Type": "application/json",
+            },
+        };
+
+        axios(config)
+            .then((response) => {
+                toast(response?.data?.message);
+                /*getPrograms();*/
+            })
+            .catch((err) => {
+                toast.error(err.response?.data?.message);
+            });
+    };
+
+    /*const getPrograms = async () => {
+        const config = {
+            method: "GET",
+            url: `${serverURL}/department/`,
+            headers: {
+                Authorization: `Bearer ${localStorage.getItem("token")}`,
+                "Content-Type": "application/json",
+            },
+        };
+
+        axios(config)
+            .then((response) => {
+                setPrograms(response?.data?.data);
+            })
+            .catch((err) => {
+                toast.error(err.response?.data?.message);
+            });
+    };
+
+    useEffect(() => {
+        getPrograms();
+    }, [programs]);*/
 
     return (
         <>
@@ -128,7 +209,7 @@ export default function Page() {
                     </div>
                     <div className="m-10">
                         <Table>
-                            <TableCaption>A list of programs.</TableCaption>
+                            <TableCaption>{programs.length} programs</TableCaption>
                             <TableHeader>
                                 <TableRow>
                                     <TableHead>Name</TableHead>
@@ -158,9 +239,43 @@ export default function Page() {
                                                 </Button>
                                             </TableCell>
                                             <TableCell>
-                                                <Button variant={"outline"} size={"icon"}>
-                                                    <Trash />
-                                                </Button>
+                                                <AlertDialog>
+                                                    <AlertDialogTrigger asChild>
+                                                        <Button variant={"outline"} size={"icon"}>
+                                                            <Trash />
+                                                        </Button>
+                                                    </AlertDialogTrigger>
+                                                    <AlertDialogContent>
+                                                        <AlertDialogHeader>
+                                                            <AlertDialogTitle>
+                                                                Delete {program.name} from
+                                                                faculties?
+                                                            </AlertDialogTitle>
+                                                            <AlertDialogDescription>
+                                                                This action cannot be undone. This
+                                                                will permanently delete
+                                                                {program.name} from deparment list.
+                                                            </AlertDialogDescription>
+                                                        </AlertDialogHeader>
+                                                        <AlertDialogFooter>
+                                                            <AlertDialogCancel>
+                                                                Cancel
+                                                            </AlertDialogCancel>
+                                                            <AlertDialogAction
+                                                                className={cn(
+                                                                    buttonVariants({
+                                                                        variant: "destructive",
+                                                                    }),
+                                                                )}
+                                                                onClick={() =>
+                                                                    deleteProgram(program._id)
+                                                                }
+                                                            >
+                                                                Delete
+                                                            </AlertDialogAction>
+                                                        </AlertDialogFooter>
+                                                    </AlertDialogContent>
+                                                </AlertDialog>
                                             </TableCell>
                                         </TableRow>
                                     ),
