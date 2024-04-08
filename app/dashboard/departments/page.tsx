@@ -116,7 +116,7 @@ export default function Page() {
 
             axios(config)
                 .then((response) => {
-                    setDepartments([...departments, response.data]);
+                    setDepartments(response?.data?.data);
                 })
                 .catch((err) => {
                     toast.error(err.response?.data?.message);
@@ -216,7 +216,7 @@ export default function Page() {
                                     </TableHeader>
                                     <TableBody>
                                         {departments &&
-                                            departments.map((department: any, index: number) =>
+                                            departments?.map((department: any, index: number) =>
                                                 !department.name
                                                     .toString()
                                                     .toLowerCase()
