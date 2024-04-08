@@ -13,22 +13,34 @@ import {
     DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
-import { useUserStore } from "@/providers/user-store-provider";
 import { RxRulerSquare } from "react-icons/rx";
-import { usePathname } from "next/navigation";
 import { AdminNav } from "../components/AdminNav";
 import { StudentNav } from "../components/StudentNav";
 import { FacultyNav } from "../components/FacultyNav";
 import NotificationCard from "@/components/notification-card";
-import { UserStoreProvider } from "@/providers/user-store-provider";
+import { useUserStore } from "@/store";
+import { useEffect } from "react";
+import { useRouter } from "next/navigation";
 
 export default function Dashboard({
     children,
 }: Readonly<{
     children: React.ReactNode;
 }>) {
-    const pathname = usePathname();
-    const { role } = useUserStore((state) => state);
+    const router = useRouter();
+    
+    const { role, setRole } = useUserStore((state) => ({
+        role: state.role,
+        setRole: state.setRole,
+    }));
+
+    const logOut = async () => {
+        setRole("");
+        localStorage.clear();
+        router.push("/signin");
+    };
+
+    useEffect(() => {}, [role]);
 
     return (
         <div className="grid h-screen overflow-hidden w-full md:grid-cols-[220px_1fr] lg:grid-cols-[280px_1fr]">
@@ -146,9 +158,7 @@ export default function Dashboard({
                             <DropdownMenuItem>Profile</DropdownMenuItem>
                             {/* <DropdownMenuItem>Support</DropdownMenuItem> */}
                             <DropdownMenuSeparator />
-                            <DropdownMenuItem onClick={useUserStore((state) => state.logOut)}>
-                                Log out
-                            </DropdownMenuItem>
+                            <DropdownMenuItem onClick={logOut}>Log out</DropdownMenuItem>
                         </DropdownMenuContent>
                     </DropdownMenu>
                 </header>
@@ -167,7 +177,7 @@ export default function Dashboard({
                             <Button className="mt-4">Add Product</Button>
                         </div>
                     </div> */}
-                    <UserStoreProvider>{children}</UserStoreProvider>
+                    {children}
                 </main>
             </div>
         </div>

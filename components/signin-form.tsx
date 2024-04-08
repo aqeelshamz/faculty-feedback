@@ -11,28 +11,32 @@ import { Label } from "@/components/ui/label";
 import { useUserStore } from "@/store";
 import axios from "axios";
 import { toast } from "sonner";
+import { produce } from "immer";
+import { useRouter } from "next/navigation";
 interface UserAuthFormProps extends HTMLAttributes<HTMLDivElement> {}
 
 export function SignInForm({ className, ...props }: UserAuthFormProps) {
-    const email = useUserStore((state) => state.email);
-    const password = useUserStore((state) => state.password);
-    const signIn = useUserStore((state) => state.signIn);
-
-    // const signIn = async () => {
-    //     try {
-    //         const response = await axios.post(`${serverURL}/users/login`, { email, password });
-    //         setData(response.data.user.email, response.data.user.role);
-    //         role.setState(response.data.user.role)
-    //         localStorage.setItem("token", response.data.token);
-    //         window.location.href = "/dashboard";
-    //     } catch (err: any) {
-    //         toast.error(err.response?.data?.message);
-    //     }
-    // };
-
+    const router = useRouter();
+    const [email, setEmail] = useState("");
+    const [password, setPassword] = useState("");
     const [showPassword, setShowPassword] = useState(false);
-
     const [isLoading, setIsLoading] = useState<boolean>(false);
+
+    const { role, setRole } = useUserStore((state) => ({
+        role: state.role,
+        setRole: state.setRole,
+    }));
+
+    const signIn = async (email: string, password: string) => {
+        try {
+            const response = await axios.post(`${serverURL}/users/login`, { email, password });
+            setRole(response.data.user.role);
+            localStorage.setItem("token", response.data.token);
+            router.push("/dashboard");
+        } catch (err: any) {
+            toast.error(err.response?.data?.message);
+        }
+    };
 
     async function onSubmit(event: SyntheticEvent) {
         event.preventDefault();
@@ -53,7 +57,7 @@ export function SignInForm({ className, ...props }: UserAuthFormProps) {
                         </Label>
                         <Input
                             value={email}
-                            onChange={(e) => useUserStore.setState({ email: e.target.value })}
+                            onChange={(e) => setEmail(e.target.value)}
                             id="email"
                             placeholder="Email"
                             type="email"
@@ -69,7 +73,7 @@ export function SignInForm({ className, ...props }: UserAuthFormProps) {
                         </Label>
                         <Input
                             value={password}
-                            onChange={(e) => useUserStore.setState({ password: e.target.value })}
+                            onChange={(e) => setPassword(e.target.value)}
                             id="password"
                             name="password"
                             placeholder="Password"

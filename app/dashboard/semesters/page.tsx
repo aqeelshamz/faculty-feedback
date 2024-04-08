@@ -34,7 +34,7 @@ import {
     TableHeader,
     TableRow,
 } from "@/components/ui/table";
-import { useUserStore } from "@/providers/user-store-provider";
+import { useUserStore } from "@/store";
 import { Edit, Trash } from "lucide-react";
 import { useState } from "react";
 import { departments, semesters } from "@/lib/data";

@@ -1,16 +1,9 @@
 import { create } from "zustand";
 import { Key } from "react";
-import axios from "axios";
-import { serverURL } from "./lib/utils";
-import { toast } from "sonner";
 
 type UserStore = {
-    email: string;
-    password: string;
     role: string;
-    logOut: () => void;
-    setData: (email: string, role: string) => void;
-    signIn: (email: string, password: string) => void;
+    setRole: (role: string) => void;
 };
 
 type FeedbackStore = {
@@ -74,26 +67,9 @@ type FacultyStore = {
 };
 
 export const useUserStore = create<UserStore>((set, get) => ({
-    email: "",
-    password: "",
     role: "",
-    logOut: () => {
-        set(() => ({ email: "", password: "", role: "" }));
-        localStorage.clear();
-        window.location.href = "/signin";
-    },
-    setData: (email, role) => {
-        set(() => ({ email: email, role: role }));
-    },
-    signIn: async (email, password) => {
-        try {
-            const response = await axios.post(`${serverURL}/users/login`, { email, password });
-            set(() => ({ email: response.data.user.email, role: response.data.user.role }));
-            localStorage.setItem("token", response.data.token);
-            window.location.href = "/dashboard";
-        } catch (err: any) {
-            toast.error(err.response?.data?.message);
-        }
+    setRole: (role) => {
+        set(() => ({ role: role }));
     },
 }));
 

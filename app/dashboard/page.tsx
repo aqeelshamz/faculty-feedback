@@ -1,17 +1,14 @@
 "use client";
-import { useUserStore } from "@/providers/user-store-provider";
+import { useUserStore } from "@/store";
 import AdminDashboard from "../components/AdminDashboard";
 import FacultyDashboard from "../components/FacultyDashboard";
 import StudentDashboard from "../components/StudentDashboard";
 import { useEffect } from "react";
 
-const roleSelector = (state: any) => state.role;
-
 export default function Page() {
-    const role = useUserStore(roleSelector);
+    const role = useUserStore((state) => state.role);
 
     useEffect(() => {}, [role]);
-
     return (
         <>
             {role == "admin" ? (
