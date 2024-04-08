@@ -21,6 +21,7 @@ import NotificationCard from "@/components/notification-card";
 import { useUserStore } from "@/store";
 import { useEffect } from "react";
 import { useRouter } from "next/navigation";
+import { Toaster } from "sonner";
 
 export default function Dashboard({
     children,
@@ -28,7 +29,7 @@ export default function Dashboard({
     children: React.ReactNode;
 }>) {
     const router = useRouter();
-    
+
     const { role, setRole } = useUserStore((state) => ({
         role: state.role,
         setRole: state.setRole,
@@ -40,7 +41,7 @@ export default function Dashboard({
         router.push("/signin");
     };
 
-    useEffect(() => {}, [role]);
+    useEffect(() => { }, [role]);
 
     return (
         <div className="grid h-screen overflow-hidden w-full md:grid-cols-[220px_1fr] lg:grid-cols-[280px_1fr]">

@@ -1,17 +1,7 @@
 "use client";
-
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import {
-    Select,
-    SelectContent,
-    SelectGroup,
-    SelectItem,
-    SelectLabel,
-    SelectTrigger,
-    SelectValue,
-} from "@/components/ui/select";
 import {
     Sheet,
     SheetClose,
@@ -29,7 +19,6 @@ import {
     TableBody,
     TableCaption,
     TableCell,
-    TableFooter,
     TableHead,
     TableHeader,
     TableRow,
@@ -40,10 +29,43 @@ import { useState } from "react";
 import { Textarea } from "@/components/ui/textarea";
 
 import { departments } from "@/lib/data";
+import axios from "axios";
+import { serverURL } from "@/lib/utils";
+import { Toaster, toast } from "sonner";
 
 export default function Page() {
     const role = useUserStore((state) => state.role);
     const [search, setSearch] = useState("");
+
+    //New Department
+    const [name, setName] = useState("");
+    const [vision, setVision] = useState("");
+    const [mission, setMission] = useState("");
+
+    const createDepartment = async () => {
+        const config = {
+            method: "POST",
+            url: `${serverURL}/department/`,
+            headers: {
+                "Authorization": `Bearer ${localStorage.getItem("token")}`,
+                "Content-Type": "application/json",
+            },
+            data: {
+                name: name,
+                vision: vision,
+                mission: mission,
+            },
+        };
+
+        axios(config).then((response) => {
+            toast.success(response.data.message);
+            setName("");
+            setVision("");
+            setMission("");
+        }).catch((err) => {
+            toast.error(err.response?.data?.message);
+        });
+    };
 
     return (
         <>
@@ -65,24 +87,24 @@ export default function Page() {
                                         <Label htmlFor="name" className="text-right">
                                             Name
                                         </Label>
-                                        <Input className="col-span-3" type="text" />
+                                        <Input className="col-span-3" type="text" value={name} onChange={(e) => setName(e.target.value)} />
                                     </div>
                                     <div className="grid grid-cols-4 items-center gap-4">
                                         <Label htmlFor="email" className="text-right">
                                             Vision
                                         </Label>
-                                        <Textarea className="col-span-3" />
+                                        <Textarea className="col-span-3" value={vision} onChange={(e) => setVision(e.target.value)} />
                                     </div>
                                     <div className="grid grid-cols-4 items-center gap-4">
                                         <Label htmlFor="title" className="text-right">
                                             Mission
                                         </Label>
-                                        <Textarea className="col-span-3" />
+                                        <Textarea className="col-span-3" value={mission} onChange={(e) => setMission(e.target.value)} />
                                     </div>
                                 </div>
                                 <SheetFooter>
                                     <SheetClose asChild>
-                                        <Button type="submit">Add Department</Button>
+                                        <Button type="submit" onClick={createDepartment}>Add Department</Button>
                                     </SheetClose>
                                 </SheetFooter>
                             </SheetContent>
@@ -117,10 +139,10 @@ export default function Page() {
                                         .toString()
                                         .toLowerCase()
                                         .includes(search.toLowerCase()) &&
-                                    !department.createdBy
-                                        .toString()
-                                        .toLowerCase()
-                                        .includes(search.toLowerCase()) ? (
+                                        !department.createdBy
+                                            .toString()
+                                            .toLowerCase()
+                                            .includes(search.toLowerCase()) ? (
                                         ""
                                     ) : (
                                         <TableRow key={index}>
@@ -153,6 +175,7 @@ export default function Page() {
                     </div>
                 </>
             )}
+            <Toaster />
         </>
     );
 }
