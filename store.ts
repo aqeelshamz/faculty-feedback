@@ -69,12 +69,19 @@ type FacultyStore = {
 
 // const myMiddlewares = (f: any) => devtools(persist(f, { name: "userStore" }));
 
-export const useUserStore = create<UserStore>()(devtools(persist((set, get) => ({
-    role: "",
-    setRole: (role) => {
-        set(() => ({ role: role }));
-    },
-}), { name: "userStore" })));
+export const useUserStore = create<UserStore>()(
+    devtools(
+        persist(
+            (set, get) => ({
+                role: "",
+                setRole: (role) => {
+                    set(() => ({ role: role }));
+                },
+            }),
+            { name: "userStore" },
+        ),
+    ),
+);
 
 export const useFeedbackStore = create<FeedbackStore>((set) => ({
     feedbacks: "your feedback",
@@ -83,9 +90,9 @@ export const useFeedbackStore = create<FeedbackStore>((set) => ({
         set({ feedbacks: "my feedback" });
     },
 
-    fetchFeedbacks: () => { },
+    fetchFeedbacks: () => {},
 
-    addFeedback: () => { },
+    addFeedback: () => {},
 }));
 
 export const useProgramStore = create<ProgramStore>((set) => ({
@@ -132,11 +139,11 @@ export const useProgramStore = create<ProgramStore>((set) => ({
         },
     ],
 
-    setPrograms: () => { },
+    setPrograms: () => {},
 
-    fetchPrograms: () => { },
+    fetchPrograms: () => {},
 
-    addProgram: () => { },
+    addProgram: () => {},
 }));
 
 export const useStudentStore = create<StudentStore>((set) => ({
@@ -340,11 +347,11 @@ export const useStudentStore = create<StudentStore>((set) => ({
             userId: "61f103f06d2f3a0012345683",
         },
     ],
-    setStudents: () => { },
+    setStudents: () => {},
 
-    fetchStudents: () => { },
+    fetchStudents: () => {},
 
-    addStudent: () => { },
+    addStudent: () => {},
 }));
 
 export const useFacultyStore = create<FacultyStore>((set) => ({
@@ -441,9 +448,9 @@ export const useFacultyStore = create<FacultyStore>((set) => ({
         },
     ],
 
-    setFaculties: () => { },
+    setFaculties: () => {},
 
-    fetchFaculties: () => { },
+    fetchFaculties: () => {},
 
-    addFaculty: () => { },
+    addFaculty: () => {},
 }));
