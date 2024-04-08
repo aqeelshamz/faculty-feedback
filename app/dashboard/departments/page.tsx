@@ -296,7 +296,7 @@ export default function Page() {
                                                         <AlertDialogContent>
                                                             <AlertDialogHeader>
                                                                 <AlertDialogTitle>
-                                                                    Delete '{department.name}' from
+                                                                    Delete &apos;{department.name}&apos; from
                                                                     departments?
                                                                 </AlertDialogTitle>
                                                                 <AlertDialogDescription>
