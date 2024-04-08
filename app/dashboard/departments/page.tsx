@@ -1,5 +1,5 @@
 "use client";
-import { Button } from "@/components/ui/button";
+import { Button, buttonVariants } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import {
@@ -39,7 +39,7 @@ import { Edit, Trash } from "lucide-react";
 import { useEffect, useState } from "react";
 import { Textarea } from "@/components/ui/textarea";
 import axios from "axios";
-import { serverURL } from "@/lib/utils";
+import { cn, serverURL } from "@/lib/utils";
 import { Toaster, toast } from "sonner";
 
 export default function Page() {
@@ -52,7 +52,6 @@ export default function Page() {
     const [mission, setMission] = useState("");
 
     const [departments, setDepartments] = useState<any>([]);
-    const [loading, setLoading] = useState(true);
 
     const createDepartment = async () => {
         const config = {
@@ -84,13 +83,10 @@ export default function Page() {
     const deleteDepartment = async (id: string) => {
         const config = {
             method: "DELETE",
-            url: `${serverURL}/department/`,
+            url: `${serverURL}/department/${id}`,
             headers: {
                 Authorization: `Bearer ${localStorage.getItem("token")}`,
                 "Content-Type": "application/json",
-            },
-            data: {
-                id: id,
             },
         };
 
@@ -122,9 +118,8 @@ export default function Page() {
                     toast.error(err.response?.data?.message);
                 });
         };
-        setLoading(true);
+
         fetchData();
-        setLoading(false);
     }, [departments]);
 
     return (
@@ -197,104 +192,92 @@ export default function Page() {
                         </div>
                     </div>
                     <div className="m-10">
-                        {loading ? (
-                            <div>
-                                <span className="loading loading-spinner loading-lg"></span>
-                            </div>
-                        ) : (
-                            <>
-                                <Table>
-                                    <TableCaption>A list of departments.</TableCaption>
-                                    <TableHeader>
-                                        <TableRow>
-                                            <TableHead>Name</TableHead>
-                                            <TableHead>Vision</TableHead>
-                                            <TableHead>Mission</TableHead>
-                                            <TableHead>Edit</TableHead>
-                                            <TableHead>Delete</TableHead>
-                                        </TableRow>
-                                    </TableHeader>
-                                    <TableBody>
-                                        {departments &&
-                                            departments?.map((department: any, index: number) =>
-                                                !department.name
-                                                    .toString()
-                                                    .toLowerCase()
-                                                    .includes(search.toLowerCase()) &&
-                                                !department.createdBy
-                                                    ?.toString()
-                                                    .toLowerCase()
-                                                    .includes(search.toLowerCase()) ? (
-                                                    ""
-                                                ) : (
-                                                    <TableRow key={index}>
-                                                        <TableCell>{department.name}</TableCell>
-                                                        <TableCell>{department.vision}</TableCell>
-                                                        <TableCell>{department.mission}</TableCell>
-                                                        <TableCell>
+                        <Table>
+                            <TableCaption>{departments.length} departments.</TableCaption>
+                            <TableHeader>
+                                <TableRow>
+                                    <TableHead>Name</TableHead>
+                                    <TableHead>Vision</TableHead>
+                                    <TableHead>Mission</TableHead>
+                                    <TableHead>Edit</TableHead>
+                                    <TableHead>Delete</TableHead>
+                                </TableRow>
+                            </TableHeader>
+                            <TableBody>
+                                {departments &&
+                                    departments?.map((department: any, index: number) =>
+                                        !department.name
+                                            .toString()
+                                            .toLowerCase()
+                                            .includes(search.toLowerCase()) &&
+                                        !department.createdBy
+                                            ?.toString()
+                                            .toLowerCase()
+                                            .includes(search.toLowerCase()) ? (
+                                            ""
+                                        ) : (
+                                            <TableRow key={index}>
+                                                <TableCell>{department.name}</TableCell>
+                                                <TableCell>{department.vision}</TableCell>
+                                                <TableCell>{department.mission}</TableCell>
+                                                <TableCell>
+                                                    <Button variant={"outline"} size={"icon"}>
+                                                        <Edit />
+                                                    </Button>
+                                                </TableCell>
+                                                <TableCell>
+                                                    <AlertDialog>
+                                                        <AlertDialogTrigger asChild>
                                                             <Button
                                                                 variant={"outline"}
                                                                 size={"icon"}
                                                             >
-                                                                <Edit />
+                                                                <Trash />
                                                             </Button>
-                                                        </TableCell>
-                                                        <TableCell>
-                                                            <AlertDialog>
-                                                                <AlertDialogTrigger asChild>
-                                                                    <Button
-                                                                        variant={"outline"}
-                                                                        size={"icon"}
-                                                                        onClick={() =>
-                                                                            deleteDepartment(
-                                                                                department._id,
-                                                                            )
-                                                                        }
-                                                                    >
-                                                                        <Trash />
-                                                                    </Button>
-                                                                </AlertDialogTrigger>
-                                                                <AlertDialogContent>
-                                                                    <AlertDialogHeader>
-                                                                        <AlertDialogTitle>
-                                                                            Are you absolutely sure?
-                                                                        </AlertDialogTitle>
-                                                                        <AlertDialogDescription>
-                                                                            This action cannot be
-                                                                            undone. This will
-                                                                            permanently delete your
-                                                                            account and remove your
-                                                                            data from our servers.
-                                                                        </AlertDialogDescription>
-                                                                    </AlertDialogHeader>
-                                                                    <AlertDialogFooter>
-                                                                        <AlertDialogCancel>
-                                                                            Cancel
-                                                                        </AlertDialogCancel>
-                                                                        <AlertDialogAction>
-                                                                            Delete
-                                                                        </AlertDialogAction>
-                                                                    </AlertDialogFooter>
-                                                                </AlertDialogContent>
-                                                            </AlertDialog>
-                                                        </TableCell>
-                                                    </TableRow>
-                                                ),
-                                            )}
-                                    </TableBody>
-                                </Table>
-                            </>
-                        )}
+                                                        </AlertDialogTrigger>
+                                                        <AlertDialogContent>
+                                                            <AlertDialogHeader>
+                                                                <AlertDialogTitle>
+                                                                    Are you absolutely sure?
+                                                                </AlertDialogTitle>
+                                                                <AlertDialogDescription>
+                                                                    This action cannot be undone.
+                                                                    This will permanently delete
+                                                                    your account and remove your
+                                                                    data from our servers.
+                                                                </AlertDialogDescription>
+                                                            </AlertDialogHeader>
+                                                            <AlertDialogFooter>
+                                                                <AlertDialogCancel>
+                                                                    Cancel
+                                                                </AlertDialogCancel>
+                                                                <AlertDialogAction
+                                                                    className={cn(
+                                                                        buttonVariants({
+                                                                            variant: "destructive",
+                                                                        }),
+                                                                    )}
+                                                                    onClick={() =>
+                                                                        deleteDepartment(
+                                                                            department._id,
+                                                                        )
+                                                                    }
+                                                                >
+                                                                    Delete
+                                                                </AlertDialogAction>
+                                                            </AlertDialogFooter>
+                                                        </AlertDialogContent>
+                                                    </AlertDialog>
+                                                </TableCell>
+                                            </TableRow>
+                                        ),
+                                    )}
+                            </TableBody>
+                        </Table>
                     </div>
                 </div>
             ) : (
-                <>
-                    <div className="flex justify-center items-center h-full">
-                        <div className="flex justify-center text-2xl font-bold">
-                            <p className="hidden lg:flex">404 Not Found</p>
-                        </div>
-                    </div>
-                </>
+                <></>
             )}
             <Toaster />
         </>

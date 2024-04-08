@@ -9,7 +9,7 @@ import { Toaster } from "sonner";
 export default function Page() {
     const role = useUserStore((state) => state.role);
 
-    useEffect(() => { }, [role]);
+    useEffect(() => {}, [role]);
     return (
         <>
             {role == "admin" ? (

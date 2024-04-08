@@ -120,9 +120,12 @@ export default function Page() {
                                         <Label htmlFor="name" className="text-right">
                                             Programs
                                         </Label>
-                                        {
-                                            programs.map((program, index) => {
-                                                return <div className="flex items-center space-x-2 my-4" key={index}>
+                                        {programs.map((program, index) => {
+                                            return (
+                                                <div
+                                                    className="flex items-center space-x-2 my-4"
+                                                    key={index}
+                                                >
                                                     <Checkbox id={program + index.toString()} />
                                                     <label
                                                         htmlFor={program + index.toString()}
@@ -131,8 +134,8 @@ export default function Page() {
                                                         {program.name}
                                                     </label>
                                                 </div>
-                                            })
-                                        }
+                                            );
+                                        })}
                                     </div>
                                 </div>
                                 <SheetFooter>
@@ -168,10 +171,10 @@ export default function Page() {
                                         .toString()
                                         .toLowerCase()
                                         .includes(search.toLowerCase()) &&
-                                        !faculty.title
-                                            .toString()
-                                            .toLowerCase()
-                                            .includes(search.toLowerCase()) ? (
+                                    !faculty.title
+                                        .toString()
+                                        .toLowerCase()
+                                        .includes(search.toLowerCase()) ? (
                                         ""
                                     ) : (
                                         <TableRow key={index}>
@@ -197,13 +200,7 @@ export default function Page() {
                     </div>
                 </div>
             ) : (
-                <>
-                    <div className="flex justify-center items-center h-full">
-                        <div className="flex justify-center text-2xl font-bold">
-                            <p className="hidden lg:flex">404 Not Found</p>
-                        </div>
-                    </div>
-                </>
+                <></>
             )}
         </>
     );

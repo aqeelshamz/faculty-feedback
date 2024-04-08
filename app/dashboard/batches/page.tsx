@@ -1,6 +1,6 @@
 "use client";
 
-import { Button } from "@/components/ui/button";
+import { Button, buttonVariants } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import {
@@ -35,21 +35,77 @@ import {
     TableHeader,
     TableRow,
 } from "@/components/ui/table";
+import {
+    AlertDialog,
+    AlertDialogAction,
+    AlertDialogCancel,
+    AlertDialogContent,
+    AlertDialogDescription,
+    AlertDialogFooter,
+    AlertDialogHeader,
+    AlertDialogTitle,
+    AlertDialogTrigger,
+} from "@/components/ui/alert-dialog";
 import { useFacultyStore, useUserStore } from "@/store";
 import { useRouter } from "next/navigation";
-import { batches, departments, programs } from "@/lib/data";
+import { departments, programs } from "@/lib/data";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
-import { cn } from "@/lib/utils";
+import { cn, serverURL } from "@/lib/utils";
 import { CalendarIcon, Edit, Trash } from "lucide-react";
 import { Calendar } from "@/components/ui/calendar";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import axios from "axios";
+import { toast } from "sonner";
 
 export default function Page() {
-    const faculties = useFacultyStore((state) => state.faculties);
     const role = useUserStore((state) => state.role);
     const [startDate, setStartDate] = useState<Date>();
     const [endDate, setEndDate] = useState<Date>();
     const [search, setSearch] = useState("");
+
+    const [batches, setBatches] = useState<any>([]);
+
+    const deleteBatch = async (id: string) => {
+        const config = {
+            method: "DELETE",
+            url: `${serverURL}/batch/${id}`,
+            headers: {
+                Authorization: `Bearer ${localStorage.getItem("token")}`,
+                "Content-Type": "application/json",
+            },
+        };
+
+        axios(config)
+            .then((response) => {
+                toast(response?.data?.message);
+            })
+            .catch((err) => {
+                toast.error(err.response?.data?.message);
+            });
+    };
+
+    useEffect(() => {
+        const fetchData = async () => {
+            const config = {
+                method: "GET",
+                url: `${serverURL}/batch/`,
+                headers: {
+                    Authorization: `Bearer ${localStorage.getItem("token")}`,
+                    "Content-Type": "application/json",
+                },
+            };
+
+            axios(config)
+                .then((response) => {
+                    setBatches(response?.data?.data);
+                })
+                .catch((err) => {
+                    toast.error(err.response?.data?.message);
+                });
+        };
+
+        fetchData();
+    }, [batches]);
 
     return (
         <>
@@ -211,7 +267,7 @@ export default function Page() {
                     </div>
                     <div className="m-10">
                         <Table>
-                            <TableCaption>A list of batches.</TableCaption>
+                            <TableCaption>{batches.length} batches</TableCaption>
                             <TableHeader>
                                 <TableRow>
                                     <TableHead>Name</TableHead>
@@ -224,7 +280,7 @@ export default function Page() {
                                 </TableRow>
                             </TableHeader>
                             <TableBody>
-                                {batches.map((batch, index: number) =>
+                                {batches.map((batch: any, index: number) =>
                                     !batch.name
                                         .toString()
                                         .toLowerCase()
@@ -247,9 +303,43 @@ export default function Page() {
                                                 </Button>
                                             </TableCell>
                                             <TableCell>
-                                                <Button variant={"outline"} size={"icon"}>
-                                                    <Trash />
-                                                </Button>
+                                                <AlertDialog>
+                                                    <AlertDialogTrigger asChild>
+                                                        <Button variant={"outline"} size={"icon"}>
+                                                            <Trash />
+                                                        </Button>
+                                                    </AlertDialogTrigger>
+                                                    <AlertDialogContent>
+                                                        <AlertDialogHeader>
+                                                            <AlertDialogTitle>
+                                                                Are you absolutely sure?
+                                                            </AlertDialogTitle>
+                                                            <AlertDialogDescription>
+                                                                This action cannot be undone. This
+                                                                will permanently delete your account
+                                                                and remove your data from our
+                                                                servers.
+                                                            </AlertDialogDescription>
+                                                        </AlertDialogHeader>
+                                                        <AlertDialogFooter>
+                                                            <AlertDialogCancel>
+                                                                Cancel
+                                                            </AlertDialogCancel>
+                                                            <AlertDialogAction
+                                                                className={cn(
+                                                                    buttonVariants({
+                                                                        variant: "destructive",
+                                                                    }),
+                                                                )}
+                                                                onClick={() =>
+                                                                    deleteBatch(batch._id)
+                                                                }
+                                                            >
+                                                                Delete
+                                                            </AlertDialogAction>
+                                                        </AlertDialogFooter>
+                                                    </AlertDialogContent>
+                                                </AlertDialog>
                                             </TableCell>
                                         </TableRow>
                                     ),
@@ -259,13 +349,7 @@ export default function Page() {
                     </div>
                 </div>
             ) : (
-                <>
-                    <div className="flex justify-center items-center h-full">
-                        <div className="flex justify-center text-2xl font-bold">
-                            <p className="hidden lg:flex">404 Not Found</p>
-                        </div>
-                    </div>
-                </>
+                <></>
             )}
         </>
     );

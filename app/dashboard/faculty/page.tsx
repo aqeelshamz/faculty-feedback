@@ -149,10 +149,10 @@ export default function Page() {
                                         .toString()
                                         .toLowerCase()
                                         .includes(search.toLowerCase()) &&
-                                        !faculty.title
-                                            .toString()
-                                            .toLowerCase()
-                                            .includes(search.toLowerCase()) ? (
+                                    !faculty.title
+                                        .toString()
+                                        .toLowerCase()
+                                        .includes(search.toLowerCase()) ? (
                                         ""
                                     ) : (
                                         <TableRow key={index}>
@@ -178,13 +178,7 @@ export default function Page() {
                     </div>
                 </div>
             ) : (
-                <>
-                    <div className="flex justify-center items-center h-full">
-                        <div className="flex justify-center text-2xl font-bold">
-                            <p className="hidden lg:flex">404 Not Found</p>
-                        </div>
-                    </div>
-                </>
+                <></>
             )}
         </>
     );

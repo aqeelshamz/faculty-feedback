@@ -36,13 +36,38 @@ import {
 } from "@/components/ui/table";
 import { useFacultyStore, useUserStore } from "@/store";
 import { Edit, Trash } from "lucide-react";
-import { useState } from "react";
-import { feedbacks } from "@/lib/data";
+import { useEffect, useState } from "react";
+import { serverURL } from "@/lib/utils";
+import axios from "axios";
+import { toast } from "sonner";
 
 export default function Page() {
     const faculties = useFacultyStore((state) => state.faculties);
     const role = useUserStore((state) => state.role);
     const [search, setSearch] = useState("");
+    const [feedbacks, setFeedbacks] = useState<any>([]);
+
+    useEffect(() => {
+        const fetchData = async () => {
+            const config = {
+                method: "GET",
+                url: `${serverURL}/feedback/`,
+                headers: {
+                    Authorization: `Bearer ${localStorage.getItem("token")}`,
+                    "Content-Type": "application/json",
+                },
+            };
+
+            axios(config)
+                .then((response) => {
+                    setFeedbacks(response?.data?.data);
+                })
+                .catch((err) => {
+                    toast.error(err.response?.data?.message);
+                });
+        };
+        fetchData();
+    }, [feedbacks]);
 
     return (
         <>
@@ -107,19 +132,17 @@ export default function Page() {
                     </div>
                     <div className="m-10">
                         <Table>
-                            <TableCaption>A list of feedback.</TableCaption>
+                            <TableCaption>{feedbacks.length} feedbacks</TableCaption>
                             <TableHeader>
                                 <TableRow>
                                     <TableHead>Title</TableHead>
                                     <TableHead>Desciption</TableHead>
                                     <TableHead>Course</TableHead>
                                     <TableHead>Created by</TableHead>
-                                    <TableHead>Edit</TableHead>
-                                    <TableHead>Delete</TableHead>
                                 </TableRow>
                             </TableHeader>
                             <TableBody>
-                                {feedbacks.map((feedback, index: number) =>
+                                {feedbacks.map((feedback: any, index: number) =>
                                     !feedback.title
                                         .toString()
                                         .toLowerCase()
@@ -143,16 +166,6 @@ export default function Page() {
                                             <TableCell>{feedback.description}</TableCell>
                                             <TableCell>{feedback.course}</TableCell>
                                             <TableCell>{feedback.createdby}</TableCell>
-                                            <TableCell>
-                                                <Button variant={"outline"} size={"icon"}>
-                                                    <Edit />
-                                                </Button>
-                                            </TableCell>
-                                            <TableCell>
-                                                <Button variant={"outline"} size={"icon"}>
-                                                    <Trash />
-                                                </Button>
-                                            </TableCell>
                                         </TableRow>
                                     ),
                                 )}
@@ -161,13 +174,7 @@ export default function Page() {
                     </div>
                 </div>
             ) : (
-                <>
-                    <div className="flex justify-center items-center h-full">
-                        <div className="flex justify-center text-2xl font-bold">
-                            <p className="hidden lg:flex">404 Not Found</p>
-                        </div>
-                    </div>
-                </>
+                <></>
             )}
         </>
     );

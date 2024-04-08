@@ -73,7 +73,11 @@ export default function Page() {
                                         <Label htmlFor="password" className="text-right">
                                             Password
                                         </Label>
-                                        <Input className="col-span-3" type="password" id="password" />
+                                        <Input
+                                            className="col-span-3"
+                                            type="password"
+                                            id="password"
+                                        />
                                     </div>
                                     <div className="grid grid-cols-4 items-center gap-4">
                                         <Label htmlFor="admNo" className="text-right">
@@ -110,18 +114,16 @@ export default function Page() {
                                             <SelectContent>
                                                 <SelectGroup>
                                                     <SelectLabel>Batches</SelectLabel>
-                                                    {batches?.map(
-                                                        (batch: any, index: number) => {
-                                                            return (
-                                                                <SelectItem
-                                                                    key={index}
-                                                                    value={batch?.name}
-                                                                >
-                                                                    {batch?.name} {batch?.program}
-                                                                </SelectItem>
-                                                            );
-                                                        },
-                                                    )}
+                                                    {batches?.map((batch: any, index: number) => {
+                                                        return (
+                                                            <SelectItem
+                                                                key={index}
+                                                                value={batch?.name}
+                                                            >
+                                                                {batch?.name} {batch?.program}
+                                                            </SelectItem>
+                                                        );
+                                                    })}
                                                 </SelectGroup>
                                             </SelectContent>
                                         </Select>
@@ -170,13 +172,7 @@ export default function Page() {
                     </div>
                 </div>
             ) : (
-                <>
-                    <div className="flex justify-center items-center h-full">
-                        <div className="flex justify-center text-2xl font-bold">
-                            <p className="hidden lg:flex">404 Not Found</p>
-                        </div>
-                    </div>
-                </>
+                <></>
             )}
         </>
     );

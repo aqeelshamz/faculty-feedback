@@ -41,7 +41,7 @@ export default function Dashboard({
         router.push("/signin");
     };
 
-    useEffect(() => { }, [role]);
+    useEffect(() => {}, [role]);
 
     return (
         <div className="grid h-screen overflow-hidden w-full md:grid-cols-[220px_1fr] lg:grid-cols-[280px_1fr]">
