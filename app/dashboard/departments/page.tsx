@@ -23,12 +23,21 @@ import {
     TableHeader,
     TableRow,
 } from "@/components/ui/table";
+import {
+    AlertDialog,
+    AlertDialogAction,
+    AlertDialogCancel,
+    AlertDialogContent,
+    AlertDialogDescription,
+    AlertDialogFooter,
+    AlertDialogHeader,
+    AlertDialogTitle,
+    AlertDialogTrigger,
+} from "@/components/ui/alert-dialog";
 import { useFacultyStore, useUserStore } from "@/store";
 import { Edit, Trash } from "lucide-react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Textarea } from "@/components/ui/textarea";
-
-import { departments } from "@/lib/data";
 import axios from "axios";
 import { serverURL } from "@/lib/utils";
 import { Toaster, toast } from "sonner";
@@ -42,12 +51,15 @@ export default function Page() {
     const [vision, setVision] = useState("");
     const [mission, setMission] = useState("");
 
+    const [departments, setDepartments] = useState<any>([]);
+    const [loading, setLoading] = useState(true);
+
     const createDepartment = async () => {
         const config = {
             method: "POST",
             url: `${serverURL}/department/`,
             headers: {
-                "Authorization": `Bearer ${localStorage.getItem("token")}`,
+                Authorization: `Bearer ${localStorage.getItem("token")}`,
                 "Content-Type": "application/json",
             },
             data: {
@@ -57,15 +69,63 @@ export default function Page() {
             },
         };
 
-        axios(config).then((response) => {
-            toast.success(response.data.message);
-            setName("");
-            setVision("");
-            setMission("");
-        }).catch((err) => {
-            toast.error(err.response?.data?.message);
-        });
+        axios(config)
+            .then((response) => {
+                toast.success(response.data.message);
+                setName("");
+                setVision("");
+                setMission("");
+            })
+            .catch((err) => {
+                toast.error(err.response?.data?.message);
+            });
     };
+
+    const deleteDepartment = async (id: string) => {
+        const config = {
+            method: "DELETE",
+            url: `${serverURL}/department/`,
+            headers: {
+                Authorization: `Bearer ${localStorage.getItem("token")}`,
+                "Content-Type": "application/json",
+            },
+            data: {
+                id: id,
+            },
+        };
+
+        axios(config)
+            .then((response) => {
+                toast(response?.data?.message);
+            })
+            .catch((err) => {
+                toast.error(err.response?.data?.message);
+            });
+    };
+
+    useEffect(() => {
+        const fetchData = async () => {
+            const config = {
+                method: "GET",
+                url: `${serverURL}/department/`,
+                headers: {
+                    Authorization: `Bearer ${localStorage.getItem("token")}`,
+                    "Content-Type": "application/json",
+                },
+            };
+
+            axios(config)
+                .then((response) => {
+                    setDepartments([...departments, response.data]);
+                })
+                .catch((err) => {
+                    toast.error(err.response?.data?.message);
+                });
+        };
+        setLoading(true);
+        fetchData();
+        setLoading(false);
+    }, [departments]);
 
     return (
         <>
@@ -87,24 +147,39 @@ export default function Page() {
                                         <Label htmlFor="name" className="text-right">
                                             Name
                                         </Label>
-                                        <Input className="col-span-3" type="text" value={name} onChange={(e) => setName(e.target.value)} />
+                                        <Input
+                                            className="col-span-3"
+                                            type="text"
+                                            value={name}
+                                            onChange={(e) => setName(e.target.value)}
+                                        />
                                     </div>
                                     <div className="grid grid-cols-4 items-center gap-4">
                                         <Label htmlFor="email" className="text-right">
                                             Vision
                                         </Label>
-                                        <Textarea className="col-span-3" value={vision} onChange={(e) => setVision(e.target.value)} />
+                                        <Textarea
+                                            className="col-span-3"
+                                            value={vision}
+                                            onChange={(e) => setVision(e.target.value)}
+                                        />
                                     </div>
                                     <div className="grid grid-cols-4 items-center gap-4">
                                         <Label htmlFor="title" className="text-right">
                                             Mission
                                         </Label>
-                                        <Textarea className="col-span-3" value={mission} onChange={(e) => setMission(e.target.value)} />
+                                        <Textarea
+                                            className="col-span-3"
+                                            value={mission}
+                                            onChange={(e) => setMission(e.target.value)}
+                                        />
                                     </div>
                                 </div>
                                 <SheetFooter>
                                     <SheetClose asChild>
-                                        <Button type="submit" onClick={createDepartment}>Add Department</Button>
+                                        <Button type="submit" onClick={createDepartment}>
+                                            Add Department
+                                        </Button>
                                     </SheetClose>
                                 </SheetFooter>
                             </SheetContent>
@@ -122,48 +197,94 @@ export default function Page() {
                         </div>
                     </div>
                     <div className="m-10">
-                        <Table>
-                            <TableCaption>A list of departments.</TableCaption>
-                            <TableHeader>
-                                <TableRow>
-                                    <TableHead>Name</TableHead>
-                                    <TableHead>Vision</TableHead>
-                                    <TableHead>Mission</TableHead>
-                                    <TableHead>Edit</TableHead>
-                                    <TableHead>Delete</TableHead>
-                                </TableRow>
-                            </TableHeader>
-                            <TableBody>
-                                {departments.map((department, index: number) =>
-                                    !department.name
-                                        .toString()
-                                        .toLowerCase()
-                                        .includes(search.toLowerCase()) &&
-                                        !department.createdBy
-                                            .toString()
-                                            .toLowerCase()
-                                            .includes(search.toLowerCase()) ? (
-                                        ""
-                                    ) : (
-                                        <TableRow key={index}>
-                                            <TableCell>{department.name}</TableCell>
-                                            <TableCell>{department.vision}</TableCell>
-                                            <TableCell>{department.mission}</TableCell>
-                                            <TableCell>
-                                                <Button variant={"outline"} size={"icon"}>
-                                                    <Edit />
-                                                </Button>
-                                            </TableCell>
-                                            <TableCell>
-                                                <Button variant={"outline"} size={"icon"}>
-                                                    <Trash />
-                                                </Button>
-                                            </TableCell>
+                        {loading ? (
+                            <div>
+                                <span className="loading loading-spinner loading-lg"></span>
+                            </div>
+                        ) : (
+                            <>
+                                <Table>
+                                    <TableCaption>A list of departments.</TableCaption>
+                                    <TableHeader>
+                                        <TableRow>
+                                            <TableHead>Name</TableHead>
+                                            <TableHead>Vision</TableHead>
+                                            <TableHead>Mission</TableHead>
+                                            <TableHead>Edit</TableHead>
+                                            <TableHead>Delete</TableHead>
                                         </TableRow>
-                                    ),
-                                )}
-                            </TableBody>
-                        </Table>
+                                    </TableHeader>
+                                    <TableBody>
+                                        {departments &&
+                                            departments.map((department: any, index: number) =>
+                                                !department.name
+                                                    .toString()
+                                                    .toLowerCase()
+                                                    .includes(search.toLowerCase()) &&
+                                                !department.createdBy
+                                                    ?.toString()
+                                                    .toLowerCase()
+                                                    .includes(search.toLowerCase()) ? (
+                                                    ""
+                                                ) : (
+                                                    <TableRow key={index}>
+                                                        <TableCell>{department.name}</TableCell>
+                                                        <TableCell>{department.vision}</TableCell>
+                                                        <TableCell>{department.mission}</TableCell>
+                                                        <TableCell>
+                                                            <Button
+                                                                variant={"outline"}
+                                                                size={"icon"}
+                                                            >
+                                                                <Edit />
+                                                            </Button>
+                                                        </TableCell>
+                                                        <TableCell>
+                                                            <AlertDialog>
+                                                                <AlertDialogTrigger asChild>
+                                                                    <Button
+                                                                        variant={"outline"}
+                                                                        size={"icon"}
+                                                                        onClick={() =>
+                                                                            deleteDepartment(
+                                                                                department._id,
+                                                                            )
+                                                                        }
+                                                                    >
+                                                                        <Trash />
+                                                                    </Button>
+                                                                </AlertDialogTrigger>
+                                                                <AlertDialogContent>
+                                                                    <AlertDialogHeader>
+                                                                        <AlertDialogTitle>
+                                                                            Are you absolutely sure?
+                                                                        </AlertDialogTitle>
+                                                                        <AlertDialogDescription>
+                                                                            This action cannot be
+                                                                            undone. This will
+                                                                            permanently delete your
+                                                                            account and remove your
+                                                                            data from our servers.
+                                                                        </AlertDialogDescription>
+                                                                    </AlertDialogHeader>
+                                                                    <AlertDialogFooter>
+                                                                        <AlertDialogCancel>
+                                                                            Cancel
+                                                                        </AlertDialogCancel>
+                                                                        <AlertDialogAction>
+                                                                            Delete
+                                                                        </AlertDialogAction>
+                                                                    </AlertDialogFooter>
+                                                                </AlertDialogContent>
+                                                            </AlertDialog>
+                                                        </TableCell>
+                                                    </TableRow>
+                                                ),
+                                            )}
+                                    </TableBody>
+                                </Table>
+                            </>
+                        )}
                     </div>
                 </div>
             ) : (

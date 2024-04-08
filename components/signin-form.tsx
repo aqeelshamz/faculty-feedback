@@ -11,7 +11,6 @@ import { Label } from "@/components/ui/label";
 import { useUserStore } from "@/store";
 import axios from "axios";
 import { toast } from "sonner";
-import { produce } from "immer";
 import { useRouter } from "next/navigation";
 interface UserAuthFormProps extends HTMLAttributes<HTMLDivElement> {}
 
@@ -93,7 +92,7 @@ export function SignInForm({ className, ...props }: UserAuthFormProps) {
                     </div>
                     <Button disabled={isLoading}>
                         {isLoading && <Icons.spinner className="mr-2 h-4 w-4 animate-spin" />}
-                        Login
+                        Sign In
                     </Button>
                 </div>
             </form>

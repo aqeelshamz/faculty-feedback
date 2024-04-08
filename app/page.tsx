@@ -6,9 +6,7 @@ import { useEffect } from "react";
 export default function App({ children }: { children: React.ReactNode }) {
     const router = useRouter();
     useEffect(() => {
-        if (localStorage.getItem("token")) {
-            router.push("/dashboard");
-        } else {
+        if (!localStorage.getItem("token")) {
             router.push("/signin");
         }
     }, [router]);
