@@ -36,7 +36,7 @@ import {
 } from "@/components/ui/alert-dialog";
 import { useUserStore } from "@/store";
 import { Edit, Trash } from "lucide-react";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Textarea } from "@/components/ui/textarea";
 import axios from "axios";
 import { cn, serverURL } from "@/lib/utils";
@@ -50,6 +50,9 @@ export default function Page() {
     const [name, setName] = useState("");
     const [vision, setVision] = useState("");
     const [mission, setMission] = useState("");
+
+    //Edit Department
+    const [editDepartmentId, setEditDepartmentId] = useState("");
 
     const [departments, setDepartments] = useState<any>([]);
 
@@ -71,6 +74,35 @@ export default function Page() {
         axios(config)
             .then((response) => {
                 toast.success(response.data.message);
+                setName("");
+                setVision("");
+                setMission("");
+                getDepartments();
+            })
+            .catch((err) => {
+                toast.error(err.response?.data?.message);
+            });
+    };
+
+    const updateDepartment = async () => {
+        const config = {
+            method: "PUT",
+            url: `${serverURL}/department/${editDepartmentId}`,
+            headers: {
+                Authorization: `Bearer ${localStorage.getItem("token")}`,
+                "Content-Type": "application/json",
+            },
+            data: {
+                name: name,
+                vision: vision,
+                mission: mission,
+            },
+        };
+
+        axios(config)
+            .then((response) => {
+                toast.success(response.data.message);
+                setEditDepartmentId("");
                 setName("");
                 setVision("");
                 setMission("");
@@ -124,20 +156,23 @@ export default function Page() {
         getDepartments();
     }, [departments]);
 
+    const sheetTrigger = useRef<any>();
+    const [editMode, setEditMode] = useState(false);
+
     return (
         <>
             {role == "admin" ? (
                 <div className="w-full h-screen p-7 overflow-y-auto">
                     <p className="font-semibold text-2xl mb-4">Departments</p>
                     <div className="flex justify-between">
-                        <Sheet>
-                            <SheetTrigger asChild>
+                        <Sheet onOpenChange={(x) => { if (x === false) setEditMode(false) }}>
+                            <SheetTrigger ref={sheetTrigger} asChild>
                                 <Button>+ New Department</Button>
                             </SheetTrigger>
                             <SheetContent side={"left"}>
                                 <SheetHeader>
-                                    <SheetTitle>New Department</SheetTitle>
-                                    <SheetDescription>Create new department.</SheetDescription>
+                                    <SheetTitle>{editMode ? "Edit" : "New"} Department</SheetTitle>
+                                    <SheetDescription>{editMode ? "Edit" : "Create new"} department.</SheetDescription>
                                 </SheetHeader>
                                 <div className="grid gap-4 py-4">
                                     <div className="grid grid-cols-4 items-center gap-4">
@@ -174,8 +209,15 @@ export default function Page() {
                                 </div>
                                 <SheetFooter>
                                     <SheetClose asChild>
-                                        <Button type="submit" onClick={createDepartment}>
-                                            Add Department
+                                        <Button type="submit" onClick={()=>{
+                                            if(editMode){
+                                                updateDepartment();
+                                            }
+                                            else{
+                                                createDepartment();
+                                            }
+                                        }}>
+                                            {editMode ? "Save" : "Create"} Department
                                         </Button>
                                     </SheetClose>
                                 </SheetFooter>
@@ -212,10 +254,10 @@ export default function Page() {
                                             .toString()
                                             .toLowerCase()
                                             .includes(search.toLowerCase()) &&
-                                        !department.createdBy
-                                            ?.toString()
-                                            .toLowerCase()
-                                            .includes(search.toLowerCase()) ? (
+                                            !department.createdBy
+                                                ?.toString()
+                                                .toLowerCase()
+                                                .includes(search.toLowerCase()) ? (
                                             ""
                                         ) : (
                                             <TableRow key={index}>
@@ -223,7 +265,14 @@ export default function Page() {
                                                 <TableCell>{department.vision}</TableCell>
                                                 <TableCell>{department.mission}</TableCell>
                                                 <TableCell>
-                                                    <Button variant={"outline"} size={"icon"}>
+                                                    <Button variant={"outline"} size={"icon"} onClick={() => {
+                                                        setEditMode(true);
+                                                        setEditDepartmentId(department._id);
+                                                        setName(department.name);
+                                                        setVision(department.vision);
+                                                        setMission(department.mission);
+                                                        sheetTrigger.current.click();
+                                                    }}>
                                                         <Edit />
                                                     </Button>
                                                 </TableCell>
