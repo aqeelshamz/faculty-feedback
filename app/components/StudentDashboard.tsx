@@ -1,6 +1,5 @@
 "use client";
 import { Card, CardContent, CardTitle } from "@/components/ui/card";
-import { useFacultyStore, useProgramStore, useStudentStore } from "@/store";
 import { GraduationCap, StickyNote, User, Users } from "lucide-react";
 import { useRouter } from "next/navigation";
 
@@ -29,7 +28,7 @@ export default function StudentDashboard() {
                     </div>
                     <CardContent>
                         <p className="text-4xl font-bold">
-                            {useProgramStore((state) => state.programs).length}
+                            0
                         </p>
                     </CardContent>
                 </Card>
@@ -43,7 +42,7 @@ export default function StudentDashboard() {
                     </div>
                     <CardContent>
                         <p className="text-4xl font-bold">
-                            {useFacultyStore((state) => state.faculties).length}
+                            0
                         </p>
                     </CardContent>
                 </Card>
@@ -57,7 +56,7 @@ export default function StudentDashboard() {
                     </div>
                     <CardContent>
                         <p className="text-4xl font-bold">
-                            {useStudentStore((state) => state.students).length}
+                            0
                         </p>
                     </CardContent>
                 </Card>

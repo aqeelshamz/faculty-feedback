@@ -224,10 +224,10 @@ export default function Page() {
                                         .toString()
                                         .toLowerCase()
                                         .includes(search.toLowerCase()) &&
-                                    !program.hod
-                                        .toString()
-                                        .toLowerCase()
-                                        .includes(search.toLowerCase()) ? (
+                                        !program.hod
+                                            .toString()
+                                            .toLowerCase()
+                                            .includes(search.toLowerCase()) ? (
                                         ""
                                     ) : (
                                         <TableRow key={index}>
@@ -267,8 +267,8 @@ export default function Page() {
                                                                         variant: "destructive",
                                                                     }),
                                                                 )}
-                                                                onClick={() =>
-                                                                    deleteProgram(program._id)
+                                                                onClick={() => { }
+                                                                    // deleteProgram(program._id)
                                                                 }
                                                             >
                                                                 Delete

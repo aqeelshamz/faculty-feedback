@@ -1,15 +1,17 @@
 "use client";
-
 import { useRouter } from "next/navigation";
-import { useEffect } from "react";
+import { ReactNode, useEffect } from "react";
 
-export default function App({ children }: { children: React.ReactNode }) {
+export default function App() {
     const router = useRouter();
     useEffect(() => {
         if (!localStorage.getItem("token")) {
             router.push("/signin");
         }
+        else{
+            router.push("/dashboard");
+        }
     }, [router]);
 
-    return <>{children}</>;
+    return <></>;
 }

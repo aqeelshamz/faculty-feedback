@@ -34,7 +34,8 @@ export default function RootLayout({
                     fontSans.variable,
                 )}
             >
-                <App>{children}</App>
+                <App />
+                {children}
             </body>
         </html>
     );

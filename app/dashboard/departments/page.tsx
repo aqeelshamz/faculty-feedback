@@ -209,11 +209,11 @@ export default function Page() {
                                 </div>
                                 <SheetFooter>
                                     <SheetClose asChild>
-                                        <Button type="submit" onClick={()=>{
-                                            if(editMode){
+                                        <Button type="submit" onClick={() => {
+                                            if (editMode) {
                                                 updateDepartment();
                                             }
-                                            else{
+                                            else {
                                                 createDepartment();
                                             }
                                         }}>
