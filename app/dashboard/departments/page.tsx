@@ -125,7 +125,7 @@ export default function Page() {
 
         axios(config)
             .then((response) => {
-                toast(response?.data?.message);
+                toast.success(response?.data?.message);
                 getDepartments();
             })
             .catch((err) => {
@@ -165,7 +165,14 @@ export default function Page() {
                 <div className="w-full h-screen p-7 overflow-y-auto">
                     <p className="font-semibold text-2xl mb-4">Departments</p>
                     <div className="flex justify-between">
-                        <Sheet onOpenChange={(x) => { if (x === false) setEditMode(false) }}>
+                        <Sheet onOpenChange={(x) => {
+                            if (x === false) setEditMode(false);
+                            if (!editMode && x) {
+                                setName("");
+                                setVision("");
+                                setMission("");
+                            }
+                        }}>
                             <SheetTrigger ref={sheetTrigger} asChild>
                                 <Button>+ New Department</Button>
                             </SheetTrigger>
@@ -289,8 +296,8 @@ export default function Page() {
                                                         <AlertDialogContent>
                                                             <AlertDialogHeader>
                                                                 <AlertDialogTitle>
-                                                                    Delete {department.name} from
-                                                                    faculties?
+                                                                    Delete '{department.name}' from
+                                                                    departments?
                                                                 </AlertDialogTitle>
                                                                 <AlertDialogDescription>
                                                                     This action cannot be undone.
