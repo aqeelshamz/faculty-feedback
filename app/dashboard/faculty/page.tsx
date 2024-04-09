@@ -138,7 +138,7 @@ export default function Page() {
 
     useEffect(() => {
         getFaculties();
-    });
+    }, []);
 
     return (
         <>

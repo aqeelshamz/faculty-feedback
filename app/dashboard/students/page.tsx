@@ -129,7 +129,7 @@ export default function Page() {
     useEffect(() => {
         getStudents();
         getBatches();
-    }, [students, batches]);
+    }, []);
 
     return (
         <>

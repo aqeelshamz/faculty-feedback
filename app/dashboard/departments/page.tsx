@@ -154,7 +154,7 @@ export default function Page() {
 
     useEffect(() => {
         getDepartments();
-    });
+    }, []);
 
     const sheetTrigger = useRef<any>();
     const [editMode, setEditMode] = useState(false);

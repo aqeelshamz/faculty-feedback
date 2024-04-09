@@ -138,8 +138,7 @@ export default function Page() {
     };
 
     useEffect(() => {
-        getPrograms();
-    });*/
+  }, []);*/
 
     return (
         <>

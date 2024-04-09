@@ -182,7 +182,7 @@ export default function Page() {
 
     useEffect(() => {
         getHods();
-    });
+  }, []);
 */
 
     return (

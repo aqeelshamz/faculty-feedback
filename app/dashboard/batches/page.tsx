@@ -177,7 +177,7 @@ export default function Page() {
 
     useEffect(() => {
         getBatches();
-    });
+    }, []);
 
     return (
         <>
