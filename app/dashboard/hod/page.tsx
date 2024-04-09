@@ -141,25 +141,25 @@ export default function Page() {
 
    */
 
-    const deleteHod = async (id: string) => {
-        const config = {
-            method: "DELETE",
-            url: `${serverURL}/hod/${id}`,
-            headers: {
-                Authorization: `Bearer ${localStorage.getItem("token")}`,
-                "Content-Type": "application/json",
-            },
-        };
+    // const deleteHod = async (id: string) => {
+    //     const config = {
+    //         method: "DELETE",
+    //         url: `${serverURL}/hod/${id}`,
+    //         headers: {
+    //             Authorization: `Bearer ${localStorage.getItem("token")}`,
+    //             "Content-Type": "application/json",
+    //         },
+    //     };
 
-        axios(config)
-            .then((response) => {
-                toast(response?.data?.message);
-                getHods();
-            })
-            .catch((err) => {
-                toast.error(err.response?.data?.message);
-            });
-    };
+    //     axios(config)
+    //         .then((response) => {
+    //             toast(response?.data?.message);
+    //             getHods();
+    //         })
+    //         .catch((err) => {
+    //             toast.error(err.response?.data?.message);
+    //         });
+    // };
 
     /*const getHods = async () => {
         const config = {
@@ -310,10 +310,10 @@ export default function Page() {
                                         .toString()
                                         .toLowerCase()
                                         .includes(search.toLowerCase()) &&
-                                    !faculty.title
-                                        .toString()
-                                        .toLowerCase()
-                                        .includes(search.toLowerCase()) ? (
+                                        !faculty.title
+                                            .toString()
+                                            .toLowerCase()
+                                            .includes(search.toLowerCase()) ? (
                                         ""
                                     ) : (
                                         <TableRow key={index}>

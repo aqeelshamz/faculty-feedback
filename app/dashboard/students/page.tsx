@@ -60,13 +60,54 @@ export default function Page() {
     const [editMode, setEditMode] = useState(false);
 
     const [name, setName] = useState("");
-    const [email, seEmail] = useState("");
+    const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
+    const [gender, setGender] = useState("");
     const [admNo, setAdmNo] = useState("");
     const [rollNo, setRollNo] = useState("");
     const [address, setAddress] = useState("");
     const [phone, setPhone] = useState("");
     const [batch, setBatch] = useState("");
+
+    const createStudent = async () => {
+        const config = {
+            method: "POST",
+            url: `${serverURL}/student`,
+            headers: {
+                Authorization: `Bearer ${localStorage.getItem("token")}`,
+                "Content-Type": "application/json",
+            },
+            data: {
+                name: name,
+                email: email,
+                password: password,
+                gender: gender,
+                admNo: admNo,
+                phone: phone,
+                address: address,
+                rollNo: rollNo,
+                batchId: batch,
+            },
+        };
+
+        axios(config)
+            .then((response) => {
+                toast.success(response.data.message);
+                getStudents();
+                setName("");
+                setEmail("");
+                setPassword("");
+                setGender("M");
+                setAdmNo("");
+                setRollNo("");
+                setAddress("");
+                setPhone("");
+                setBatch("");
+            })
+            .catch((err) => {
+                toast.error(err.response?.data?.message);
+            });
+    };
 
     const getStudents = async () => {
         const config = {
@@ -151,13 +192,13 @@ export default function Page() {
                                         <Label htmlFor="name" className="text-right">
                                             Name
                                         </Label>
-                                        <Input className="col-span-3" type="text" id="name" />
+                                        <Input className="col-span-3" type="text" id="name" value={name} onChange={(x) => setName(x.target.value)} />
                                     </div>
                                     <div className="grid grid-cols-4 items-center gap-4">
                                         <Label htmlFor="email" className="text-right">
                                             Email
                                         </Label>
-                                        <Input className="col-span-3" type="email" id="email" />
+                                        <Input className="col-span-3" type="email" id="email" value={email} onChange={(x) => setEmail(x.target.value)} />
                                     </div>
                                     <div className="grid grid-cols-4 items-center gap-4">
                                         <Label htmlFor="password" className="text-right">
@@ -167,37 +208,65 @@ export default function Page() {
                                             className="col-span-3"
                                             type="password"
                                             id="password"
+                                            value={password} onChange={(x) => setPassword(x.target.value)}
                                         />
+                                    </div>
+                                    <div className="grid grid-cols-4 items-center gap-4">
+                                        <Label htmlFor="admNo" className="text-right">
+                                            Gender
+                                        </Label>
+                                        <Select onValueChange={(x) => setGender(x)} value={gender}>
+                                            <SelectTrigger className="col-span-3">
+                                                <SelectValue placeholder="Select gender" />
+                                            </SelectTrigger>
+                                            <SelectContent>
+                                                <SelectGroup>
+                                                    <SelectLabel>Gender</SelectLabel>
+                                                    <SelectItem
+                                                        key={0}
+                                                        value={"M"}
+                                                    >
+                                                        Male
+                                                    </SelectItem>
+                                                    <SelectItem
+                                                        key={1}
+                                                        value={"F"}
+                                                    >
+                                                        Female
+                                                    </SelectItem>
+                                                </SelectGroup>
+                                            </SelectContent>
+                                        </Select>
                                     </div>
                                     <div className="grid grid-cols-4 items-center gap-4">
                                         <Label htmlFor="admNo" className="text-right">
                                             Adm. No.
                                         </Label>
-                                        <Input className="col-span-3" type="text" id="admNo" />
+                                        <Input className="col-span-3" type="text" id="admNo" value={admNo} onChange={(x) => setAdmNo(x.target.value)} />
                                     </div>
                                     <div className="grid grid-cols-4 items-center gap-4">
                                         <Label htmlFor="phone" className="text-right">
                                             Phone
                                         </Label>
-                                        <Input className="col-span-3" type="tel" id="phone" />
+                                        <Input className="col-span-3" type="tel" id="phone" value={phone} onChange={(x) => setPhone(x.target.value)} />
                                     </div>
                                     <div className="grid grid-cols-4 items-center gap-4">
                                         <Label htmlFor="address" className="text-right">
                                             Address
                                         </Label>
-                                        <Input className="col-span-3" type="text" id="address" />
+                                        <Input className="col-span-3" type="text" id="address" value={address} onChange={(x)=>setAddress(x.target.value)} />
                                     </div>
                                     <div className="grid grid-cols-4 items-center gap-4">
                                         <Label htmlFor="rollNo" className="text-right">
                                             Roll No.
                                         </Label>
-                                        <Input className="col-span-3" type="number" id="rollNo" />
+                                        <Input className="col-span-3" type="number" id="rollNo" value={rollNo} onChange={(x)=>setRollNo(x.target.value)} />
                                     </div>
                                     <div className="grid grid-cols-4 items-center gap-4">
                                         <Label htmlFor="batchId" className="text-right">
                                             Batch
                                         </Label>
-                                        <Select>
+                                        <Select onValueChange={(x) => setBatch(x)} value={batch}>
                                             <SelectTrigger className="col-span-3">
                                                 <SelectValue placeholder="Select batch" />
                                             </SelectTrigger>
@@ -208,7 +277,7 @@ export default function Page() {
                                                         return (
                                                             <SelectItem
                                                                 key={index}
-                                                                value={batch?.name}
+                                                                value={batch?._id}
                                                             >
                                                                 {batch?.name} {batch?.program}
                                                             </SelectItem>
@@ -221,7 +290,7 @@ export default function Page() {
                                 </div>
                                 <SheetFooter>
                                     <SheetClose asChild>
-                                        <Button type="submit">Add Student</Button>
+                                        <Button type="submit" onClick={createStudent}>Add Student</Button>
                                     </SheetClose>
                                 </SheetFooter>
                             </SheetContent>

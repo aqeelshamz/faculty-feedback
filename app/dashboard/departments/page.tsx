@@ -59,7 +59,7 @@ export default function Page() {
     const createDepartment = async () => {
         const config = {
             method: "POST",
-            url: `${serverURL}/department/`,
+            url: `${serverURL}/department`,
             headers: {
                 Authorization: `Bearer ${localStorage.getItem("token")}`,
                 "Content-Type": "application/json",
