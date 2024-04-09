@@ -155,9 +155,9 @@ export default function Dashboard({
                         </DropdownMenuTrigger>
                         <DropdownMenuContent align="end">
                             <DropdownMenuLabel>My Account</DropdownMenuLabel>
-                            <DropdownMenuSeparator />
+                            {/*<DropdownMenuSeparator />
                             <DropdownMenuItem>Profile</DropdownMenuItem>
-                            {/* <DropdownMenuItem>Support</DropdownMenuItem> */}
+                    <DropdownMenuItem>Support</DropdownMenuItem> */}
                             <DropdownMenuSeparator />
                             <DropdownMenuItem onClick={logOut}>Log out</DropdownMenuItem>
                         </DropdownMenuContent>

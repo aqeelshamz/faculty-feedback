@@ -37,7 +37,7 @@ import {
 import { useUserStore } from "@/store";
 import { faculties } from "@/lib/data";
 import { Edit, Trash } from "lucide-react";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Textarea } from "@/components/ui/textarea";
 import { departments, programs } from "@/lib/data";
 import { Checkbox } from "@/components/ui/checkbox";
@@ -48,10 +48,13 @@ import { toast } from "sonner";
 export default function Page() {
     const role = useUserStore((state) => state.role);
     const [search, setSearch] = useState("");
-    {
-        /* const [hods, setHods] = useState<any>([]);
 
-    const createHod = async () => {
+    const sheetTrigger = useRef<any>();
+    const [editMode, setEditMode] = useState(false);
+
+    const [hods, setHods] = useState<any>([]);
+
+    /* const createHod = async () => {
         const config = {
             method: "POST",
             url: `${serverURL}/hod/`,
@@ -77,7 +80,66 @@ export default function Page() {
             .catch((err) => {
                 toast.error(err.response?.data?.message);
             });
+
+             const updateDepartment = async () => {
+        const config = {
+            method: "PUT",
+            url: `${serverURL}/department/${editDepartmentId}`,
+            headers: {
+                Authorization: `Bearer ${localStorage.getItem("token")}`,
+                "Content-Type": "application/json",
+            },
+            data: {
+                name: name,
+                vision: vision,
+                mission: mission,
+            },
+        };
+
+        axios(config)
+            .then((response) => {
+                toast.success(response.data.message);
+                setEditDepartmentId("");
+                setName("");
+                setVision("");
+                setMission("");
+                getDepartments();
+            })
+            .catch((err) => {
+                toast.error(err.response?.data?.message);
+            });
     };
+
+    const updateHod= async () => {
+        const config = {
+            method: "PUT",
+            url: `${serverURL}/department/${editDepartmentId}`,
+            headers: {
+                Authorization: `Bearer ${localStorage.getItem("token")}`,
+                "Content-Type": "application/json",
+            },
+            data: {
+                name: name,
+                vision: vision,
+                mission: mission,
+            },
+        };
+
+        axios(config)
+            .then((response) => {
+                toast.success(response.data.message);
+                setEditDepartmentId("");
+                setName("");
+                setVision("");
+                setMission("");
+                getDepartments();
+            })
+            .catch((err) => {
+                toast.error(err.response?.data?.message);
+            });
+    };
+
+   */
 
     const deleteHod = async (id: string) => {
         const config = {
@@ -99,7 +161,7 @@ export default function Page() {
             });
     };
 
-    const getHods = async () => {
+    /*const getHods = async () => {
         const config = {
             method: "GET",
             url: `${serverURL}/hod/`,
@@ -120,9 +182,8 @@ export default function Page() {
 
     useEffect(() => {
         getHods();
-    }, [hods]);
+    });
 */
-    }
 
     return (
         <>

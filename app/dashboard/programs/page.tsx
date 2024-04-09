@@ -56,7 +56,7 @@ import { useUserStore } from "@/store";
 import axios from "axios";
 import { departments, programs } from "@/lib/data";
 import { Check, ChevronsUpDown, Edit, Trash } from "lucide-react";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 import { LuFilter } from "react-icons/lu";
 import { toast } from "sonner";
@@ -64,6 +64,9 @@ import { toast } from "sonner";
 export default function Page() {
     const role = useUserStore((state) => state.role);
     const [search, setSearch] = useState("");
+
+    const sheetTrigger = useRef<any>();
+    const [editMode, setEditMode] = useState(false);
 
     /*  const [programs, setPrograms] = useState<any>([]);
 
@@ -136,7 +139,7 @@ export default function Page() {
 
     useEffect(() => {
         getPrograms();
-    }, [programs]);*/
+    });*/
 
     return (
         <>
@@ -224,10 +227,10 @@ export default function Page() {
                                         .toString()
                                         .toLowerCase()
                                         .includes(search.toLowerCase()) &&
-                                        !program.hod
-                                            .toString()
-                                            .toLowerCase()
-                                            .includes(search.toLowerCase()) ? (
+                                    !program.hod
+                                        .toString()
+                                        .toLowerCase()
+                                        .includes(search.toLowerCase()) ? (
                                         ""
                                     ) : (
                                         <TableRow key={index}>
@@ -248,13 +251,12 @@ export default function Page() {
                                                     <AlertDialogContent>
                                                         <AlertDialogHeader>
                                                             <AlertDialogTitle>
-                                                                Delete {program.name} from
-                                                                faculties?
+                                                                Delete {program.name} from programs?
                                                             </AlertDialogTitle>
                                                             <AlertDialogDescription>
                                                                 This action cannot be undone. This
                                                                 will permanently delete
-                                                                {program.name} from deparment list.
+                                                                {program.name} from program list.
                                                             </AlertDialogDescription>
                                                         </AlertDialogHeader>
                                                         <AlertDialogFooter>
@@ -267,7 +269,8 @@ export default function Page() {
                                                                         variant: "destructive",
                                                                     }),
                                                                 )}
-                                                                onClick={() => { }
+                                                                onClick={
+                                                                    () => {}
                                                                     // deleteProgram(program._id)
                                                                 }
                                                             >

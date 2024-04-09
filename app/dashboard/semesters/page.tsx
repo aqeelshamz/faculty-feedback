@@ -36,12 +36,15 @@ import {
 } from "@/components/ui/table";
 import { useUserStore } from "@/store";
 import { Edit, Trash } from "lucide-react";
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { departments, semesters } from "@/lib/data";
 
 export default function Page() {
     const role = useUserStore((state) => state.role);
     const [search, setSearch] = useState("");
+
+    const sheetTrigger = useRef<any>();
+    const [editMode, setEditMode] = useState(false);
 
     return (
         <>

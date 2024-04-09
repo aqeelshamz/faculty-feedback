@@ -53,17 +53,88 @@ import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover
 import { cn, serverURL } from "@/lib/utils";
 import { CalendarIcon, Edit, Trash } from "lucide-react";
 import { Calendar } from "@/components/ui/calendar";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import axios from "axios";
 import { toast } from "sonner";
 
 export default function Page() {
     const role = useUserStore((state) => state.role);
+
+    const [name, setName] = useState("");
+    const [department, setDepartment] = useState("");
+    const [program, setProgram] = useState("");
     const [startDate, setStartDate] = useState<Date>();
     const [endDate, setEndDate] = useState<Date>();
     const [search, setSearch] = useState("");
 
     const [batches, setBatches] = useState<any>([]);
+    const [editBatchId, setEditBatchId] = useState("");
+    const sheetTrigger = useRef<any>();
+    const [editMode, setEditMode] = useState(false);
+
+    const createBatch = async () => {
+        const config = {
+            method: "POST",
+            url: `${serverURL}/batch/`,
+            headers: {
+                Authorization: `Bearer ${localStorage.getItem("token")}`,
+                "Content-Type": "application/json",
+            },
+            data: {
+                name: name,
+                department: department,
+                porgram: program,
+                startDate: startDate,
+                endDate: endDate,
+            },
+        };
+
+        axios(config)
+            .then((response) => {
+                toast.success(response.data.message);
+                setName("");
+                setDepartment("");
+                setProgram("");
+                setStartDate(undefined);
+                setEndDate(undefined);
+                getBatches();
+            })
+            .catch((err) => {
+                toast.error(err.response?.data?.message);
+            });
+    };
+
+    const updateBatch = async () => {
+        const config = {
+            method: "PUT",
+            url: `${serverURL}/batch/${editBatchId}`,
+            headers: {
+                Authorization: `Bearer ${localStorage.getItem("token")}`,
+                "Content-Type": "application/json",
+            },
+            data: {
+                name: name,
+                department: department,
+                porgram: program,
+                startDate: startDate,
+                endDate: endDate,
+            },
+        };
+
+        axios(config)
+            .then((response) => {
+                toast.success(response.data.message);
+                setName("");
+                setDepartment("");
+                setProgram("");
+                setStartDate(undefined);
+                setEndDate(undefined);
+                getBatches();
+            })
+            .catch((err) => {
+                toast.error(err.response?.data?.message);
+            });
+    };
 
     const deleteBatch = async (id: string) => {
         const config = {
@@ -106,7 +177,7 @@ export default function Page() {
 
     useEffect(() => {
         getBatches();
-    }, [batches]);
+    });
 
     return (
         <>
@@ -114,14 +185,27 @@ export default function Page() {
                 <div className="w-full h-screen p-7 overflow-y-auto">
                     <p className="font-semibold text-2xl mb-4">Batches</p>
                     <div className="flex justify-between">
-                        <Sheet>
+                        <Sheet
+                            onOpenChange={(x) => {
+                                if (x === false) setEditMode(false);
+                                if (!editMode && x) {
+                                    setName("");
+                                    setDepartment("");
+                                    setProgram("");
+                                    setStartDate(undefined);
+                                    setEndDate(undefined);
+                                }
+                            }}
+                        >
                             <SheetTrigger asChild>
                                 <Button>+ New Batch</Button>
                             </SheetTrigger>
                             <SheetContent side={"left"}>
                                 <SheetHeader>
-                                    <SheetTitle>New Batch</SheetTitle>
-                                    <SheetDescription>Create new batch.</SheetDescription>
+                                    <SheetTitle>{editMode ? "Edit" : "New"} Batch</SheetTitle>
+                                    <SheetDescription>
+                                        {editMode ? "Edit" : "Create new"} batch.
+                                    </SheetDescription>
                                 </SheetHeader>
                                 <div className="grid gap-4 py-4">
                                     <div className="grid grid-cols-4 items-center gap-4">
@@ -249,7 +333,18 @@ export default function Page() {
                                 </div>
                                 <SheetFooter>
                                     <SheetClose asChild>
-                                        <Button type="submit">Add Batch</Button>
+                                        <Button
+                                            type="submit"
+                                            onClick={() => {
+                                                if (editMode) {
+                                                    updateBatch();
+                                                } else {
+                                                    createBatch();
+                                                }
+                                            }}
+                                        >
+                                            {editMode ? "Save" : "Create"} Batch
+                                        </Button>
                                     </SheetClose>
                                 </SheetFooter>
                             </SheetContent>
@@ -299,7 +394,20 @@ export default function Page() {
                                             <TableCell>{batch.startDate}</TableCell>
                                             <TableCell>{batch.endDate}</TableCell>
                                             <TableCell>
-                                                <Button variant={"outline"} size={"icon"}>
+                                                <Button
+                                                    variant={"outline"}
+                                                    size={"icon"}
+                                                    onClick={() => {
+                                                        setEditMode(true);
+                                                        setEditBatchId(batch._id);
+                                                        setName(batch.name);
+                                                        setDepartment(batch.department);
+                                                        setProgram(batch.program);
+                                                        setStartDate(batch.startDate);
+                                                        setEndDate(batch.endDate);
+                                                        sheetTrigger.current.click();
+                                                    }}
+                                                >
                                                     <Edit />
                                                 </Button>
                                             </TableCell>
@@ -313,13 +421,13 @@ export default function Page() {
                                                     <AlertDialogContent>
                                                         <AlertDialogHeader>
                                                             <AlertDialogTitle>
-                                                                Are you absolutely sure?
+                                                                Delete &apos;{batch.name}&apos; from
+                                                                batches?
                                                             </AlertDialogTitle>
                                                             <AlertDialogDescription>
                                                                 This action cannot be undone. This
-                                                                will permanently delete your account
-                                                                and remove your data from our
-                                                                servers.
+                                                                will permanently delete
+                                                                {batch.name} from batch list.
                                                             </AlertDialogDescription>
                                                         </AlertDialogHeader>
                                                         <AlertDialogFooter>

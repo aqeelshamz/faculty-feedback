@@ -154,7 +154,7 @@ export default function Page() {
 
     useEffect(() => {
         getDepartments();
-    }, [departments]);
+    });
 
     const sheetTrigger = useRef<any>();
     const [editMode, setEditMode] = useState(false);
@@ -165,21 +165,25 @@ export default function Page() {
                 <div className="w-full h-screen p-7 overflow-y-auto">
                     <p className="font-semibold text-2xl mb-4">Departments</p>
                     <div className="flex justify-between">
-                        <Sheet onOpenChange={(x) => {
-                            if (x === false) setEditMode(false);
-                            if (!editMode && x) {
-                                setName("");
-                                setVision("");
-                                setMission("");
-                            }
-                        }}>
+                        <Sheet
+                            onOpenChange={(x) => {
+                                if (x === false) setEditMode(false);
+                                if (!editMode && x) {
+                                    setName("");
+                                    setVision("");
+                                    setMission("");
+                                }
+                            }}
+                        >
                             <SheetTrigger ref={sheetTrigger} asChild>
                                 <Button>+ New Department</Button>
                             </SheetTrigger>
                             <SheetContent side={"left"}>
                                 <SheetHeader>
                                     <SheetTitle>{editMode ? "Edit" : "New"} Department</SheetTitle>
-                                    <SheetDescription>{editMode ? "Edit" : "Create new"} department.</SheetDescription>
+                                    <SheetDescription>
+                                        {editMode ? "Edit" : "Create new"} department.
+                                    </SheetDescription>
                                 </SheetHeader>
                                 <div className="grid gap-4 py-4">
                                     <div className="grid grid-cols-4 items-center gap-4">
@@ -216,14 +220,16 @@ export default function Page() {
                                 </div>
                                 <SheetFooter>
                                     <SheetClose asChild>
-                                        <Button type="submit" onClick={() => {
-                                            if (editMode) {
-                                                updateDepartment();
-                                            }
-                                            else {
-                                                createDepartment();
-                                            }
-                                        }}>
+                                        <Button
+                                            type="submit"
+                                            onClick={() => {
+                                                if (editMode) {
+                                                    updateDepartment();
+                                                } else {
+                                                    createDepartment();
+                                                }
+                                            }}
+                                        >
                                             {editMode ? "Save" : "Create"} Department
                                         </Button>
                                     </SheetClose>
@@ -261,10 +267,10 @@ export default function Page() {
                                             .toString()
                                             .toLowerCase()
                                             .includes(search.toLowerCase()) &&
-                                            !department.createdBy
-                                                ?.toString()
-                                                .toLowerCase()
-                                                .includes(search.toLowerCase()) ? (
+                                        !department.createdBy
+                                            ?.toString()
+                                            .toLowerCase()
+                                            .includes(search.toLowerCase()) ? (
                                             ""
                                         ) : (
                                             <TableRow key={index}>
@@ -272,14 +278,18 @@ export default function Page() {
                                                 <TableCell>{department.vision}</TableCell>
                                                 <TableCell>{department.mission}</TableCell>
                                                 <TableCell>
-                                                    <Button variant={"outline"} size={"icon"} onClick={() => {
-                                                        setEditMode(true);
-                                                        setEditDepartmentId(department._id);
-                                                        setName(department.name);
-                                                        setVision(department.vision);
-                                                        setMission(department.mission);
-                                                        sheetTrigger.current.click();
-                                                    }}>
+                                                    <Button
+                                                        variant={"outline"}
+                                                        size={"icon"}
+                                                        onClick={() => {
+                                                            setEditMode(true);
+                                                            setEditDepartmentId(department._id);
+                                                            setName(department.name);
+                                                            setVision(department.vision);
+                                                            setMission(department.mission);
+                                                            sheetTrigger.current.click();
+                                                        }}
+                                                    >
                                                         <Edit />
                                                     </Button>
                                                 </TableCell>
@@ -296,12 +306,12 @@ export default function Page() {
                                                         <AlertDialogContent>
                                                             <AlertDialogHeader>
                                                                 <AlertDialogTitle>
-                                                                    Delete &apos;{department.name}&apos; from
-                                                                    departments?
+                                                                    Delete &apos;{department.name}
+                                                                    &apos; from departments?
                                                                 </AlertDialogTitle>
                                                                 <AlertDialogDescription>
                                                                     This action cannot be undone.
-                                                                    This will permanently delete{" "}
+                                                                    This will permanently delete
                                                                     {department.name} from deparment
                                                                     list.
                                                                 </AlertDialogDescription>

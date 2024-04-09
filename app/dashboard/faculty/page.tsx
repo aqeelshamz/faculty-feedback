@@ -47,7 +47,7 @@ import {
 } from "@/components/ui/alert-dialog";
 import { useUserStore } from "@/store";
 import { Edit, Trash } from "lucide-react";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { cn, serverURL } from "@/lib/utils";
 import axios from "axios";
 import { toast } from "sonner";
@@ -62,6 +62,9 @@ export default function Page() {
     const [password, setPassword] = useState("");
     const [title, setTitle] = useState("");
     const [facultyRole, setFacultyRole] = useState("");
+
+    const sheetTrigger = useRef<any>();
+    const [editMode, setEditMode] = useState(false);
 
     const createFaculty = async () => {
         const config = {
@@ -135,7 +138,7 @@ export default function Page() {
 
     useEffect(() => {
         getFaculties();
-    }, [faculties]);
+    });
 
     return (
         <>
@@ -296,7 +299,7 @@ export default function Page() {
                                                             </AlertDialogTitle>
                                                             <AlertDialogDescription>
                                                                 This action cannot be undone. This
-                                                                will permanently delete{" "}
+                                                                will permanently delete
                                                                 {faculty.name} from faculty list.
                                                             </AlertDialogDescription>
                                                         </AlertDialogHeader>

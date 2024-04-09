@@ -46,7 +46,7 @@ import {
 import { cn, serverURL } from "@/lib/utils";
 import { useUserStore } from "@/store";
 import axios from "axios";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { LuFilter } from "react-icons/lu";
 import { toast } from "sonner";
 import { Edit, Trash } from "lucide-react";
@@ -55,6 +55,9 @@ export default function Page() {
     const role = useUserStore((state) => state.role);
     const [students, setStudents] = useState<any>([]);
     const [batches, setBatches] = useState<any>([]);
+
+    const sheetTrigger = useRef<any>();
+    const [editMode, setEditMode] = useState(false);
 
     const [name, setName] = useState("");
     const [email, seEmail] = useState("");
