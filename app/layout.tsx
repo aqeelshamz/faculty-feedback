@@ -3,7 +3,6 @@ import "./globals.css";
 import localFont from "next/font/local";
 import { cn } from "@/lib/utils";
 import { Metadata } from "next";
-import App from "./page";
 
 const fontSans = FontSans({
     subsets: ["latin"],
@@ -34,7 +33,6 @@ export default function RootLayout({
                     fontSans.variable,
                 )}
             >
-                <App />
                 {children}
             </body>
         </html>

@@ -1,6 +1,6 @@
 "use client";
 
-import { Button } from "@/components/ui/button";
+import { Button, buttonVariants } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import {
@@ -34,11 +34,23 @@ import {
     TableHeader,
     TableRow,
 } from "@/components/ui/table";
+import {
+    AlertDialog,
+    AlertDialogAction,
+    AlertDialogCancel,
+    AlertDialogContent,
+    AlertDialogDescription,
+    AlertDialogFooter,
+    AlertDialogHeader,
+    AlertDialogTitle,
+    AlertDialogTrigger,
+} from "@/components/ui/alert-dialog";
 import { useUserStore } from "@/store";
-import { useEffect, useState } from "react";
-import { serverURL } from "@/lib/utils";
+import { useEffect, useRef, useState } from "react";
+import { cn, serverURL } from "@/lib/utils";
 import axios from "axios";
 import { toast } from "sonner";
+import { Edit, Trash } from "lucide-react";
 
 export default function Page() {
     const role = useUserStore((state) => state.role);
@@ -64,6 +76,26 @@ export default function Page() {
             });
     };
 
+    const deleteFeedback = async (id: string) => {
+        const config = {
+            method: "DELETE",
+            url: `${serverURL}/feedback/${id}`,
+            headers: {
+                Authorization: `Bearer ${localStorage.getItem("token")}`,
+                "Content-Type": "application/json",
+            },
+        };
+
+        axios(config)
+            .then((response) => {
+                toast.success(response?.data?.message);
+                getFeedbacks();
+            })
+            .catch((err) => {
+                toast.error(err.response?.data?.message);
+            });
+    };
+
     useEffect(() => {
         getFeedbacks();
     }, []);
@@ -75,48 +107,53 @@ export default function Page() {
                     <p className="font-semibold text-2xl mb-4">Feedbacks</p>
                     <div className="flex justify-between">
                         <div />
-                        {/* <Sheet>
-                            <SheetTrigger asChild>
-                                <Button>+ New Feedback</Button>
-                            </SheetTrigger>
-                            <SheetContent side={"left"}>
-                                <SheetHeader>
-                                    <SheetTitle>New Feedback</SheetTitle>
-                                    <SheetDescription>Create new feedback.</SheetDescription>
-                                </SheetHeader>
-                                <div className="grid gap-4 py-4">
-                                    <div className="grid grid-cols-4 items-center gap-4">
-                                        <Label htmlFor="name" className="text-right">
-                                            Name
-                                        </Label>
-                                        <Input className="col-span-3" type="text" />
-                                    </div>
-                                    <div className="grid grid-cols-4 items-center gap-4">
-                                        <Label htmlFor="email" className="text-right">
-                                            Email
-                                        </Label>
-                                        <Input className="col-span-3" type="email" />
-                                    </div>
-                                    <div className="grid grid-cols-4 items-center gap-4">
-                                        <Label htmlFor="title" className="text-right">
-                                            Title
-                                        </Label>
-                                        <Input className="col-span-3" type="text" />
-                                    </div>
-                                    <div className="grid grid-cols-4 items-center gap-4">
-                                        <Label htmlFor="role" className="text-right">
-                                            Role
-                                        </Label>
-                                        <Input className="col-span-3" type="text" />
-                                    </div>
-                                </div>
-                                <SheetFooter>
-                                    <SheetClose asChild>
-                                        <Button type="submit">Add Feedback</Button>
-                                    </SheetClose>
-                                </SheetFooter>
-                            </SheetContent>
-                        </Sheet> */}
+                        {/*
+                                <Sheet>
+                                    <SheetTrigger asChild>
+                                        <Button>+ New Feedback</Button>
+                                    </SheetTrigger>
+                                    <SheetContent side={"left"}>
+                                        <SheetHeader>
+                                            <SheetTitle>New Feedback</SheetTitle>
+                                            <SheetDescription>
+                                                Create new feedback.
+                                            </SheetDescription>
+                                        </SheetHeader>
+                                        <div className="grid gap-4 py-4">
+                                            <div className="grid grid-cols-4 items-center gap-4">
+                                                <Label htmlFor="name" className="text-right">
+                                                    Name
+                                                </Label>
+                                                <Input className="col-span-3" type="text" />
+                                            </div>
+                                            <div className="grid grid-cols-4 items-center gap-4">
+                                                <Label htmlFor="email" className="text-right">
+                                                    Email
+                                                </Label>
+                                                <Input className="col-span-3" type="email" />
+                                            </div>
+                                            <div className="grid grid-cols-4 items-center gap-4">
+                                                <Label htmlFor="title" className="text-right">
+                                                    Title
+                                                </Label>
+                                                <Input className="col-span-3" type="text" />
+                                            </div>
+                                            <div className="grid grid-cols-4 items-center gap-4">
+                                                <Label htmlFor="role" className="text-right">
+                                                    Role
+                                                </Label>
+                                                <Input className="col-span-3" type="text" />
+                                            </div>
+                                        </div>
+                                        <SheetFooter>
+                                            <SheetClose asChild>
+                                                <Button type="submit">Add Feedback</Button>
+                                            </SheetClose>
+                                        </SheetFooter>
+                                    </SheetContent>
+                                </Sheet>
+                            
+            */}
                         <div className="flex">
                             <Input
                                 className="mr-4"
@@ -163,8 +200,8 @@ export default function Page() {
                                         <TableRow key={index}>
                                             <TableCell>{feedback.title}</TableCell>
                                             <TableCell>{feedback.description}</TableCell>
-                                            <TableCell>{feedback.course}</TableCell>
-                                            <TableCell>{feedback.createdby}</TableCell>
+                                            <TableCell>{feedback.courseId}</TableCell>
+                                            <TableCell>{feedback.createdBy}</TableCell>
                                         </TableRow>
                                     ),
                                 )}

@@ -1,6 +1,6 @@
 "use client";
 
-import { Button } from "@/components/ui/button";
+import { Button, buttonVariants } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import {
@@ -34,15 +34,162 @@ import {
     TableHeader,
     TableRow,
 } from "@/components/ui/table";
+import {
+    AlertDialog,
+    AlertDialogAction,
+    AlertDialogCancel,
+    AlertDialogContent,
+    AlertDialogDescription,
+    AlertDialogFooter,
+    AlertDialogHeader,
+    AlertDialogTitle,
+    AlertDialogTrigger,
+} from "@/components/ui/alert-dialog";
 import { useUserStore } from "@/store";
 import { Edit, Trash } from "lucide-react";
-import { useRef, useState } from "react";
-import { courses, faculties } from "@/lib/data";
+import { useEffect, useRef, useState } from "react";
 import { Checkbox } from "@/components/ui/checkbox";
+import axios from "axios";
+import { cn, serverURL } from "@/lib/utils";
+import { toast } from "sonner";
 
 export default function Page() {
     const role = useUserStore((state) => state.role);
     const [search, setSearch] = useState("");
+    const [courses, setCourses] = useState<any>([]);
+    const [faculties, setFaculties] = useState<any>([]);
+
+    //New Course
+    const [name, setName] = useState("");
+    const [courseCode, setCourseCode] = useState("");
+    const [semester, setSemester] = useState("");
+    const [courseFaculties, setCourseFaculties] = useState<any>([]);
+
+    //Edit Course
+    const [editCourseId, setEditCourseId] = useState("");
+
+    const createCourse = async () => {
+        const config = {
+            method: "POST",
+            url: `${serverURL}/course`,
+            headers: {
+                Authorization: `Bearer ${localStorage.getItem("token")}`,
+                "Content-Type": "application/json",
+            },
+            data: {
+                name: name,
+                courseCode: courseCode,
+                semester: semester,
+                faculties: courseFaculties,
+            },
+        };
+
+        axios(config)
+            .then((response) => {
+                toast.success(response.data.message);
+                setCourseCode("");
+                setSemester("");
+                setCourseFaculties([]);
+                getCourses();
+            })
+            .catch((err) => {
+                toast.error(err.response?.data?.message);
+            });
+    };
+
+    const updateCourse = async () => {
+        const config = {
+            method: "PUT",
+            url: `${serverURL}/course/${editCourseId}`,
+            headers: {
+                Authorization: `Bearer ${localStorage.getItem("token")}`,
+                "Content-Type": "application/json",
+            },
+            data: {
+                name: name,
+                courseCode: courseCode,
+                semester: semester,
+                faculties: courseFaculties,
+            },
+        };
+
+        axios(config)
+            .then((response) => {
+                toast.success(response.data.message);
+                setEditCourseId("");
+                setName("");
+                setCourseCode("");
+                setSemester("");
+                setCourseFaculties([]);
+                getCourses();
+            })
+            .catch((err) => {
+                toast.error(err.response?.data?.message);
+            });
+    };
+
+    const deleteCourse = async (id: string) => {
+        const config = {
+            method: "DELETE",
+            url: `${serverURL}/course/${id}`,
+            headers: {
+                Authorization: `Bearer ${localStorage.getItem("token")}`,
+                "Content-Type": "application/json",
+            },
+        };
+
+        axios(config)
+            .then((response) => {
+                toast.success(response?.data?.message);
+                getCourses();
+            })
+            .catch((err) => {
+                toast.error(err.response?.data?.message);
+            });
+    };
+
+    const getCourses = async () => {
+        const config = {
+            method: "GET",
+            url: `${serverURL}/course/`,
+            headers: {
+                Authorization: `Bearer ${localStorage.getItem("token")}`,
+                "Content-Type": "application/json",
+            },
+        };
+
+        axios(config)
+            .then((response) => {
+                setCourses(response?.data?.data);
+            })
+            .catch((err) => {
+                toast.error(err.response?.data?.message);
+            });
+    };
+
+    const getFaculties = async () => {
+        const config = {
+            method: "GET",
+            url: `${serverURL}/faculty/`,
+            headers: {
+                Authorization: `Bearer ${localStorage.getItem("token")}`,
+                "Content-Type": "application/json",
+            },
+        };
+
+        axios(config)
+            .then((response) => {
+                setFaculties(response?.data?.data);
+            })
+            .catch((err) => {
+                toast.error(err.response?.data?.message);
+            });
+    };
+
+    useEffect(() => {
+        getCourses();
+        getFaculties();
+    }, []);
 
     const sheetTrigger = useRef<any>();
     const [editMode, setEditMode] = useState(false);
@@ -53,27 +200,49 @@ export default function Page() {
                 <div className="w-full h-screen p-7 overflow-y-auto">
                     <p className="font-semibold text-2xl mb-4">Courses</p>
                     <div className="flex justify-between">
-                        <Sheet>
+                        <Sheet
+                            onOpenChange={(x) => {
+                                if (x === false) setEditMode(false);
+                                if (!editMode && x) {
+                                    setCourseCode("");
+                                    setSemester("");
+                                    setCourseFaculties([]);
+                                }
+                            }}
+                        >
                             <SheetTrigger asChild>
                                 <Button>+ New Course</Button>
                             </SheetTrigger>
                             <SheetContent side={"left"}>
                                 <SheetHeader>
-                                    <SheetTitle>New Course</SheetTitle>
-                                    <SheetDescription>Create new course.</SheetDescription>
+                                    <SheetTitle>{editMode ? "Edit" : "New"} Course</SheetTitle>
+                                    <SheetDescription>
+                                        {" "}
+                                        {editMode ? "Edit" : "Create new"} course.
+                                    </SheetDescription>
                                 </SheetHeader>
                                 <div className="grid gap-4 py-4">
                                     <div className="grid grid-cols-4 items-center gap-4">
                                         <Label htmlFor="name" className="text-right">
                                             Name
                                         </Label>
-                                        <Input className="col-span-3" type="text" />
+                                        <Input
+                                            className="col-span-3"
+                                            type="text"
+                                            value={name}
+                                            onChange={(e) => setName(e.target.value)}
+                                        />
                                     </div>
                                     <div className="grid grid-cols-4 items-center gap-4">
                                         <Label htmlFor="title" className="text-right">
                                             Course Code
                                         </Label>
-                                        <Input className="col-span-3" type="text" />
+                                        <Input
+                                            className="col-span-3"
+                                            type="text"
+                                            value={courseCode}
+                                            onChange={(e) => setCourseCode(e.target.value)}
+                                        />
                                     </div>
                                     <div className="grid grid-cols-4 items-center gap-4">
                                         <Label htmlFor="course" className="text-right">
@@ -86,16 +255,18 @@ export default function Page() {
                                             <SelectContent>
                                                 <SelectGroup>
                                                     <SelectLabel>Semesters</SelectLabel>
-                                                    {courses?.map((course: any, index: number) => {
-                                                        return (
-                                                            <SelectItem
-                                                                key={index}
-                                                                value={course?.name}
-                                                            >
-                                                                {course?.name}
-                                                            </SelectItem>
-                                                        );
-                                                    })}
+                                                    {["1", "2", "3", "4", "5", "6", "7", "8"]?.map(
+                                                        (semester: any, index: number) => {
+                                                            return (
+                                                                <SelectItem
+                                                                    key={index}
+                                                                    value={semester}
+                                                                >
+                                                                    {semester}
+                                                                </SelectItem>
+                                                            );
+                                                        },
+                                                    )}
                                                 </SelectGroup>
                                             </SelectContent>
                                         </Select>
@@ -104,7 +275,7 @@ export default function Page() {
                                         <Label htmlFor="name" className="text-right">
                                             Faculties
                                         </Label>
-                                        {faculties.map((faculty, index) => {
+                                        {faculties.map((faculty: any, index: number) => {
                                             return (
                                                 <div
                                                     className="flex items-center space-x-2 my-4"
@@ -124,7 +295,9 @@ export default function Page() {
                                 </div>
                                 <SheetFooter>
                                     <SheetClose asChild>
-                                        <Button type="submit">Add Course</Button>
+                                        <Button type="submit" onClick={createCourse}>
+                                            Add Course
+                                        </Button>
                                     </SheetClose>
                                 </SheetFooter>
                             </SheetContent>
@@ -143,17 +316,19 @@ export default function Page() {
                     </div>
                     <div className="m-10">
                         <Table>
-                            <TableCaption>A list of courses.</TableCaption>
+                            <TableCaption>{courses.length} courses</TableCaption>
                             <TableHeader>
                                 <TableRow>
                                     <TableHead>Name</TableHead>
                                     <TableHead>Course Code</TableHead>
+                                    <TableHead>Semester</TableHead>
+                                    <TableHead>Faculties</TableHead>
                                     <TableHead>Edit</TableHead>
                                     <TableHead>Delete</TableHead>
                                 </TableRow>
                             </TableHeader>
                             <TableBody>
-                                {courses.map((course, index: number) =>
+                                {courses.map((course: any, index: number) =>
                                     !course.name
                                         .toString()
                                         .toLowerCase()
@@ -167,15 +342,63 @@ export default function Page() {
                                         <TableRow key={index}>
                                             <TableCell>{course.name}</TableCell>
                                             <TableCell>{course.courseCode}</TableCell>
+                                            <TableCell>{course.semester}</TableCell>
+                                            <TableCell>{course.courseFaculties}</TableCell>
                                             <TableCell>
-                                                <Button variant={"outline"} size={"icon"}>
+                                                <Button
+                                                    variant={"outline"}
+                                                    size={"icon"}
+                                                    onClick={() => {
+                                                        setEditMode(true);
+                                                        setEditCourseId(course._id);
+                                                        setName(course.name);
+                                                        setCourseCode(course.courseCode);
+                                                        setSemester(course.semester);
+                                                        setCourseFaculties(course.courseFaculties);
+                                                        sheetTrigger.current.click();
+                                                    }}
+                                                >
                                                     <Edit />
                                                 </Button>
                                             </TableCell>
                                             <TableCell>
-                                                <Button variant={"outline"} size={"icon"}>
-                                                    <Trash />
-                                                </Button>
+                                                <AlertDialog>
+                                                    <AlertDialogTrigger asChild>
+                                                        <Button variant={"outline"} size={"icon"}>
+                                                            <Trash />
+                                                        </Button>
+                                                    </AlertDialogTrigger>
+                                                    <AlertDialogContent>
+                                                        <AlertDialogHeader>
+                                                            <AlertDialogTitle>
+                                                                Delete &apos;{course.name}
+                                                                &apos; from courses?
+                                                            </AlertDialogTitle>
+                                                            <AlertDialogDescription>
+                                                                This action cannot be undone. This
+                                                                will permanently delete
+                                                                {course.name} from course list.
+                                                            </AlertDialogDescription>
+                                                        </AlertDialogHeader>
+                                                        <AlertDialogFooter>
+                                                            <AlertDialogCancel>
+                                                                Cancel
+                                                            </AlertDialogCancel>
+                                                            <AlertDialogAction
+                                                                className={cn(
+                                                                    buttonVariants({
+                                                                        variant: "destructive",
+                                                                    }),
+                                                                )}
+                                                                onClick={() =>
+                                                                    deleteCourse(course._id)
+                                                                }
+                                                            >
+                                                                Delete
+                                                            </AlertDialogAction>
+                                                        </AlertDialogFooter>
+                                                    </AlertDialogContent>
+                                                </AlertDialog>
                                             </TableCell>
                                         </TableRow>
                                     ),
@@ -185,13 +408,7 @@ export default function Page() {
                     </div>
                 </div>
             ) : (
-                <>
-                    <div className="flex justify-center items-center h-full">
-                        <div className="flex justify-center text-2xl font-bold">
-                            <p className="hidden lg:flex">404 Not Found</p>
-                        </div>
-                    </div>
-                </>
+                <></>
             )}
         </>
     );

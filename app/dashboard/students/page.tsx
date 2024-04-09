@@ -58,6 +58,7 @@ export default function Page() {
 
     const sheetTrigger = useRef<any>();
     const [editMode, setEditMode] = useState(false);
+    const [editStudentId, setEditStudentId] = useState("");
 
     const [name, setName] = useState("");
     const [email, setEmail] = useState("");
@@ -103,6 +104,47 @@ export default function Page() {
                 setAddress("");
                 setPhone("");
                 setBatch("");
+            })
+            .catch((err) => {
+                toast.error(err.response?.data?.message);
+            });
+    };
+
+    const updateStudent = async () => {
+        const config = {
+            method: "PUT",
+            url: `${serverURL}/student/${editStudentId}`,
+            headers: {
+                Authorization: `Bearer ${localStorage.getItem("token")}`,
+                "Content-Type": "application/json",
+            },
+            data: {
+                name: name,
+                email: email,
+                password: password,
+                gender: gender,
+                admNo: admNo,
+                phone: phone,
+                address: address,
+                rollNo: rollNo,
+                batchId: batch,
+            },
+        };
+
+        axios(config)
+            .then((response) => {
+                toast.success(response.data.message);
+                setEditStudentId("");
+                setName("");
+                setEmail("");
+                setPassword("");
+                setGender("M");
+                setAdmNo("");
+                setRollNo("");
+                setAddress("");
+                setPhone("");
+                setBatch("");
+                getStudents();
             })
             .catch((err) => {
                 toast.error(err.response?.data?.message);
@@ -178,27 +220,57 @@ export default function Page() {
                 <div className="w-full h-screen p-7 overflow-y-auto">
                     <p className="font-semibold text-2xl mb-4">Students</p>
                     <div className="flex justify-between">
-                        <Sheet>
-                            <SheetTrigger asChild>
+                        <Sheet
+                            onOpenChange={(x) => {
+                                if (x === false) setEditMode(false);
+                                if (!editMode && x) {
+                                    setName("");
+                                    setEmail("");
+                                    setPassword("");
+                                    setGender("M");
+                                    setAdmNo("");
+                                    setRollNo("");
+                                    setAddress("");
+                                    setPhone("");
+                                    setBatch("");
+                                }
+                            }}
+                        >
+                            <SheetTrigger ref={sheetTrigger} asChild>
                                 <Button>+ New Student</Button>
                             </SheetTrigger>
                             <SheetContent side={"left"}>
                                 <SheetHeader>
-                                    <SheetTitle>New Student</SheetTitle>
-                                    <SheetDescription>Create new student.</SheetDescription>
+                                    <SheetTitle>{editMode ? "Edit" : "New"} Student</SheetTitle>
+                                    <SheetDescription>
+                                        {" "}
+                                        {editMode ? "Edit" : "Create new"} student.
+                                    </SheetDescription>
                                 </SheetHeader>
                                 <div className="grid gap-4 py-4">
                                     <div className="grid grid-cols-4 items-center gap-4">
                                         <Label htmlFor="name" className="text-right">
                                             Name
                                         </Label>
-                                        <Input className="col-span-3" type="text" id="name" value={name} onChange={(x) => setName(x.target.value)} />
+                                        <Input
+                                            className="col-span-3"
+                                            type="text"
+                                            id="name"
+                                            value={name}
+                                            onChange={(x) => setName(x.target.value)}
+                                        />
                                     </div>
                                     <div className="grid grid-cols-4 items-center gap-4">
                                         <Label htmlFor="email" className="text-right">
                                             Email
                                         </Label>
-                                        <Input className="col-span-3" type="email" id="email" value={email} onChange={(x) => setEmail(x.target.value)} />
+                                        <Input
+                                            className="col-span-3"
+                                            type="email"
+                                            id="email"
+                                            value={email}
+                                            onChange={(x) => setEmail(x.target.value)}
+                                        />
                                     </div>
                                     <div className="grid grid-cols-4 items-center gap-4">
                                         <Label htmlFor="password" className="text-right">
@@ -208,7 +280,8 @@ export default function Page() {
                                             className="col-span-3"
                                             type="password"
                                             id="password"
-                                            value={password} onChange={(x) => setPassword(x.target.value)}
+                                            value={password}
+                                            onChange={(x) => setPassword(x.target.value)}
                                         />
                                     </div>
                                     <div className="grid grid-cols-4 items-center gap-4">
@@ -222,16 +295,10 @@ export default function Page() {
                                             <SelectContent>
                                                 <SelectGroup>
                                                     <SelectLabel>Gender</SelectLabel>
-                                                    <SelectItem
-                                                        key={0}
-                                                        value={"M"}
-                                                    >
+                                                    <SelectItem key={0} value={"M"}>
                                                         Male
                                                     </SelectItem>
-                                                    <SelectItem
-                                                        key={1}
-                                                        value={"F"}
-                                                    >
+                                                    <SelectItem key={1} value={"F"}>
                                                         Female
                                                     </SelectItem>
                                                 </SelectGroup>
@@ -242,25 +309,49 @@ export default function Page() {
                                         <Label htmlFor="admNo" className="text-right">
                                             Adm. No.
                                         </Label>
-                                        <Input className="col-span-3" type="text" id="admNo" value={admNo} onChange={(x) => setAdmNo(x.target.value)} />
+                                        <Input
+                                            className="col-span-3"
+                                            type="text"
+                                            id="admNo"
+                                            value={admNo}
+                                            onChange={(x) => setAdmNo(x.target.value)}
+                                        />
                                     </div>
                                     <div className="grid grid-cols-4 items-center gap-4">
                                         <Label htmlFor="phone" className="text-right">
                                             Phone
                                         </Label>
-                                        <Input className="col-span-3" type="tel" id="phone" value={phone} onChange={(x) => setPhone(x.target.value)} />
+                                        <Input
+                                            className="col-span-3"
+                                            type="tel"
+                                            id="phone"
+                                            value={phone}
+                                            onChange={(x) => setPhone(x.target.value)}
+                                        />
                                     </div>
                                     <div className="grid grid-cols-4 items-center gap-4">
                                         <Label htmlFor="address" className="text-right">
                                             Address
                                         </Label>
-                                        <Input className="col-span-3" type="text" id="address" value={address} onChange={(x)=>setAddress(x.target.value)} />
+                                        <Input
+                                            className="col-span-3"
+                                            type="text"
+                                            id="address"
+                                            value={address}
+                                            onChange={(x) => setAddress(x.target.value)}
+                                        />
                                     </div>
                                     <div className="grid grid-cols-4 items-center gap-4">
                                         <Label htmlFor="rollNo" className="text-right">
                                             Roll No.
                                         </Label>
-                                        <Input className="col-span-3" type="number" id="rollNo" value={rollNo} onChange={(x)=>setRollNo(x.target.value)} />
+                                        <Input
+                                            className="col-span-3"
+                                            type="number"
+                                            id="rollNo"
+                                            value={rollNo}
+                                            onChange={(x) => setRollNo(x.target.value)}
+                                        />
                                     </div>
                                     <div className="grid grid-cols-4 items-center gap-4">
                                         <Label htmlFor="batchId" className="text-right">
@@ -290,7 +381,18 @@ export default function Page() {
                                 </div>
                                 <SheetFooter>
                                     <SheetClose asChild>
-                                        <Button type="submit" onClick={createStudent}>Add Student</Button>
+                                        <Button
+                                            type="submit"
+                                            onClick={() => {
+                                                if (editMode) {
+                                                    updateStudent();
+                                                } else {
+                                                    createStudent();
+                                                }
+                                            }}
+                                        >
+                                            {editMode ? "Save" : "Create"} Student
+                                        </Button>
                                     </SheetClose>
                                 </SheetFooter>
                             </SheetContent>
@@ -327,7 +429,24 @@ export default function Page() {
                                         <TableCell>{student.address}</TableCell>
                                         <TableCell>{student.batchId}</TableCell>
                                         <TableCell>
-                                            <Button variant={"outline"} size={"icon"}>
+                                            <Button
+                                                variant={"outline"}
+                                                size={"icon"}
+                                                onClick={() => {
+                                                    setEditMode(true);
+                                                    setEditStudentId(student._id);
+                                                    setName("");
+                                                    setEmail("");
+                                                    setPassword("");
+                                                    setGender("M");
+                                                    setAdmNo("");
+                                                    setRollNo("");
+                                                    setAddress("");
+                                                    setPhone("");
+                                                    setBatch("");
+                                                    sheetTrigger.current.click();
+                                                }}
+                                            >
                                                 <Edit />
                                             </Button>
                                         </TableCell>
@@ -341,12 +460,13 @@ export default function Page() {
                                                 <AlertDialogContent>
                                                     <AlertDialogHeader>
                                                         <AlertDialogTitle>
-                                                            Delete {student.name} from faculties?
+                                                            Delete &apos;{student.name}&apos; from
+                                                            students?
                                                         </AlertDialogTitle>
                                                         <AlertDialogDescription>
                                                             This action cannot be undone. This will
                                                             permanently delete {student.name} from
-                                                            deparment list.
+                                                            student list.
                                                         </AlertDialogDescription>
                                                     </AlertDialogHeader>
                                                     <AlertDialogFooter>
