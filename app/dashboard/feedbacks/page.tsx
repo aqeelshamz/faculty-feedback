@@ -201,7 +201,7 @@ export default function Page() {
                                             <TableCell>{feedback.title}</TableCell>
                                             <TableCell>{feedback.description}</TableCell>
                                             <TableCell>{feedback.courseId}</TableCell>
-                                            <TableCell>{feedback.createdBy}</TableCell>
+                                            <TableCell>{feedback.createdBy.name}</TableCell>
                                         </TableRow>
                                     ),
                                 )}
