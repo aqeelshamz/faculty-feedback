@@ -65,23 +65,28 @@ export default function Page() {
     const role = useUserStore((state) => state.role);
     const [search, setSearch] = useState("");
 
+    const [name, setName] = useState("");
+    const [hod, setHod] = useState("");
+
+    //Edit Program
+    const [editProgramId, setEditProgramId] = useState("");
+
     const sheetTrigger = useRef<any>();
     const [editMode, setEditMode] = useState(false);
 
-    /*  const [programs, setPrograms] = useState<any>([]);
+    const [programs, setPrograms] = useState<any>([]);
 
     const createProgram = async () => {
         const config = {
             method: "POST",
-            url: `${serverURL}/department/`,
+            url: `${serverURL}/program/`,
             headers: {
                 Authorization: `Bearer ${localStorage.getItem("token")}`,
                 "Content-Type": "application/json",
             },
             data: {
                 name: name,
-                vision: vision,
-                mission: mission,
+                hod: hod,
             },
         };
 
@@ -89,15 +94,14 @@ export default function Page() {
             .then((response) => {
                 toast.success(response.data.message);
                 setName("");
-                setVision("");
-                setMission("");
+                setHod("");
                 getPrograms();
             })
             .catch((err) => {
                 toast.error(err.response?.data?.message);
             });
     };
-    
+
     const updateProgram = async () => {
         const config = {
             method: "PUT",
@@ -108,21 +112,17 @@ export default function Page() {
             },
             data: {
                 name: name,
-                courseCode: courseCode,
-                semester: semester,
-                faculties: courseFaculties,
+                hod: hod,
             },
         };
 
         axios(config)
             .then((response) => {
                 toast.success(response.data.message);
-                setEditCourseId("");
+                setEditProgramId("");
                 setName("");
-                setCourseCode("");
-                setSemester("");
-                setCourseFaculties([]);
-                getCourses();
+                setHod("");
+                getPrograms();
             })
             .catch((err) => {
                 toast.error(err.response?.data?.message);
@@ -152,7 +152,7 @@ export default function Page() {
     const getPrograms = async () => {
         const config = {
             method: "GET",
-            url: `${serverURL}/department/`,
+            url: `${serverURL}/program/`,
             headers: {
                 Authorization: `Bearer ${localStorage.getItem("token")}`,
                 "Content-Type": "application/json",
@@ -170,8 +170,7 @@ export default function Page() {
 
     useEffect(() => {
         getPrograms();
-  }, []);
-  */
+    }, []);
 
     return (
         <>
@@ -179,8 +178,16 @@ export default function Page() {
                 <div className="w-full h-screen p-7 overflow-y-auto">
                     <p className="font-semibold text-2xl mb-4">Programs</p>
                     <div className="flex justify-between">
-                        <Sheet>
-                            <SheetTrigger asChild>
+                        <Sheet
+                            onOpenChange={(x) => {
+                                if (x === false) setEditMode(false);
+                                if (!editMode && x) {
+                                    setName("");
+                                    setHod("");
+                                }
+                            }}
+                        >
+                            <SheetTrigger ref={sheetTrigger} asChild>
                                 <Button>+ New Program</Button>
                             </SheetTrigger>
                             <SheetContent side={"left"}>
@@ -195,7 +202,12 @@ export default function Page() {
                                         <Label htmlFor="name" className="text-right">
                                             Name
                                         </Label>
-                                        <Input className="col-span-3" type="text" />
+                                        <Input
+                                            className="col-span-3"
+                                            type="text"
+                                            value={name}
+                                            onChange={(e) => setName(e.target.value)}
+                                        />
                                     </div>
                                     <div className="grid grid-cols-4 items-center gap-4">
                                         <Label htmlFor="hod" className="text-right">
@@ -227,7 +239,18 @@ export default function Page() {
                                 </div>
                                 <SheetFooter>
                                     <SheetClose asChild>
-                                        <Button type="submit">Add program</Button>
+                                        <Button
+                                            type="submit"
+                                            onClick={() => {
+                                                if (editMode) {
+                                                    updateProgram();
+                                                } else {
+                                                    createProgram();
+                                                }
+                                            }}
+                                        >
+                                            {editMode ? "Save" : "Create"} program
+                                        </Button>
                                     </SheetClose>
                                 </SheetFooter>
                             </SheetContent>
@@ -251,13 +274,12 @@ export default function Page() {
                                 <TableRow>
                                     <TableHead>Name</TableHead>
                                     <TableHead>HOD</TableHead>
-                                    <TableHead>Department</TableHead>
                                     <TableHead>Edit</TableHead>
                                     <TableHead>Delete</TableHead>
                                 </TableRow>
                             </TableHeader>
                             <TableBody>
-                                {programs.map((program, index: number) =>
+                                {programs.map((program: any, index: number) =>
                                     !program.name
                                         .toString()
                                         .toLowerCase()
@@ -271,9 +293,18 @@ export default function Page() {
                                         <TableRow key={index}>
                                             <TableCell>{program.name}</TableCell>
                                             <TableCell>{program.hod}</TableCell>
-                                            <TableCell>DEPARTMENT</TableCell>
                                             <TableCell>
-                                                <Button variant={"outline"} size={"icon"}>
+                                                <Button
+                                                    variant={"outline"}
+                                                    size={"icon"}
+                                                    onClick={() => {
+                                                        setEditMode(true);
+                                                        setEditProgramId(program._id);
+                                                        setName(program.name);
+                                                        setHod(program.hod);
+                                                        sheetTrigger.current.click();
+                                                    }}
+                                                >
                                                     <Edit />
                                                 </Button>
                                             </TableCell>
@@ -306,9 +337,8 @@ export default function Page() {
                                                                         variant: "destructive",
                                                                     }),
                                                                 )}
-                                                                onClick={
-                                                                    () => {}
-                                                                    // deleteProgram(program._id)
+                                                                onClick={() =>
+                                                                    deleteProgram(program._id)
                                                                 }
                                                             >
                                                                 Delete

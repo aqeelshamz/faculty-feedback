@@ -24,11 +24,11 @@ export const FacultyNav = () => {
                                 </Badge> */}
             </Link>
             <Link
-                href="/dashboard/faculty"
+                href="/dashboard/feedbacks"
                 className={`flex items-center gap-3 rounded-lg px-3 py-2 transition-all hover:text-primary ${pathname === "/dashboard/faculty" ? "bg-muted text-primary" : "text-muted-foreground"}`}
             >
                 <User className="h-4 w-4" />
-                Survey
+                Feedbacks
                 {/* <Badge className="ml-auto flex h-6 w-6 shrink-0 items-center justify-center rounded-full">
                                     {useFacultyStore((state) => state.faculties).length}
                                 </Badge> */}

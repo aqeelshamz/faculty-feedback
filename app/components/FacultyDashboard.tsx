@@ -11,7 +11,7 @@ export default function FacultyDashboard() {
             <div className="grid gap-4 md:grid-cols-2 md:gap-8 lg:grid-cols-4">
                 <Card className="cursor-pointer hover:shadow-md duration-75 w-full max-w-xs mr-4">
                     <div className="p-4 flex justify-between">
-                        <CardTitle className="flex">Surveys</CardTitle>
+                        <CardTitle className="flex">Feedbacks</CardTitle>
                         <StickyNote className="h-6 w-6" />
                     </div>
                     <CardContent>
@@ -27,9 +27,7 @@ export default function FacultyDashboard() {
                         <GraduationCap className="h-6 w-6" />
                     </div>
                     <CardContent>
-                        <p className="text-4xl font-bold">
-                            0
-                        </p>
+                        <p className="text-4xl font-bold">0</p>
                     </CardContent>
                 </Card>
                 <Card
@@ -41,9 +39,7 @@ export default function FacultyDashboard() {
                         <User className="h-6 w-6" />
                     </div>
                     <CardContent>
-                        <p className="text-4xl font-bold">
-                            0
-                        </p>
+                        <p className="text-4xl font-bold">0</p>
                     </CardContent>
                 </Card>
                 <Card
@@ -55,9 +51,7 @@ export default function FacultyDashboard() {
                         <Users className="h-6 w-6" />
                     </div>
                     <CardContent>
-                        <p className="text-4xl font-bold">
-                            0
-                        </p>
+                        <p className="text-4xl font-bold">0</p>
                     </CardContent>
                 </Card>
             </div>

@@ -52,7 +52,7 @@ export default function Dashboard({
                             <RxRulerSquare className="mr-2" />
                             <p className="hidden lg:flex">Dashboard</p>
                         </div>
-                        <DropdownMenu>
+                        {/* <DropdownMenu>
                             <DropdownMenuTrigger asChild>
                                 <Button variant="outline" size="icon" className="ml-auto h-8 w-8">
                                     <Bell className="h-4 w-4" />
@@ -62,7 +62,7 @@ export default function Dashboard({
                             <DropdownMenuContent align="end">
                                 <NotificationCard />
                             </DropdownMenuContent>
-                        </DropdownMenu>
+                        </DropdownMenu> */}
                     </div>
                     <div className="flex-1">
                         <nav className="grid items-start px-2 text-sm font-medium lg:px-4">

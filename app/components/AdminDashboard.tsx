@@ -13,10 +13,39 @@ import {
     Users,
 } from "lucide-react";
 import { useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
+import { serverURL } from "@/lib/utils";
+import axios from "axios";
+import { toast } from "sonner";
 
 export default function AdminDashboard() {
     const router = useRouter();
     const role = useUserStore((state) => state.role);
+
+    const [allCounts, setAllCounts] = useState({});
+
+    const getAllCounts = async () => {
+        const config = {
+            method: "POST",
+            url: `${serverURL}/college/get-all-count`,
+            headers: {
+                Authorization: `Bearer ${localStorage.getItem("token")}`,
+                "Content-Type": "application/json",
+            },
+        };
+
+        axios(config)
+            .then((response) => {
+                setAllCounts(response?.data?.data);
+            })
+            .catch((err) => {
+                toast.error(err.response?.data?.message);
+            });
+    };
+
+    useEffect(() => {
+        getAllCounts();
+    }, []);
 
     return (
         <div className="w-full h-full p-7">
@@ -26,11 +55,11 @@ export default function AdminDashboard() {
                     className="cursor-pointer hover:shadow-md duration-75 w-full max-w-xs mr-4"
                 >
                     <div className="p-4 flex justify-between">
-                        <CardTitle className="flex">Surveys</CardTitle>
+                        <CardTitle className="flex">Feedbacks</CardTitle>
                         <StickyNote className="h-6 w-6" />
                     </div>
                     <CardContent>
-                        <p className="text-4xl font-bold">13</p>
+                        <p className="text-4xl font-bold">{allCounts?.feedbackCount}</p>
                     </CardContent>
                 </Card>
                 <Card
@@ -42,7 +71,7 @@ export default function AdminDashboard() {
                         <GraduationCap className="h-6 w-6" />
                     </div>
                     <CardContent>
-                        <p className="text-4xl font-bold">{programs.length}</p>
+                        <p className="text-4xl font-bold">{allCounts?.programCount}</p>
                     </CardContent>
                 </Card>
                 <Card
@@ -54,7 +83,7 @@ export default function AdminDashboard() {
                         <BookOpen className="h-6 w-6" />
                     </div>
                     <CardContent>
-                        <p className="text-4xl font-bold">{students.length}</p>
+                        <p className="text-4xl font-bold">{allCounts?.courseCount}</p>
                     </CardContent>
                 </Card>
                 <Card
@@ -66,9 +95,7 @@ export default function AdminDashboard() {
                         <Building className="h-6 w-6" />
                     </div>
                     <CardContent>
-                        <p className="text-4xl font-bold">
-                            {students.length}
-                        </p>
+                        <p className="text-4xl font-bold">{allCounts?.departmentCount}</p>
                     </CardContent>
                 </Card>
                 <Card
@@ -80,9 +107,7 @@ export default function AdminDashboard() {
                         <Group className="h-6 w-6" />
                     </div>
                     <CardContent>
-                        <p className="text-4xl font-bold">
-                             {students.length}
-                        </p>
+                        <p className="text-4xl font-bold">{allCounts?.batchCount}</p>
                     </CardContent>
                 </Card>
                 <Card
@@ -94,9 +119,7 @@ export default function AdminDashboard() {
                         <Calendar className="h-6 w-6" />
                     </div>
                     <CardContent>
-                        <p className="text-4xl font-bold">
-                             {students.length}
-                        </p>
+                        <p className="text-4xl font-bold">{allCounts?.semesterCount}</p>
                     </CardContent>
                 </Card>
                 <Card
@@ -108,9 +131,7 @@ export default function AdminDashboard() {
                         <User className="h-6 w-6" />
                     </div>
                     <CardContent>
-                        <p className="text-4xl font-bold">
-                             {faculties.length}
-                        </p>
+                        <p className="text-4xl font-bold">{allCounts?.facultyCount}</p>
                     </CardContent>
                 </Card>
                 <Card
@@ -122,9 +143,7 @@ export default function AdminDashboard() {
                         <Users className="h-6 w-6" />
                     </div>
                     <CardContent>
-                        <p className="text-4xl font-bold">
-                             {students.length}
-                        </p>
+                        <p className="text-4xl font-bold">{allCounts?.studentCount}</p>
                     </CardContent>
                 </Card>
             </div>
