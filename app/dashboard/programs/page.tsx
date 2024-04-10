@@ -271,7 +271,7 @@ export default function Page() {
                                         <TableRow key={index}>
                                             <TableCell>{program.name}</TableCell>
                                             <TableCell>{program.hod}</TableCell>
-                                            <TableCell>{program.department}</TableCell>
+                                            <TableCell>DEPARTMENT</TableCell>
                                             <TableCell>
                                                 <Button variant={"outline"} size={"icon"}>
                                                     <Edit />
