@@ -42,8 +42,9 @@ export default function SignIn() {
                     <div className="relative z-20 p-10 mt-auto">
                         <blockquote className="space-y-2">
                             <p className="text-md">
-                                &ldquo;Very little is needed to make a happy life; it is all within
-                                yourself, in your way of thinking.&rdquo;
+                                &ldquo;This is the mark of perfection of character – to spend each
+                                day as if it were your last, without frenzy, laziness, or any
+                                pretending.&rdquo;
                             </p>
                             <footer className="text-sm">Marcus Aurelius</footer>
                         </blockquote>

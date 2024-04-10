@@ -96,12 +96,43 @@ export default function Page() {
             .catch((err) => {
                 toast.error(err.response?.data?.message);
             });
-    };*/
+    };
+    
+    const updateProgram = async () => {
+        const config = {
+            method: "PUT",
+            url: `${serverURL}/program/${editProgramId}`,
+            headers: {
+                Authorization: `Bearer ${localStorage.getItem("token")}`,
+                "Content-Type": "application/json",
+            },
+            data: {
+                name: name,
+                courseCode: courseCode,
+                semester: semester,
+                faculties: courseFaculties,
+            },
+        };
+
+        axios(config)
+            .then((response) => {
+                toast.success(response.data.message);
+                setEditCourseId("");
+                setName("");
+                setCourseCode("");
+                setSemester("");
+                setCourseFaculties([]);
+                getCourses();
+            })
+            .catch((err) => {
+                toast.error(err.response?.data?.message);
+            });
+    };
 
     const deleteProgram = async (id: string) => {
         const config = {
             method: "DELETE",
-            url: `${serverURL}/department/${id}`,
+            url: `${serverURL}/program/${id}`,
             headers: {
                 Authorization: `Bearer ${localStorage.getItem("token")}`,
                 "Content-Type": "application/json",
@@ -111,14 +142,14 @@ export default function Page() {
         axios(config)
             .then((response) => {
                 toast(response?.data?.message);
-                /*getPrograms();*/
+                getPrograms();
             })
             .catch((err) => {
                 toast.error(err.response?.data?.message);
             });
     };
 
-    /*const getPrograms = async () => {
+    const getPrograms = async () => {
         const config = {
             method: "GET",
             url: `${serverURL}/department/`,
@@ -138,7 +169,9 @@ export default function Page() {
     };
 
     useEffect(() => {
-  }, []);*/
+        getPrograms();
+  }, []);
+  */
 
     return (
         <>
@@ -152,8 +185,10 @@ export default function Page() {
                             </SheetTrigger>
                             <SheetContent side={"left"}>
                                 <SheetHeader>
-                                    <SheetTitle>New Program</SheetTitle>
-                                    <SheetDescription>Create new program.</SheetDescription>
+                                    <SheetTitle>{editMode ? "Edit" : "New"} Program</SheetTitle>
+                                    <SheetDescription>
+                                        {editMode ? "Edit" : "Create new"} program.
+                                    </SheetDescription>
                                 </SheetHeader>
                                 <div className="grid gap-4 py-4">
                                     <div className="grid grid-cols-4 items-center gap-4">
@@ -164,15 +199,15 @@ export default function Page() {
                                     </div>
                                     <div className="grid grid-cols-4 items-center gap-4">
                                         <Label htmlFor="hod" className="text-right">
-                                            Department
+                                            HOD
                                         </Label>
                                         <Select>
                                             <SelectTrigger className="col-span-3">
-                                                <SelectValue placeholder="Select department" />
+                                                <SelectValue placeholder="Select HOD" />
                                             </SelectTrigger>
                                             <SelectContent>
                                                 <SelectGroup>
-                                                    <SelectLabel>Departments</SelectLabel>
+                                                    <SelectLabel>HOD</SelectLabel>
                                                     {departments?.map(
                                                         (department: any, index: number) => {
                                                             return (
@@ -201,7 +236,7 @@ export default function Page() {
                             <Input
                                 className="mr-4"
                                 type="text"
-                                placeholder="Search programs"
+                                placeholder="Search program"
                                 onChange={(e) => setSearch(e.target.value)}
                             />
                             <Button variant="outline">
@@ -216,6 +251,7 @@ export default function Page() {
                                 <TableRow>
                                     <TableHead>Name</TableHead>
                                     <TableHead>HOD</TableHead>
+                                    <TableHead>Department</TableHead>
                                     <TableHead>Edit</TableHead>
                                     <TableHead>Delete</TableHead>
                                 </TableRow>
@@ -235,6 +271,7 @@ export default function Page() {
                                         <TableRow key={index}>
                                             <TableCell>{program.name}</TableCell>
                                             <TableCell>{program.hod}</TableCell>
+                                            <TableCell>{program.department}</TableCell>
                                             <TableCell>
                                                 <Button variant={"outline"} size={"icon"}>
                                                     <Edit />
@@ -250,7 +287,8 @@ export default function Page() {
                                                     <AlertDialogContent>
                                                         <AlertDialogHeader>
                                                             <AlertDialogTitle>
-                                                                Delete {program.name} from programs?
+                                                                Delete &apos;{program.name}&apos;
+                                                                from programs?
                                                             </AlertDialogTitle>
                                                             <AlertDialogDescription>
                                                                 This action cannot be undone. This

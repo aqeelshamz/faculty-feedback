@@ -140,7 +140,7 @@ export default function Page() {
                             <Input
                                 className="mr-4"
                                 type="text"
-                                placeholder="Search semesters"
+                                placeholder="Search semester"
                                 onChange={(e) => setSearch(e.target.value)}
                             />
                             <Button variant="outline">

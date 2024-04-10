@@ -217,7 +217,6 @@ export default function Page() {
                                 <SheetHeader>
                                     <SheetTitle>{editMode ? "Edit" : "New"} Course</SheetTitle>
                                     <SheetDescription>
-                                        {" "}
                                         {editMode ? "Edit" : "Create new"} course.
                                     </SheetDescription>
                                 </SheetHeader>
