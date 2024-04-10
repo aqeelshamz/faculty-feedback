@@ -28,7 +28,7 @@ export function SignInForm({ className, ...props }: UserAuthFormProps) {
 
     const signIn = async (email: string, password: string) => {
         try {
-            const response = await axios.post(`${serverURL}/users/login`, { email, password });
+            const response = await axios.post(`${serverURL}/user/login`, { email, password });
             setRole(response.data.user.role);
             localStorage.setItem("token", response.data.token);
             router.push("/dashboard");
