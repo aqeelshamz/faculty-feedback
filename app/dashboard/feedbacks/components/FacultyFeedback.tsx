@@ -1,5 +1,5 @@
 "use client";
-import { Button } from "@/components/ui/button";
+import { Button, buttonVariants } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { LuFilter } from "react-icons/lu";
 import {
@@ -34,15 +34,51 @@ import {
 } from "@/components/ui/alert-dialog";
 import { useUserStore } from "@/store";
 import { useEffect, useRef, useState } from "react";
-import { serverURL } from "@/lib/utils";
+import { cn, serverURL } from "@/lib/utils";
 import axios from "axios";
 import { toast } from "sonner";
 import { Label } from "@/components/ui/label";
+import { Edit, Trash } from "lucide-react";
 
 export default function FacultyFeedback() {
     const role = useUserStore((state) => state.role);
     const [search, setSearch] = useState("");
     const [feedbacks, setFeedbacks] = useState<any>([]);
+    const [editFeedbackId, setEditFeedbackId] = useState("");
+    const [title, setTitle] = useState("");
+    const [description, setDescription] = useState("");
+
+    const sheetTrigger = useRef<any>();
+    const [editMode, setEditMode] = useState(false);
+
+    const createFeedback = () => {};
+
+    const updateFeedback = async () => {
+        const config = {
+            method: "PUT",
+            url: `${serverURL}/feedback/${editFeedbackId}`,
+            headers: {
+                Authorization: `Bearer ${localStorage.getItem("token")}`,
+                "Content-Type": "application/json",
+            },
+            data: {
+                title: title,
+                description: description,
+            },
+        };
+
+        axios(config)
+            .then((response) => {
+                toast.success(response.data.message);
+                setEditFeedbackId("");
+                setTitle("");
+                setDescription("");
+                getFeedbacks();
+            })
+            .catch((err) => {
+                toast.error(err.response?.data?.message);
+            });
+    };
 
     const getFeedbacks = async () => {
         const config = {
@@ -92,39 +128,63 @@ export default function FacultyFeedback() {
             <p className="font-semibold text-2xl mb-4">Feedbacks</p>
             <div className="flex justify-between">
                 <div />
-                <Sheet>
+                <Sheet
+                    onOpenChange={(x) => {
+                        if (x === false) setEditMode(false);
+                        if (!editMode && x) {
+                            setTitle("");
+                            setDescription("");
+                        }
+                    }}
+                >
                     <SheetTrigger asChild>
                         <Button>+ New Feedback</Button>
                     </SheetTrigger>
                     <SheetContent side={"left"}>
                         <SheetHeader>
-                            <SheetTitle>New Feedback</SheetTitle>
-                            <SheetDescription>Create new feedback.</SheetDescription>
+                            <SheetTitle>{editMode ? "Edit" : "New"} Feedback</SheetTitle>
+                            <SheetDescription>
+                                {" "}
+                                {editMode ? "Edit" : "Create new"} feedback.
+                            </SheetDescription>
                         </SheetHeader>
                         <div className="grid gap-4 py-4">
                             <div className="grid grid-cols-4 items-center gap-4">
-                                <Label htmlFor="name" className="text-right">
+                                <Label htmlFor="title" className="text-right">
                                     Title
                                 </Label>
-                                <Input className="col-span-3" type="text" />
+                                <Input
+                                    className="col-span-3"
+                                    type="text"
+                                    value={title}
+                                    onChange={(e) => setTitle(e.target.value)}
+                                />
                             </div>
                             <div className="grid grid-cols-4 items-center gap-4">
-                                <Label htmlFor="email" className="text-right">
+                                <Label htmlFor="description" className="text-right">
                                     Description
                                 </Label>
-                                <Input className="col-span-3" type="email" />
-                            </div>
-
-                            <div className="grid grid-cols-4 items-center gap-4">
-                                <Label htmlFor="role" className="text-right">
-                                    Role
-                                </Label>
-                                <Input className="col-span-3" type="text" />
+                                <Input
+                                    className="col-span-3"
+                                    type="text"
+                                    value={title}
+                                    onChange={(e) => setTitle(e.target.value)}
+                                />
                             </div>
                         </div>
                         <SheetFooter>
                             <SheetClose asChild>
-                                <Button type="submit">Add Feedback</Button>
+                                        <Button
+                                            type="submit"
+                                            onClick={() => {
+                                                if (editMode) {
+                                                    updateFeedback();
+                                                } else {
+                                                    createFeedback();
+                                                }
+                                            }}>
+                                        
+                              {editMode ? "Save" : "Create"} Feedback</Button>
                             </SheetClose>
                         </SheetFooter>
                     </SheetContent>
@@ -183,10 +243,9 @@ export default function FacultyFeedback() {
                                             size={"icon"}
                                             onClick={() => {
                                                 setEditMode(true);
-                                                setEditDepartmentId(department._id);
-                                                setName(department.name);
-                                                setVision(department.vision);
-                                                setMission(department.mission);
+                                                setEditFeedbackId(feedback._id);
+                                                setTitle(feedback.title);
+                                                setDescription(feedback.description);
                                                 sheetTrigger.current.click();
                                             }}
                                         >
@@ -204,12 +263,12 @@ export default function FacultyFeedback() {
                                                 <AlertDialogHeader>
                                                     <AlertDialogTitle>
                                                         Delete &apos;{feedback.name}
-                                                        &apos; from departments?
+                                                        &apos; from feedbacks?
                                                     </AlertDialogTitle>
                                                     <AlertDialogDescription>
                                                         This action cannot be undone. This will
                                                         permanently delete
-                                                        {department.name} from deparment list.
+                                                        {feedback.name} from feedback list.
                                                     </AlertDialogDescription>
                                                 </AlertDialogHeader>
                                                 <AlertDialogFooter>
@@ -220,9 +279,7 @@ export default function FacultyFeedback() {
                                                                 variant: "destructive",
                                                             }),
                                                         )}
-                                                        onClick={() =>
-                                                            deleteDepartment(department._id)
-                                                        }
+                                                        onClick={() => deleteFeedback(feedback._id)}
                                                     >
                                                         Delete
                                                     </AlertDialogAction>

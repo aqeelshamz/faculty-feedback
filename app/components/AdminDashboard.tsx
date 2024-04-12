@@ -22,7 +22,16 @@ export default function AdminDashboard() {
     const router = useRouter();
     const role = useUserStore((state) => state.role);
 
-    const [allCounts, setAllCounts] = useState({});
+    const [allCounts, setAllCounts] = useState({
+        departmentCount: 0,
+        batchCount: 0,
+        programCount: 0,
+        feedbackCount: 0,
+        courseCount: 0,
+        studentCount: 0,
+        semesterCount: 0,
+        facultyCount: 0,
+    });
 
     const getAllCounts = async () => {
         const config = {
@@ -59,7 +68,7 @@ export default function AdminDashboard() {
                         <StickyNote className="h-6 w-6" />
                     </div>
                     <CardContent>
-                        <p className="text-4xl font-bold">{allCounts?.feedbackCount}</p>
+                        <p className="text-4xl font-bold">{allCounts.feedbackCount}</p>
                     </CardContent>
                 </Card>
                 <Card
