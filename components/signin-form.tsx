@@ -21,15 +21,15 @@ export function SignInForm({ className, ...props }: UserAuthFormProps) {
     const [showPassword, setShowPassword] = useState(false);
     const [isLoading, setIsLoading] = useState<boolean>(false);
 
-    const { role, setRole } = useUserStore((state) => ({
+    const { role, setData } = useUserStore((state) => ({
         role: state.role,
-        setRole: state.setRole,
+        setData: state.setData,
     }));
 
     const signIn = async (email: string, password: string) => {
         try {
             const response = await axios.post(`${serverURL}/user/login`, { email, password });
-            setRole(response.data.user.role);
+            setData(response.data.user.email, response.data.user.role);
             localStorage.setItem("token", response.data.token);
             router.push("/dashboard");
         } catch (err: any) {

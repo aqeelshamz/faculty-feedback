@@ -68,7 +68,7 @@ export default function AdminDashboard() {
                         <StickyNote className="h-6 w-6" />
                     </div>
                     <CardContent>
-                        <p className="text-4xl font-bold">{allCounts.feedbackCount}</p>
+                        <p className="text-4xl font-bold">{allCounts?.feedbackCount}</p>
                     </CardContent>
                 </Card>
                 <Card
