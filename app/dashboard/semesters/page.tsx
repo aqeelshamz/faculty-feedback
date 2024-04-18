@@ -193,7 +193,7 @@ export default function Semesters() {
         <>
             {role == "admin" ? (
                 <div className="w-full h-screen p-7 overflow-y-auto">
-                    <p className="font-semibold text-2xl mb-4">Semester</p>
+                    <p className="font-semibold text-2xl mb-4">Semesters</p>
                     <div className="flex justify-between">
                         <Sheet
                             onOpenChange={(x) => {
@@ -243,7 +243,10 @@ export default function Semesters() {
                                         <Label htmlFor="email" className="text-right">
                                             Program
                                         </Label>
-                                        <Select>
+                                        <Select
+                                            onValueChange={(x) => setProgramId(x)}
+                                            value={programId}
+                                        >
                                             <SelectTrigger className="col-span-3">
                                                 <SelectValue placeholder="Select program" />
                                             </SelectTrigger>
@@ -255,7 +258,7 @@ export default function Semesters() {
                                                             return (
                                                                 <SelectItem
                                                                     key={index}
-                                                                    value={program?.name}
+                                                                    value={program?._id}
                                                                 >
                                                                     {program?.name}
                                                                 </SelectItem>
@@ -355,7 +358,7 @@ export default function Semesters() {
                                                             </AlertDialogTitle>
                                                             <AlertDialogDescription>
                                                                 This action cannot be undone. This
-                                                                will permanently delete
+                                                                will permanently delete{" "}
                                                                 {semester.name} from semester list.
                                                             </AlertDialogDescription>
                                                         </AlertDialogHeader>
