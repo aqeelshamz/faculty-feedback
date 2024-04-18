@@ -1,6 +1,6 @@
 "use client";
 
-import { Button } from "@/components/ui/button";
+import { Button, buttonVariants } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import {
@@ -34,17 +34,160 @@ import {
     TableHeader,
     TableRow,
 } from "@/components/ui/table";
+import {
+    AlertDialog,
+    AlertDialogAction,
+    AlertDialogCancel,
+    AlertDialogContent,
+    AlertDialogDescription,
+    AlertDialogFooter,
+    AlertDialogHeader,
+    AlertDialogTitle,
+    AlertDialogTrigger,
+} from "@/components/ui/alert-dialog";
 import { useUserStore } from "@/store";
 import { Edit, Trash } from "lucide-react";
-import { useRef, useState } from "react";
-import { departments, semesters } from "@/lib/data";
+import { useEffect, useRef, useState } from "react";
+import { cn, serverURL } from "@/lib/utils";
+import { Toaster, toast } from "sonner";
+import axios from "axios";
 
-export default function Page() {
+export default function Semesters() {
     const role = useUserStore((state) => state.role);
     const [search, setSearch] = useState("");
 
+    const [name, setName] = useState("");
+    const [number, setNumber] = useState("");
+    const [programId, setProgramId] = useState("");
+
+    const [semesters, setSemesters] = useState<any>([]);
+    const [programs, setPrograms] = useState<any>([]);
+
     const sheetTrigger = useRef<any>();
     const [editMode, setEditMode] = useState(false);
+    const [editSemesterId, setEditSemesterId] = useState("");
+
+    const getSemesters = async () => {
+        const config = {
+            method: "GET",
+            url: `${serverURL}/semester/`,
+            headers: {
+                Authorization: `Bearer ${localStorage.getItem("token")}`,
+                "Content-Type": "application/json",
+            },
+        };
+
+        axios(config)
+            .then((response) => {
+                setSemesters(response?.data?.data);
+            })
+            .catch((err) => {
+                toast.error(err.response?.data?.message);
+            });
+    };
+
+    const getPrograms = async () => {
+        const config = {
+            method: "GET",
+            url: `${serverURL}/program/`,
+            headers: {
+                Authorization: `Bearer ${localStorage.getItem("token")}`,
+                "Content-Type": "application/json",
+            },
+        };
+
+        axios(config)
+            .then((response) => {
+                setPrograms(response?.data?.data);
+            })
+            .catch((err) => {
+                toast.error(err.response?.data?.message);
+            });
+    };
+
+    const createSemester = async () => {
+        const config = {
+            method: "POST",
+            url: `${serverURL}/semester`,
+            headers: {
+                Authorization: `Bearer ${localStorage.getItem("token")}`,
+                "Content-Type": "application/json",
+            },
+            data: {
+                name,
+                number,
+                programId,
+            },
+        };
+
+        axios(config)
+            .then((response) => {
+                toast.success(response.data.message);
+                setName("");
+                setNumber("");
+                setProgramId("");
+                getSemesters();
+                getPrograms();
+            })
+            .catch((err) => {
+                toast.error(err.response?.data?.message);
+            });
+    };
+
+    const updateSemester = async () => {
+        const config = {
+            method: "PUT",
+            url: `${serverURL}/semester/${editSemesterId}`,
+            headers: {
+                Authorization: `Bearer ${localStorage.getItem("token")}`,
+                "Content-Type": "application/json",
+            },
+            data: {
+                name,
+                number,
+                programId,
+            },
+        };
+
+        axios(config)
+            .then((response) => {
+                toast.success(response.data.message);
+                setName("");
+                setNumber("");
+                setProgramId("");
+                getSemesters();
+                getPrograms();
+            })
+            .catch((err) => {
+                toast.error(err.response?.data?.message);
+            });
+    };
+
+    const deleteSemester = async (id: string) => {
+        const config = {
+            method: "DELETE",
+            url: `${serverURL}/semester/${id}`,
+            headers: {
+                Authorization: `Bearer ${localStorage.getItem("token")}`,
+                "Content-Type": "application/json",
+            },
+        };
+
+        axios(config)
+            .then((response) => {
+                toast.success(response?.data?.message);
+                getSemesters();
+                getPrograms;
+            })
+            .catch((err) => {
+                toast.error(err.response?.data?.message);
+            });
+    };
+
+    useEffect(() => {
+        getSemesters();
+        getPrograms();
+    }, []);
 
     return (
         <>
@@ -52,74 +195,69 @@ export default function Page() {
                 <div className="w-full h-screen p-7 overflow-y-auto">
                     <p className="font-semibold text-2xl mb-4">Semester</p>
                     <div className="flex justify-between">
-                        <Sheet>
-                            <SheetTrigger asChild>
+                        <Sheet
+                            onOpenChange={(x) => {
+                                if (x === false) setEditMode(false);
+                                if (!editMode && x) {
+                                    setName("");
+                                    setNumber("");
+                                    setProgramId("");
+                                }
+                            }}
+                        >
+                            <SheetTrigger ref={sheetTrigger} asChild>
                                 <Button>+ New Semester</Button>
                             </SheetTrigger>
                             <SheetContent side={"left"}>
                                 <SheetHeader>
-                                    <SheetTitle>New semester</SheetTitle>
-                                    <SheetDescription>Create new semester.</SheetDescription>
+                                    <SheetTitle>{editMode ? "Edit" : "New"} semester</SheetTitle>
+                                    <SheetDescription>
+                                        {editMode ? "Edit" : "Create new"} semester.
+                                    </SheetDescription>
                                 </SheetHeader>
                                 <div className="grid gap-4 py-4">
                                     <div className="grid grid-cols-4 items-center gap-4">
                                         <Label htmlFor="name" className="text-right">
                                             Name
                                         </Label>
-                                        <Input className="col-span-3" type="text" />
+                                        <Input
+                                            className="col-span-3"
+                                            type="text"
+                                            value={name}
+                                            onChange={(e) => setName(e.target.value)}
+                                        />
                                     </div>
                                     <div className="grid grid-cols-4 items-center gap-4">
                                         <Label htmlFor="number" className="text-right">
                                             Number
                                         </Label>
-                                        <Input className="col-span-3" type="number" min={1} />
+                                        <Input
+                                            className="col-span-3"
+                                            type="number"
+                                            min={1}
+                                            value={number}
+                                            onChange={(e) => setNumber(e.target.value)}
+                                        />
                                     </div>
                                     <div className="grid grid-cols-4 items-center gap-4">
                                         <Label htmlFor="email" className="text-right">
-                                            Department
+                                            Program
                                         </Label>
                                         <Select>
                                             <SelectTrigger className="col-span-3">
-                                                <SelectValue placeholder="Select department" />
+                                                <SelectValue placeholder="Select program" />
                                             </SelectTrigger>
                                             <SelectContent>
                                                 <SelectGroup>
-                                                    <SelectLabel>Departments</SelectLabel>
-                                                    {departments?.map(
-                                                        (department: any, index: number) => {
+                                                    <SelectLabel>Programs</SelectLabel>
+                                                    {programs?.map(
+                                                        (program: any, index: number) => {
                                                             return (
                                                                 <SelectItem
                                                                     key={index}
-                                                                    value={department?.name}
+                                                                    value={program?.name}
                                                                 >
-                                                                    {department?.name}
-                                                                </SelectItem>
-                                                            );
-                                                        },
-                                                    )}
-                                                </SelectGroup>
-                                            </SelectContent>
-                                        </Select>
-                                    </div>
-                                    <div className="grid grid-cols-4 items-center gap-4">
-                                        <Label htmlFor="email" className="text-right">
-                                            Semester
-                                        </Label>
-                                        <Select>
-                                            <SelectTrigger className="col-span-3">
-                                                <SelectValue placeholder="Select semester" />
-                                            </SelectTrigger>
-                                            <SelectContent>
-                                                <SelectGroup>
-                                                    <SelectLabel>Semesters</SelectLabel>
-                                                    {semesters?.map(
-                                                        (semester: any, index: number) => {
-                                                            return (
-                                                                <SelectItem
-                                                                    key={index}
-                                                                    value={semester?.name}
-                                                                >
-                                                                    {semester?.name}
+                                                                    {program?.name}
                                                                 </SelectItem>
                                                             );
                                                         },
@@ -131,7 +269,18 @@ export default function Page() {
                                 </div>
                                 <SheetFooter>
                                     <SheetClose asChild>
-                                        <Button type="submit">Add Semester</Button>
+                                        <Button
+                                            type="submit"
+                                            onClick={() => {
+                                                if (editMode) {
+                                                    updateSemester();
+                                                } else {
+                                                    createSemester();
+                                                }
+                                            }}
+                                        >
+                                            {editMode ? "Save" : "Create"} Semester
+                                        </Button>
                                     </SheetClose>
                                 </SheetFooter>
                             </SheetContent>
@@ -150,17 +299,18 @@ export default function Page() {
                     </div>
                     <div className="m-10">
                         <Table>
-                            <TableCaption>A list of semesters.</TableCaption>
+                            <TableCaption>{semesters.length} semesters.</TableCaption>
                             <TableHeader>
                                 <TableRow>
                                     <TableHead>Name</TableHead>
                                     <TableHead>Number</TableHead>
+                                    <TableHead>Program</TableHead>
                                     <TableHead>Edit</TableHead>
                                     <TableHead>Delete</TableHead>
                                 </TableRow>
                             </TableHeader>
                             <TableBody>
-                                {semesters.map((semester, index: number) =>
+                                {semesters.map((semester: any, index: number) =>
                                     !semester.name
                                         .toString()
                                         .toLowerCase()
@@ -174,15 +324,60 @@ export default function Page() {
                                         <TableRow key={index}>
                                             <TableCell>{semester.name}</TableCell>
                                             <TableCell>{semester.number}</TableCell>
+                                            <TableCell>{semester.program.name}</TableCell>
                                             <TableCell>
-                                                <Button variant={"outline"} size={"icon"}>
+                                                <Button
+                                                    variant={"outline"}
+                                                    size={"icon"}
+                                                    onClick={() => {
+                                                        setEditMode(true);
+                                                        setEditSemesterId(semester._id);
+                                                        setName(semester.name);
+                                                        setProgramId(semester.progranId);
+                                                        sheetTrigger.current.click();
+                                                    }}
+                                                >
                                                     <Edit />
                                                 </Button>
                                             </TableCell>
                                             <TableCell>
-                                                <Button variant={"outline"} size={"icon"}>
-                                                    <Trash />
-                                                </Button>
+                                                <AlertDialog>
+                                                    <AlertDialogTrigger asChild>
+                                                        <Button variant={"outline"} size={"icon"}>
+                                                            <Trash />
+                                                        </Button>
+                                                    </AlertDialogTrigger>
+                                                    <AlertDialogContent>
+                                                        <AlertDialogHeader>
+                                                            <AlertDialogTitle>
+                                                                Delete &apos;{semester.name}
+                                                                &apos; from semesters?
+                                                            </AlertDialogTitle>
+                                                            <AlertDialogDescription>
+                                                                This action cannot be undone. This
+                                                                will permanently delete
+                                                                {semester.name} from semester list.
+                                                            </AlertDialogDescription>
+                                                        </AlertDialogHeader>
+                                                        <AlertDialogFooter>
+                                                            <AlertDialogCancel>
+                                                                Cancel
+                                                            </AlertDialogCancel>
+                                                            <AlertDialogAction
+                                                                className={cn(
+                                                                    buttonVariants({
+                                                                        variant: "destructive",
+                                                                    }),
+                                                                )}
+                                                                onClick={() =>
+                                                                    deleteSemester(semester._id)
+                                                                }
+                                                            >
+                                                                Delete
+                                                            </AlertDialogAction>
+                                                        </AlertDialogFooter>
+                                                    </AlertDialogContent>
+                                                </AlertDialog>
                                             </TableCell>
                                         </TableRow>
                                     ),
@@ -194,6 +389,7 @@ export default function Page() {
             ) : (
                 <></>
             )}
+            <Toaster />
         </>
     );
 }

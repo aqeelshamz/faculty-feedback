@@ -65,9 +65,9 @@ export default function Page() {
                 "Content-Type": "application/json",
             },
             data: {
-                name: name,
-                vision: vision,
-                mission: mission,
+                name,
+                vision,
+                mission,
             },
         };
 
@@ -93,9 +93,9 @@ export default function Page() {
                 "Content-Type": "application/json",
             },
             data: {
-                name: name,
-                vision: vision,
-                mission: mission,
+                name,
+                vision,
+                mission,
             },
         };
 
@@ -292,7 +292,8 @@ export default function Page() {
                                                     >
                                                         <Edit />
                                                     </Button>
-                                                </TableCell>S
+                                                </TableCell>
+                                                S
                                                 <TableCell>
                                                     <AlertDialog>
                                                         <AlertDialogTrigger asChild>
