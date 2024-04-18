@@ -69,7 +69,7 @@ export default function Page() {
     const createFaculty = async () => {
         const config = {
             method: "POST",
-            url: `${serverURL}/faculty/`,
+            url: `${serverURL}/faculty`,
             headers: {
                 Authorization: `Bearer ${localStorage.getItem("token")}`,
                 "Content-Type": "application/json",
@@ -253,7 +253,7 @@ export default function Page() {
                                 <SheetFooter>
                                     <SheetClose asChild>
                                         <Button type="submit" onClick={createFaculty}>
-                                            Add Faculty
+                                            Create Faculty
                                         </Button>
                                     </SheetClose>
                                 </SheetFooter>

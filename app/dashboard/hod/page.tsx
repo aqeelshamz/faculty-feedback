@@ -52,119 +52,55 @@ export default function Page() {
     const sheetTrigger = useRef<any>();
     const [editMode, setEditMode] = useState(false);
 
+    const [faculties, setFaculties] = useState<any>([]);
+    const [departments, setDepartments] = useState<any>([]);
     const [hods, setHods] = useState<any>([]);
 
-    /* const createHod = async () => {
-        const config = {
-            method: "POST",
-            url: `${serverURL}/hod/`,
-            headers: {
-                Authorization: `Bearer ${localStorage.getItem("token")}`,
-                "Content-Type": "application/json",
-            },
-            data: {
-                name: name,
-                vision: vision,
-                mission: mission,
-            },
-        };
+    const [facultyId, setFacultyId] = useState("");
+    const [departmentId, setDepartmentId] = useState("");
 
-        axios(config)
-            .then((response) => {
-                toast.success(response.data.message);
-                setName("");
-                setVision("");
-                setMission("");
-                getHods();
-            })
-            .catch((err) => {
-                toast.error(err.response?.data?.message);
-            });
-
-             const updateDepartment = async () => {
-        const config = {
-            method: "PUT",
-            url: `${serverURL}/department/${editDepartmentId}`,
-            headers: {
-                Authorization: `Bearer ${localStorage.getItem("token")}`,
-                "Content-Type": "application/json",
-            },
-            data: {
-                name: name,
-                vision: vision,
-                mission: mission,
-            },
-        };
-
-        axios(config)
-            .then((response) => {
-                toast.success(response.data.message);
-                setEditDepartmentId("");
-                setName("");
-                setVision("");
-                setMission("");
-                getDepartments();
-            })
-            .catch((err) => {
-                toast.error(err.response?.data?.message);
-            });
-    };
-
-    const updateHod= async () => {
-        const config = {
-            method: "PUT",
-            url: `${serverURL}/department/${editDepartmentId}`,
-            headers: {
-                Authorization: `Bearer ${localStorage.getItem("token")}`,
-                "Content-Type": "application/json",
-            },
-            data: {
-                name: name,
-                vision: vision,
-                mission: mission,
-            },
-        };
-
-        axios(config)
-            .then((response) => {
-                toast.success(response.data.message);
-                setEditDepartmentId("");
-                setName("");
-                setVision("");
-                setMission("");
-                getDepartments();
-            })
-            .catch((err) => {
-                toast.error(err.response?.data?.message);
-            });
-    };
-
-   */
-
-    // const deleteHod = async (id: string) => {
-    //     const config = {
-    //         method: "DELETE",
-    //         url: `${serverURL}/hod/${id}`,
-    //         headers: {
-    //             Authorization: `Bearer ${localStorage.getItem("token")}`,
-    //             "Content-Type": "application/json",
-    //         },
-    //     };
-
-    //     axios(config)
-    //         .then((response) => {
-    //             toast(response?.data?.message);
-    //             getHods();
-    //         })
-    //         .catch((err) => {
-    //             toast.error(err.response?.data?.message);
-    //         });
-    // };
-
-    /*const getHods = async () => {
+    const getFaculties = async () => {
         const config = {
             method: "GET",
-            url: `${serverURL}/hod/`,
+            url: `${serverURL}/faculty`,
+            headers: {
+                Authorization: `Bearer ${localStorage.getItem("token")}`,
+                "Content-Type": "application/json",
+            },
+        };
+
+        axios(config)
+            .then((response) => {
+                setFaculties(response?.data?.data.reverse());
+            })
+            .catch((err) => {
+                toast.error(err.response?.data?.message);
+            });
+    };
+
+    const getDepartments = async () => {
+        const config = {
+            method: "GET",
+            url: `${serverURL}/department`,
+            headers: {
+                Authorization: `Bearer ${localStorage.getItem("token")}`,
+                "Content-Type": "application/json",
+            },
+        };
+
+        axios(config)
+            .then((response) => {
+                setDepartments(response?.data?.data);
+            })
+            .catch((err) => {
+                toast.error(err.response?.data?.message);
+            });
+    };
+
+    const getHods = async () => {
+        const config = {
+            method: "GET",
+            url: `${serverURL}/hod`,
             headers: {
                 Authorization: `Bearer ${localStorage.getItem("token")}`,
                 "Content-Type": "application/json",
@@ -180,10 +116,39 @@ export default function Page() {
             });
     };
 
+    const createHod = async () => {
+        const config = {
+            method: "POST",
+            url: `${serverURL}/hod`,
+            headers: {
+                Authorization: `Bearer ${localStorage.getItem("token")}`,
+                "Content-Type": "application/json",
+            },
+            data: {
+                facultyId,
+                departmentId,
+            },
+        };
+
+        axios(config)
+            .then((response) => {
+                toast.success(response.data.message);
+                setFacultyId("");
+                setDepartmentId("");
+                getHods();
+                getFaculties();
+                getDepartments();
+            })
+            .catch((err) => {
+                toast.error(err.response?.data?.message);
+            });
+    };
+
     useEffect(() => {
         getHods();
-  }, []);
-*/
+        getFaculties();
+        getDepartments();
+    }, []);
 
     return (
         <>
@@ -205,7 +170,7 @@ export default function Page() {
                                         <Label htmlFor="name" className="text-right">
                                             Faculty
                                         </Label>
-                                        <Select>
+                                        <Select onValueChange={(x) => setFacultyId(x)} value={facultyId}>
                                             <SelectTrigger className="col-span-3">
                                                 <SelectValue placeholder="Select faculty" />
                                             </SelectTrigger>
@@ -217,9 +182,9 @@ export default function Page() {
                                                             return (
                                                                 <SelectItem
                                                                     key={index}
-                                                                    value={faculty?.name}
+                                                                    value={faculty?._id}
                                                                 >
-                                                                    {faculty?.name}
+                                                                    {faculty?.name} ({faculty?.email})
                                                                 </SelectItem>
                                                             );
                                                         },
@@ -232,7 +197,7 @@ export default function Page() {
                                         <Label htmlFor="name" className="text-right">
                                             Department
                                         </Label>
-                                        <Select>
+                                        <Select onValueChange={(x) => setDepartmentId(x)} value={departmentId}>
                                             <SelectTrigger className="col-span-3">
                                                 <SelectValue placeholder="Select department" />
                                             </SelectTrigger>
@@ -244,7 +209,7 @@ export default function Page() {
                                                             return (
                                                                 <SelectItem
                                                                     key={index}
-                                                                    value={department?.name}
+                                                                    value={department?._id}
                                                                 >
                                                                     {department?.name}
                                                                 </SelectItem>
@@ -255,7 +220,7 @@ export default function Page() {
                                             </SelectContent>
                                         </Select>
                                     </div>
-                                    <div className="items-center gap-4">
+                                    {/* <div className="items-center gap-4">
                                         <Label htmlFor="name" className="text-right">
                                             Programs
                                         </Label>
@@ -275,11 +240,11 @@ export default function Page() {
                                                 </div>
                                             );
                                         })}
-                                    </div>
+                                    </div> */}
                                 </div>
                                 <SheetFooter>
                                     <SheetClose asChild>
-                                        <Button type="submit">Add HOD</Button>
+                                        <Button type="submit" onClick={createHod}>Create HOD</Button>
                                     </SheetClose>
                                 </SheetFooter>
                             </SheetContent>
@@ -298,29 +263,27 @@ export default function Page() {
                                 <TableRow>
                                     <TableHead>Name</TableHead>
                                     <TableHead>Email</TableHead>
-                                    <TableHead>Title</TableHead>
-                                    <TableHead>Role</TableHead>
+                                    <TableHead>Department</TableHead>
                                     <TableHead>Edit</TableHead>
                                     <TableHead>Delete</TableHead>
                                 </TableRow>
                             </TableHeader>
                             <TableBody>
-                                {faculties.map((faculty, index: number) =>
-                                    !faculty.name
+                                {hods.map((hod: any, index: number) =>
+                                    !hod.name
                                         .toString()
                                         .toLowerCase()
                                         .includes(search.toLowerCase()) &&
-                                        !faculty.title
+                                        !hod.title
                                             .toString()
                                             .toLowerCase()
                                             .includes(search.toLowerCase()) ? (
                                         ""
                                     ) : (
                                         <TableRow key={index}>
-                                            <TableCell>{faculty.name}</TableCell>
-                                            <TableCell>{faculty.email}</TableCell>
-                                            <TableCell>{faculty.title}</TableCell>
-                                            <TableCell>{faculty.role}</TableCell>
+                                            <TableCell>{hod.name}</TableCell>
+                                            <TableCell>{hod.email}</TableCell>
+                                            <TableCell>{hod.department.name}</TableCell>
                                             <TableCell>
                                                 <Button variant={"outline"} size={"icon"}>
                                                     <Edit />

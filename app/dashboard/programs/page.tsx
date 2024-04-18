@@ -1,16 +1,8 @@
 "use client";
 
 import { Button, buttonVariants } from "@/components/ui/button";
-import {
-    Command,
-    CommandEmpty,
-    CommandGroup,
-    CommandInput,
-    CommandItem,
-} from "@/components/ui/command";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import {
     Select,
     SelectContent,
@@ -46,7 +38,6 @@ import {
     TableBody,
     TableCaption,
     TableCell,
-    TableFooter,
     TableHead,
     TableHeader,
     TableRow,
@@ -54,8 +45,8 @@ import {
 import { cn, serverURL } from "@/lib/utils";
 import { useUserStore } from "@/store";
 import axios from "axios";
-import { departments, programs } from "@/lib/data";
-import { Check, ChevronsUpDown, Edit, Trash } from "lucide-react";
+import { departments } from "@/lib/data";
+import { Edit, Trash } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 
 import { LuFilter } from "react-icons/lu";
@@ -284,10 +275,10 @@ export default function Page() {
                                         .toString()
                                         .toLowerCase()
                                         .includes(search.toLowerCase()) &&
-                                    !program.hod
-                                        .toString()
-                                        .toLowerCase()
-                                        .includes(search.toLowerCase()) ? (
+                                        !program.hod
+                                            .toString()
+                                            .toLowerCase()
+                                            .includes(search.toLowerCase()) ? (
                                         ""
                                     ) : (
                                         <TableRow key={index}>
