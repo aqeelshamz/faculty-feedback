@@ -29,7 +29,6 @@ import {
     TableBody,
     TableCaption,
     TableCell,
-    TableFooter,
     TableHead,
     TableHeader,
     TableRow,
@@ -62,6 +61,7 @@ export default function Page() {
     const [password, setPassword] = useState("");
     const [title, setTitle] = useState("");
     const [facultyRole, setFacultyRole] = useState("");
+    const [gender, setGender] = useState("M");
 
     const sheetTrigger = useRef<any>();
     const [editMode, setEditMode] = useState(false);
@@ -78,6 +78,7 @@ export default function Page() {
                 name: name,
                 email: email,
                 password: password,
+                gender: gender,
                 title: title,
                 role: facultyRole,
             },
@@ -120,7 +121,7 @@ export default function Page() {
     const getFaculties = async () => {
         const config = {
             method: "GET",
-            url: `${serverURL}/faculty/`,
+            url: `${serverURL}/faculty`,
             headers: {
                 Authorization: `Bearer ${localStorage.getItem("token")}`,
                 "Content-Type": "application/json",
@@ -129,7 +130,7 @@ export default function Page() {
 
         axios(config)
             .then((response) => {
-                setFaculties(response?.data?.data);
+                setFaculties(response?.data?.data.reverse());
             })
             .catch((err) => {
                 toast.error(err.response?.data?.message);
@@ -190,6 +191,27 @@ export default function Page() {
                                         />
                                     </div>
                                     <div className="grid grid-cols-4 items-center gap-4">
+                                        <Label htmlFor="admNo" className="text-right">
+                                            Gender
+                                        </Label>
+                                        <Select onValueChange={(x) => setGender(x)} value={gender}>
+                                            <SelectTrigger className="col-span-3">
+                                                <SelectValue placeholder="Select gender" />
+                                            </SelectTrigger>
+                                            <SelectContent>
+                                                <SelectGroup>
+                                                    <SelectLabel>Gender</SelectLabel>
+                                                    <SelectItem key={0} value={"M"}>
+                                                        Male
+                                                    </SelectItem>
+                                                    <SelectItem key={1} value={"F"}>
+                                                        Female
+                                                    </SelectItem>
+                                                </SelectGroup>
+                                            </SelectContent>
+                                        </Select>
+                                    </div>
+                                    <div className="grid grid-cols-4 items-center gap-4">
                                         <Label htmlFor="title" className="text-right">
                                             Title
                                         </Label>
@@ -204,7 +226,7 @@ export default function Page() {
                                         <Label htmlFor="role" className="text-right">
                                             Role
                                         </Label>
-                                        <Select>
+                                        <Select onValueChange={(x) => setFacultyRole(x)} value={facultyRole}>
                                             <SelectTrigger className="col-span-3">
                                                 <SelectValue placeholder="Select role" />
                                             </SelectTrigger>
@@ -216,7 +238,7 @@ export default function Page() {
                                                             return (
                                                                 <SelectItem
                                                                     key={index}
-                                                                    value={facultyRole}
+                                                                    value={facultyRole.toLowerCase()}
                                                                 >
                                                                     {facultyRole}
                                                                 </SelectItem>
@@ -268,10 +290,10 @@ export default function Page() {
                                         .toString()
                                         .toLowerCase()
                                         .includes(search.toLowerCase()) &&
-                                    !faculty.title
-                                        .toString()
-                                        .toLowerCase()
-                                        .includes(search.toLowerCase()) ? (
+                                        !faculty.title
+                                            .toString()
+                                            .toLowerCase()
+                                            .includes(search.toLowerCase()) ? (
                                         ""
                                     ) : (
                                         <TableRow key={index}>
