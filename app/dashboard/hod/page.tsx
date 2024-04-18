@@ -1,6 +1,6 @@
 "use client";
 
-import { Button } from "@/components/ui/button";
+import { Button, buttonVariants } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import {
@@ -34,6 +34,17 @@ import {
     TableHeader,
     TableRow,
 } from "@/components/ui/table";
+import {
+    AlertDialog,
+    AlertDialogAction,
+    AlertDialogCancel,
+    AlertDialogContent,
+    AlertDialogDescription,
+    AlertDialogFooter,
+    AlertDialogHeader,
+    AlertDialogTitle,
+    AlertDialogTrigger,
+} from "@/components/ui/alert-dialog";
 import { useUserStore } from "@/store";
 import { faculties } from "@/lib/data";
 import { Edit, Trash } from "lucide-react";
@@ -41,7 +52,7 @@ import { useEffect, useRef, useState } from "react";
 import { Textarea } from "@/components/ui/textarea";
 import { departments, programs } from "@/lib/data";
 import { Checkbox } from "@/components/ui/checkbox";
-import { serverURL } from "@/lib/utils";
+import { cn, serverURL } from "@/lib/utils";
 import axios from "axios";
 import { toast } from "sonner";
 
@@ -49,15 +60,16 @@ export default function Page() {
     const role = useUserStore((state) => state.role);
     const [search, setSearch] = useState("");
 
-    const sheetTrigger = useRef<any>();
-    const [editMode, setEditMode] = useState(false);
-
     const [faculties, setFaculties] = useState<any>([]);
     const [departments, setDepartments] = useState<any>([]);
     const [hods, setHods] = useState<any>([]);
 
     const [facultyId, setFacultyId] = useState("");
     const [departmentId, setDepartmentId] = useState("");
+
+    const [editHodId, setEditHodId] = useState("");
+    const sheetTrigger = useRef<any>();
+    const [editMode, setEditMode] = useState(false);
 
     const getFaculties = async () => {
         const config = {
@@ -144,6 +156,54 @@ export default function Page() {
             });
     };
 
+    const updateHod = async () => {
+        const config = {
+            method: "PUT",
+            url: `${serverURL}/hod/${editHodId}`,
+            headers: {
+                Authorization: `Bearer ${localStorage.getItem("token")}`,
+                "Content-Type": "application/json",
+            },
+            data: {
+                facultyId,
+                departmentId,
+            },
+        };
+
+        axios(config)
+            .then((response) => {
+                toast.success(response.data.message);
+                setFacultyId("");
+                setDepartmentId("");
+                getHods();
+                getFaculties();
+                getDepartments();
+            })
+            .catch((err) => {
+                toast.error(err.response?.data?.message);
+            });
+    };
+
+    const deleteHod = async (id: string) => {
+        const config = {
+            method: "DELETE",
+            url: `${serverURL}/hod/${id}`,
+            headers: {
+                Authorization: `Bearer ${localStorage.getItem("token")}`,
+                "Content-Type": "application/json",
+            },
+        };
+
+        axios(config)
+            .then((response) => {
+                toast.success(response?.data?.message);
+                getHods();
+            })
+            .catch((err) => {
+                toast.error(err.response?.data?.message);
+            });
+    };
+
     useEffect(() => {
         getHods();
         getFaculties();
@@ -156,21 +216,34 @@ export default function Page() {
                 <div className="w-full h-screen p-7 overflow-y-auto">
                     <p className="font-semibold text-2xl mb-4">HODs</p>
                     <div className="flex justify-between">
-                        <Sheet>
-                            <SheetTrigger asChild>
+                        <Sheet
+                            onOpenChange={(x) => {
+                                if (x === false) setEditMode(false);
+                                if (!editMode && x) {
+                                    setFacultyId("");
+                                    setDepartmentId("");
+                                }
+                            }}
+                        >
+                            <SheetTrigger ref={sheetTrigger} asChild>
                                 <Button>+ New HOD</Button>
                             </SheetTrigger>
                             <SheetContent side={"left"}>
                                 <SheetHeader>
-                                    <SheetTitle>New HOD</SheetTitle>
-                                    <SheetDescription>Create new HOD.</SheetDescription>
+                                    <SheetTitle>{editMode ? "Edit" : "New"} HOD</SheetTitle>
+                                    <SheetDescription>
+                                        {editMode ? "Edit" : "Create new"} HOD.
+                                    </SheetDescription>
                                 </SheetHeader>
                                 <div className="grid gap-4 py-4">
                                     <div className="grid grid-cols-4 items-center gap-4">
                                         <Label htmlFor="name" className="text-right">
                                             Faculty
                                         </Label>
-                                        <Select onValueChange={(x) => setFacultyId(x)} value={facultyId}>
+                                        <Select
+                                            onValueChange={(x) => setFacultyId(x)}
+                                            value={facultyId}
+                                        >
                                             <SelectTrigger className="col-span-3">
                                                 <SelectValue placeholder="Select faculty" />
                                             </SelectTrigger>
@@ -184,7 +257,8 @@ export default function Page() {
                                                                     key={index}
                                                                     value={faculty?._id}
                                                                 >
-                                                                    {faculty?.name} ({faculty?.email})
+                                                                    {faculty?.name} (
+                                                                    {faculty?.email})
                                                                 </SelectItem>
                                                             );
                                                         },
@@ -197,7 +271,10 @@ export default function Page() {
                                         <Label htmlFor="name" className="text-right">
                                             Department
                                         </Label>
-                                        <Select onValueChange={(x) => setDepartmentId(x)} value={departmentId}>
+                                        <Select
+                                            onValueChange={(x) => setDepartmentId(x)}
+                                            value={departmentId}
+                                        >
                                             <SelectTrigger className="col-span-3">
                                                 <SelectValue placeholder="Select department" />
                                             </SelectTrigger>
@@ -244,7 +321,18 @@ export default function Page() {
                                 </div>
                                 <SheetFooter>
                                     <SheetClose asChild>
-                                        <Button type="submit" onClick={createHod}>Create HOD</Button>
+                                        <Button
+                                            type="submit"
+                                            onClick={() => {
+                                                if (editMode) {
+                                                    updateHod();
+                                                } else {
+                                                    createHod();
+                                                }
+                                            }}
+                                        >
+                                            {editMode ? "Save" : "Create"} HOD
+                                        </Button>
                                     </SheetClose>
                                 </SheetFooter>
                             </SheetContent>
@@ -258,7 +346,7 @@ export default function Page() {
                     </div>
                     <div className="m-10">
                         <Table>
-                            <TableCaption>A list of hod.</TableCaption>
+                            <TableCaption>{hods.length} HODs</TableCaption>
                             <TableHeader>
                                 <TableRow>
                                     <TableHead>Name</TableHead>
@@ -274,10 +362,10 @@ export default function Page() {
                                         .toString()
                                         .toLowerCase()
                                         .includes(search.toLowerCase()) &&
-                                        !hod.title
-                                            .toString()
-                                            .toLowerCase()
-                                            .includes(search.toLowerCase()) ? (
+                                    !hod.title
+                                        .toString()
+                                        .toLowerCase()
+                                        .includes(search.toLowerCase()) ? (
                                         ""
                                     ) : (
                                         <TableRow key={index}>
@@ -285,14 +373,56 @@ export default function Page() {
                                             <TableCell>{hod.email}</TableCell>
                                             <TableCell>{hod.department.name}</TableCell>
                                             <TableCell>
-                                                <Button variant={"outline"} size={"icon"}>
+                                                <Button
+                                                    variant={"outline"}
+                                                    size={"icon"}
+                                                    onClick={() => {
+                                                        setEditMode(true);
+                                                        setEditHodId(hod._id);
+                                                        setFacultyId(hod.facultyId);
+                                                        setDepartmentId(hod.departmentId);
+                                                        sheetTrigger.current.click();
+                                                    }}
+                                                >
                                                     <Edit />
                                                 </Button>
                                             </TableCell>
                                             <TableCell>
-                                                <Button variant={"outline"} size={"icon"}>
-                                                    <Trash />
-                                                </Button>
+                                                <AlertDialog>
+                                                    <AlertDialogTrigger asChild>
+                                                        <Button variant={"outline"} size={"icon"}>
+                                                            <Trash />
+                                                        </Button>
+                                                    </AlertDialogTrigger>
+                                                    <AlertDialogContent>
+                                                        <AlertDialogHeader>
+                                                            <AlertDialogTitle>
+                                                                Delete &apos;{hod.name}
+                                                                &apos; from HODs?
+                                                            </AlertDialogTitle>
+                                                            <AlertDialogDescription>
+                                                                This action cannot be undone. This
+                                                                will permanently delete {hod.name}{" "}
+                                                                from HOD list.
+                                                            </AlertDialogDescription>
+                                                        </AlertDialogHeader>
+                                                        <AlertDialogFooter>
+                                                            <AlertDialogCancel>
+                                                                Cancel
+                                                            </AlertDialogCancel>
+                                                            <AlertDialogAction
+                                                                className={cn(
+                                                                    buttonVariants({
+                                                                        variant: "destructive",
+                                                                    }),
+                                                                )}
+                                                                onClick={() => deleteHod(hod._id)}
+                                                            >
+                                                                Delete
+                                                            </AlertDialogAction>
+                                                        </AlertDialogFooter>
+                                                    </AlertDialogContent>
+                                                </AlertDialog>
                                             </TableCell>
                                         </TableRow>
                                     ),
