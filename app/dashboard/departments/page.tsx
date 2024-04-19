@@ -293,7 +293,6 @@ export default function Page() {
                                                         <Edit />
                                                     </Button>
                                                 </TableCell>
-                                                S
                                                 <TableCell>
                                                     <AlertDialog>
                                                         <AlertDialogTrigger asChild>

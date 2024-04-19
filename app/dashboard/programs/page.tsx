@@ -265,6 +265,7 @@ export default function Page() {
                                 <TableRow>
                                     <TableHead>Name</TableHead>
                                     <TableHead>HOD</TableHead>
+                                    <TableHead>Department</TableHead>
                                     <TableHead>Edit</TableHead>
                                     <TableHead>Delete</TableHead>
                                 </TableRow>
@@ -283,7 +284,8 @@ export default function Page() {
                                     ) : (
                                         <TableRow key={index}>
                                             <TableCell>{program.name}</TableCell>
-                                            <TableCell>{program.hod}</TableCell>
+                                            <TableCell><span className="text-md">{program?.hod?.name}</span><br /><span className="text-sm">{program?.hod?.title}</span><br /><span className="text-sm opacity-50">{program?.hod?.email}</span></TableCell>
+                                            <TableCell>{program?.department?.name}</TableCell>
                                             <TableCell>
                                                 <Button
                                                     variant={"outline"}

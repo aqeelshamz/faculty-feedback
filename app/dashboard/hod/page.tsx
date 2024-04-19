@@ -349,8 +349,7 @@ export default function Page() {
                             <TableCaption>{hods.length} HODs</TableCaption>
                             <TableHeader>
                                 <TableRow>
-                                    <TableHead>Name</TableHead>
-                                    <TableHead>Email</TableHead>
+                                    <TableHead>Faculty</TableHead>
                                     <TableHead>Department</TableHead>
                                     <TableHead>Edit</TableHead>
                                     <TableHead>Delete</TableHead>
@@ -369,8 +368,7 @@ export default function Page() {
                                         ""
                                     ) : (
                                         <TableRow key={index}>
-                                            <TableCell>{hod.name}</TableCell>
-                                            <TableCell>{hod.email}</TableCell>
+                                            <TableCell><span className="text-md">{hod?.name}</span><br/><span className="text-sm">{hod?.faculty?.title}</span><br/><span className="text-sm opacity-50">{hod?.email}</span></TableCell>
                                             <TableCell>{hod.department.name}</TableCell>
                                             <TableCell>
                                                 <Button
