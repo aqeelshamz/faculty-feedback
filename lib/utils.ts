@@ -5,22 +5,26 @@ export function cn(...inputs: ClassValue[]) {
     return twMerge(clsx(inputs));
 }
 
-const feedbackFormColors = {
+const feedbackFormColors = <any>{
     "red": {
-        "light": "bg-red-50",
-        "dark": "bg-red-700",
+        "lightBg": "#C3DDFD",
+        "darkBg": "#1E429F",
+        "text": "#1E429F",
     },
     "yellow": {
-        "light": "bg-yellow-50",
-        "dark": "bg-yellow-700",
+        "lightBg": "bg-yellow-50",
+        "darkBg": "bg-yellow-700",
+        "text": "text-yellow-700",
     },
     "green": {
-        "light": "bg-green-50",
-        "dark": "bg-green-700",
+        "lightBg": "bg-green-50",
+        "darkBg": "bg-green-700",
+        "text": "text-green-700",
     },
     "blue": {
-        "light": "bg-blue-50",
-        "dark": "bg-blue-700",
+        "lightBg": "bg-blue-50",
+        "darkBg": "bg-blue-700",
+        "text": "text-blue-700",
     },
 };
 
