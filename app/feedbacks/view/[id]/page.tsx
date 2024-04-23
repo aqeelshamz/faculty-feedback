@@ -10,6 +10,7 @@ import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
+import { ChevronDown, ChevronUp } from "lucide-react";
 
 export default function Page() {
     const { id } = useParams();
@@ -49,7 +50,7 @@ export default function Page() {
                 <p className="mb-10">{feedback.description}</p>
                 <Button onClick={() => setCurrentStep(0)}>Start</Button>
             </div> : <div className="flex flex-col items-center">
-                <h1 className={`text-3xl font-bold`}>{feedback?.questions[currentStep]?.question}</h1>
+                <h1 className={`text-3xl font-bold flex`}>{feedback?.questions[currentStep]?.question}{feedback?.questions[currentStep]?.settings?.required ? <span className="text-red-700 font-normal text-md">*</span> : ""}</h1>
                 <p className="mb-10">{feedback?.questions[currentStep]?.question}</p>
                 <div className="mb-10 w-full">
                     {
@@ -75,7 +76,18 @@ export default function Page() {
                         currentStep === feedback.questions.length - 1 ? "Submit" : "Next"
                     }</Button>
             </div>}
-            <div></div>
+            <div className="flex w-full p-5">
+                <Button className="mr-2" size={"icon"} onClick={() => {
+                    if (currentStep > -1) {
+                        setCurrentStep(-1);
+                    }
+                }}><ChevronUp /></Button>
+                <Button size={"icon"} onClick={() => {
+                    if (currentStep < feedback.questions.length - 1) {
+                        setCurrentStep(currentStep + 1);
+                    }
+                }}><ChevronDown /></Button>
+            </div>
             <Toaster />
         </div>
     );
