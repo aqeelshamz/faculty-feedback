@@ -44,7 +44,7 @@ export default function Page() {
 
     return (
         <div className={`flex w-screen h-screen flex-col justify-between items-center`} style={{ background: feedbackFormColors[feedback?.color]?.lightBg, color: feedbackFormColors[feedback?.color]?.text }}>
-            <Progress value={50} />
+            <Progress value={feedback?.questions === undefined ? 0 : (((currentStep === -1 ? 0 : currentStep + 1) / feedback?.questions?.length) * 100)} color={feedbackFormColors[feedback?.color]?.primary} className="w-full" />
             {currentStep === -1 ? <div className="flex flex-col items-center">
                 <h1 className={`text-3xl font-bold`}>{feedback?.title}</h1>
                 <p className="mb-10">{feedback.description}</p>
@@ -66,10 +66,7 @@ export default function Page() {
                     }
                 </div>
                 <Button onClick={() => {
-                    if (currentStep === feedback.questions.length - 1) {
-                        setCurrentStep(-1);
-                    }
-                    else {
+                    if (currentStep < feedback.questions.length - 1) {
                         setCurrentStep(currentStep + 1);
                     }
                 }}>{
