@@ -8,7 +8,8 @@ import {
     Calendar,
     MessageSquare,
     Group,
-    UserCircle2,
+    UserCircle,
+    Crown,
 } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
@@ -48,7 +49,7 @@ export const AdminNav = () => {
                 href="/dashboard/hod"
                 className={`flex items-center gap-3 rounded-lg px-3 py-2 transition-all hover:text-primary ${pathname === "/dashboard/hod" ? "bg-muted text-primary" : "text-muted-foreground"}`}
             >
-                <UserCircle2 className="h-4 w-4" />
+                <UserCircle className="h-4 w-4" />
                 HOD
                 {/* <Badge className="ml-auto flex h-6 w-6 shrink-0 items-center justify-center rounded-full">
                                     {useStudentStore((state) => state.students).length}
@@ -100,6 +101,16 @@ export const AdminNav = () => {
             >
                 <Users className="h-4 w-4" />
                 Students
+                {/* <Badge className="ml-auto flex h-6 w-6 shrink-0 items-center justify-center rounded-full">
+                                    {useStudentStore((state) => state.students).length}
+                                </Badge> */}
+            </Link>
+            <Link
+                href="/dashboard/admins"
+                className={`flex items-center gap-3 rounded-lg px-3 py-2 transition-all hover:text-primary ${pathname === "/dashboard/feedbacks" ? "bg-muted text-primary" : "text-muted-foreground"}`}
+            >
+                <Crown className="h-4 w-4" />
+                Admins
                 {/* <Badge className="ml-auto flex h-6 w-6 shrink-0 items-center justify-center rounded-full">
                                     {useStudentStore((state) => state.students).length}
                                 </Badge> */}
