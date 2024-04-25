@@ -23,10 +23,10 @@ import {
 } from "@/components/ui/select";
 import { Slider } from "@/components/ui/slider";
 import { Label } from "@/components/ui/label";
-import { Plus } from "lucide-react";
+import { CheckIcon, Plus } from "lucide-react";
 import { Trash2 } from "lucide-react";
 import { useParams } from "next/navigation";
-import { serverURL } from "@/lib/utils";
+import { cn, serverURL } from "@/lib/utils";
 import axios from "axios";
 import { Toaster, toast } from "sonner";
 import { Textarea } from "@/components/ui/textarea";
@@ -68,7 +68,11 @@ export default function EditFeedback() {
     const [title, setTitle] = useState("");
     const [description, setDescription] = useState("");
     const [color, setColor] = useState("");
+    const [course, setCourse] = useState("");
     const [questions, setQuestions] = useState<Question[]>([initialQuestion]);
+    const [courses, setCourses] = useState<any>([]);
+
+    const [isActive, setIsActive] = useState<boolean>(false);
 
     const getFeedback = async (id: any) => {
         const config = {
@@ -122,9 +126,29 @@ export default function EditFeedback() {
             });
     };
 
+    const getCourses = async () => {
+        const config = {
+            method: "GET",
+            url: `${serverURL}/course/`,
+            headers: {
+                Authorization: `Bearer ${localStorage.getItem("token")}`,
+                "Content-Type": "application/json",
+            },
+        };
+
+        axios(config)
+            .then((response) => {
+                setCourses([]);
+            })
+            .catch((err) => {
+                toast.error(err.response?.data?.message);
+            });
+    };
+
     useEffect(() => {
         getFeedback(id);
-    }, [questions]);
+        getCourses();
+    }, [id]);
 
     // function handleInputChange(index: number, event: React.ChangeEvent<HTMLInputElement>) {
     //     const { value } = event.target;
@@ -292,7 +316,7 @@ export default function EditFeedback() {
                 <div className="flex flex-col justify-between space-y-4">
                     <div className="flex justify-between">
                         <Input
-                            className="text-2xl font-medium w-[50%]"
+                            className="text-2xl font-medium w-[50%] h-15"
                             placeholder="Title"
                             value={title}
                             onChange={(e) => setTitle(e.target.value)}
@@ -307,22 +331,37 @@ export default function EditFeedback() {
                         value={description}
                         onChange={(e) => setDescription(e.target.value)}
                     />
-                    <Select onValueChange={setColor}>
-                        <SelectTrigger className="w-[180px]">
-                            <SelectValue placeholder="Theme" />
-                        </SelectTrigger>
-                        <SelectContent>
-                            <SelectGroup>
-                                <SelectLabel>Theme</SelectLabel>
-                                <SelectItem value="black">Black</SelectItem>
-                                <SelectItem value="red">Red</SelectItem>
-                                <SelectItem value="green">Green</SelectItem>
-                                <SelectItem value="blue">Blue</SelectItem>
-                                <SelectItem value="yellow">Yellow</SelectItem>
-                                <SelectItem value="pink">Pink</SelectItem>
-                            </SelectGroup>
-                        </SelectContent>
-                    </Select>
+                    <div className="flex flex-col justify-between space-y-4">
+                        <div className="flex justfy-between gap-2">
+                            <Select onValueChange={setCourse}>
+                                <SelectTrigger className="w-[180px]">
+                                    <SelectValue placeholder="Course" />
+                                </SelectTrigger>
+                                <SelectContent>
+                                    <SelectGroup>
+                                        <SelectLabel>Course</SelectLabel>
+                                        {courses?.map((course: any, index: number) => {
+                                            return (
+                                                <SelectItem key={index} value={course?._id}>
+                                                    {course?.name}
+                                                </SelectItem>
+                                            );
+                                        })}
+                                    </SelectGroup>
+                                </SelectContent>
+                            </Select>
+                            {["black", "black", "black", "black", "black"].map((color) => {
+                                return (
+                                    <span
+                                        key={color}
+                                        className={`flex h-6 w-6 items-center justify-center rounded-full bg-${color} bg-`}
+                                    >
+                                        {isActive && <CheckIcon className="h-4 w-4 text-white" />}
+                                    </span>
+                                );
+                            })}
+                        </div>
+                    </div>
                 </div>
                 <div className="flex justify-between">
                     <Button onClick={() => setQuestions([...questions, initialQuestion])}>

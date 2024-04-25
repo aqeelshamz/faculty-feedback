@@ -38,42 +38,63 @@ import { cn, serverURL } from "@/lib/utils";
 import axios from "axios";
 import { toast } from "sonner";
 import { Label } from "@/components/ui/label";
-import { Edit, Trash } from "lucide-react";
+import { Edit, Eye, Trash } from "lucide-react";
+import { DialogTrigger } from "@radix-ui/react-dialog";
+import {
+    Dialog,
+    DialogClose,
+    DialogContent,
+    DialogDescription,
+    DialogFooter,
+    DialogHeader,
+    DialogTitle,
+} from "@/components/ui/dialog";
+import { Textarea } from "@/components/ui/textarea";
+import {
+    Select,
+    SelectContent,
+    SelectGroup,
+    SelectItem,
+    SelectLabel,
+    SelectTrigger,
+    SelectValue,
+} from "@/components/ui/select";
+import { useRouter } from "next/navigation";
 
 export default function FacultyFeedback() {
     const role = useUserStore((state) => state.role);
     const [search, setSearch] = useState("");
     const [feedbacks, setFeedbacks] = useState<any>([]);
-    const [editFeedbackId, setEditFeedbackId] = useState("");
+    const [courses, setCourses] = useState<any>([]);
     const [title, setTitle] = useState("");
     const [description, setDescription] = useState("");
+    const [course, setCourse] = useState("");
 
-    const sheetTrigger = useRef<any>();
-    const [editMode, setEditMode] = useState(false);
+    const router = useRouter();
 
-    const createFeedback = () => {};
-
-    const updateFeedback = async () => {
+    const createFeedback = () => {
         const config = {
-            method: "PUT",
-            url: `${serverURL}/feedback/${editFeedbackId}`,
+            method: "POST",
+            url: `${serverURL}/feedback/`,
             headers: {
                 Authorization: `Bearer ${localStorage.getItem("token")}`,
                 "Content-Type": "application/json",
             },
             data: {
-                title: title,
-                description: description,
+                title,
+                description,
+                course,
             },
         };
 
         axios(config)
             .then((response) => {
                 toast.success(response.data.message);
-                setEditFeedbackId("");
                 setTitle("");
                 setDescription("");
+                setCourse("");
                 getFeedbacks();
+                getCourses();
             })
             .catch((err) => {
                 toast.error(err.response?.data?.message);
@@ -119,76 +140,79 @@ export default function FacultyFeedback() {
             });
     };
 
+    const getCourses = async () => {
+        const config = {
+            method: "GET",
+            url: `${serverURL}/course/`,
+            headers: {
+                Authorization: `Bearer ${localStorage.getItem("token")}`,
+                "Content-Type": "application/json",
+            },
+        };
+
+        axios(config)
+            .then((response) => {
+                setCourses(response?.data?.data);
+            })
+            .catch((err) => {
+                toast.error(err.response?.data?.message);
+            });
+    };
+
     useEffect(() => {
         getFeedbacks();
+        getCourses();
     }, []);
 
     return (
         <div className="w-full h-screen p-7 overflow-y-auto">
             <p className="font-semibold text-2xl mb-4">Feedbacks</p>
             <div className="flex justify-between">
-                <div />
-                <Sheet
-                    onOpenChange={(x) => {
-                        if (x === false) setEditMode(false);
-                        if (!editMode && x) {
-                            setTitle("");
-                            setDescription("");
-                        }
-                    }}
-                >
-                    <SheetTrigger asChild>
-                        <Button>+ New Feedback</Button>
-                    </SheetTrigger>
-                    <SheetContent side={"left"}>
-                        <SheetHeader>
-                            <SheetTitle>{editMode ? "Edit" : "New"} Feedback</SheetTitle>
-                            <SheetDescription>
-                                {" "}
-                                {editMode ? "Edit" : "Create new"} feedback.
-                            </SheetDescription>
-                        </SheetHeader>
-                        <div className="grid gap-4 py-4">
-                            <div className="grid grid-cols-4 items-center gap-4">
-                                <Label htmlFor="title" className="text-right">
-                                    Title
-                                </Label>
-                                <Input
-                                    className="col-span-3"
-                                    type="text"
-                                    value={title}
-                                    onChange={(e) => setTitle(e.target.value)}
-                                />
-                            </div>
-                            <div className="grid grid-cols-4 items-center gap-4">
-                                <Label htmlFor="description" className="text-right">
-                                    Description
-                                </Label>
-                                <Input
-                                    className="col-span-3"
-                                    type="text"
-                                    value={title}
-                                    onChange={(e) => setTitle(e.target.value)}
-                                />
-                            </div>
-                        </div>
-                        <SheetFooter>
-                            <SheetClose asChild>
-                                        <Button
-                                            type="submit"
-                                            onClick={() => {
-                                                if (editMode) {
-                                                    updateFeedback();
-                                                } else {
-                                                    createFeedback();
-                                                }
-                                            }}>
-                                        
-                              {editMode ? "Save" : "Create"} Feedback</Button>
-                            </SheetClose>
-                        </SheetFooter>
-                    </SheetContent>
-                </Sheet>
+                <Dialog>
+                    <DialogTrigger>
+                        <Button>+ Create Feedback</Button>
+                    </DialogTrigger>
+                    <DialogContent className="space-y-4">
+                        <DialogHeader className="space-y-4">
+                            <DialogTitle>Create new feedback survey</DialogTitle>
+                            <DialogDescription>
+                                Create a feedback survey to collect data from students. Enter the
+                                details below to continue to editor.
+                            </DialogDescription>
+                            <Input
+                                placeholder="Title"
+                                value={title}
+                                onChange={(e) => setTitle(e.target.value)}
+                            />
+                            <Textarea
+                                placeholder="Description"
+                                value={description}
+                                onChange={(e) => setDescription(e.target.value)}
+                            />
+                            <Select value={course} onValueChange={(x) => setCourse(x)}>
+                                <SelectTrigger className="col-span-3">
+                                    <SelectValue placeholder="Select course" />
+                                </SelectTrigger>
+                                <SelectContent>
+                                    <SelectGroup>
+                                        <SelectLabel>Courses</SelectLabel>
+                                        {courses?.map((course: any, index: number) => {
+                                            return (
+                                                <SelectItem key={index} value={course?._id}>
+                                                    {course?.name}
+                                                </SelectItem>
+                                            );
+                                        })}
+                                    </SelectGroup>
+                                </SelectContent>
+                            </Select>
+                        </DialogHeader>
+                        <DialogFooter>
+                            <Button>Continue in editor</Button>
+                        </DialogFooter>
+                    </DialogContent>
+                </Dialog>
+
                 <div className="flex">
                     <Input
                         className="mr-4"
@@ -241,13 +265,11 @@ export default function FacultyFeedback() {
                                         <Button
                                             variant={"outline"}
                                             size={"icon"}
-                                            onClick={() => {
-                                                setEditMode(true);
-                                                setEditFeedbackId(feedback._id);
-                                                setTitle(feedback.title);
-                                                setDescription(feedback.description);
-                                                sheetTrigger.current.click();
-                                            }}
+                                            onClick={() =>
+                                                router.push(
+                                                    "/dashboard/feedbacks/edit/{feedback._id}",
+                                                )
+                                            }
                                         >
                                             <Edit />
                                         </Button>

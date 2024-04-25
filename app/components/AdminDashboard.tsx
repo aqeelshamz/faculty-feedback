@@ -60,7 +60,7 @@ export default function AdminDashboard() {
         <div className="w-full h-full p-7">
             <div className="grid gap-4 md:grid-cols-2 md:gap-8 lg:grid-cols-4">
                 <Card
-                    {/*onClick={() => router.push("/dashboard/feedbacks")}*/}
+                    onClick={() => router.push("/dashboard/feedbacks")}
                     className="cursor-pointer hover:shadow-md duration-75 w-full max-w-xs mr-4"
                 >
                     <div className="p-4 flex justify-between">
