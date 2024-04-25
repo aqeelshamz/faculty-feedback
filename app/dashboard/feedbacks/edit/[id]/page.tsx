@@ -1,6 +1,6 @@
 "use client";
 
-import * as React from "react";
+import { useState, useEffect } from "react";
 
 import { Button } from "@/components/ui/button";
 import {
@@ -21,9 +21,15 @@ import {
     SelectTrigger,
     SelectValue,
 } from "@/components/ui/select";
+import { Slider } from "@/components/ui/slider";
 import { Label } from "@/components/ui/label";
 import { Plus } from "lucide-react";
 import { Trash2 } from "lucide-react";
+import { useParams } from "next/navigation";
+import { serverURL } from "@/lib/utils";
+import axios from "axios";
+import { Toaster, toast } from "sonner";
+import { Textarea } from "@/components/ui/textarea";
 
 // create interface question where it should have questionType and question as string
 type LongTextQuestion = {
@@ -56,11 +62,68 @@ const initialQuestion: Question = {
     options: [{ option: "" }, { option: "" }, { option: "" }, { option: "" }],
 };
 
-export default function Page() {
-    const [questions, setQuestions] = React.useState<Question[]>([initialQuestion]);
+export default function EditFeedback() {
+    const { id } = useParams();
 
-    React.useEffect(() => {
-        console.log(questions);
+    const [title, setTitle] = useState("");
+    const [description, setDescription] = useState("");
+    const [color, setColor] = useState("");
+    const [questions, setQuestions] = useState<Question[]>([initialQuestion]);
+
+    const getFeedback = async (id: any) => {
+        const config = {
+            method: "GET",
+            url: `${serverURL}/feedback/${id}`,
+            headers: {
+                Authorization: `Bearer ${localStorage.getItem("token")}`,
+                "Content-Type": "application/json",
+            },
+        };
+
+        axios(config)
+            .then((response) => {
+                setTitle(response?.data?.title);
+                setDescription(response?.data?.description);
+                setColor(response?.data?.color);
+                setQuestions(response?.data?.questions);
+            })
+            .catch((err) => {
+                toast.error(err.response?.data?.message);
+            });
+    };
+
+    const createFeedback = async () => {
+        const config = {
+            method: "POST",
+            url: `${serverURL}/feedback/`,
+            headers: {
+                Authorization: `Bearer ${localStorage.getItem("token")}`,
+                "Content-Type": "application/json",
+            },
+            data: {
+                title,
+                description,
+                color,
+                questions,
+            },
+        };
+
+        axios(config)
+            .then((response) => {
+                toast.success(response.data.message);
+                setTitle("");
+                setDescription("");
+                setColor("");
+                setQuestions([]);
+                getFeedback(id);
+            })
+            .catch((err) => {
+                toast.error(err.response?.data?.message);
+            });
+    };
+
+    useEffect(() => {
+        getFeedback(id);
     }, [questions]);
 
     // function handleInputChange(index: number, event: React.ChangeEvent<HTMLInputElement>) {
@@ -111,7 +174,7 @@ export default function Page() {
         return (
             <Select onValueChange={handleOnValueChange} value={questions[index].questionType}>
                 <SelectTrigger className="w-[180px]">
-                    <SelectValue placeholder="Select a option" />
+                    <SelectValue placeholder="Select an option" />
                 </SelectTrigger>
                 <SelectContent>
                     <SelectGroup>
@@ -155,6 +218,9 @@ export default function Page() {
                 <div className="flex items-center space-x-2">
                     <p className="text-lg">{questionNumber + "."}</p>
                     <Input placeholder="Question" size={100} />
+                </div>
+                <div className="space-y-4 py-4">
+                    <Slider defaultValue={[0]} max={5} step={1} />
                 </div>
             </div>
         );
@@ -223,15 +289,46 @@ export default function Page() {
     return (
         <div className="p-4 w-full space-y-8 overflow-y-auto">
             <div className="flex flex-col gap-y-3">
-                <div className="flex flex-row justify-between">
-                    <h1 className="text-2xl font-semibold">Compiler Design (CST 304)</h1>
+                <div className="flex flex-col justify-between space-y-4">
+                    <div className="flex justify-between">
+                        <Input
+                            className="text-2xl font-medium w-[50%]"
+                            placeholder="Title"
+                            value={title}
+                            onChange={(e) => setTitle(e.target.value)}
+                        />
+                        <Button className="w-24" onClick={createFeedback}>
+                            Save
+                        </Button>
+                    </div>
+                    <Textarea
+                        placeholder="Description"
+                        className="w-[50%]"
+                        value={description}
+                        onChange={(e) => setDescription(e.target.value)}
+                    />
+                    <Select onValueChange={setColor}>
+                        <SelectTrigger className="w-[180px]">
+                            <SelectValue placeholder="Theme" />
+                        </SelectTrigger>
+                        <SelectContent>
+                            <SelectGroup>
+                                <SelectLabel>Theme</SelectLabel>
+                                <SelectItem value="black">Black</SelectItem>
+                                <SelectItem value="red">Red</SelectItem>
+                                <SelectItem value="green">Green</SelectItem>
+                                <SelectItem value="blue">Blue</SelectItem>
+                                <SelectItem value="yellow">Yellow</SelectItem>
+                                <SelectItem value="pink">Pink</SelectItem>
+                            </SelectGroup>
+                        </SelectContent>
+                    </Select>
                 </div>
-                <div className="flex  justify-between">
+                <div className="flex justify-between">
                     <Button onClick={() => setQuestions([...questions, initialQuestion])}>
                         <Plus className="mr-2" size={20} />
                         New question
                     </Button>
-                    <Button className="w-24">Save</Button>
                 </div>
             </div>
             {questions.map((question, index) => {
@@ -323,6 +420,7 @@ export default function Page() {
                     );
                 }
             })}
+            <Toaster />
         </div>
     );
 }
