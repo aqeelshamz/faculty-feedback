@@ -71,6 +71,7 @@ export default function EditFeedback() {
     const [course, setCourse] = useState("");
     const [questions, setQuestions] = useState<Question[]>([initialQuestion]);
     const [courses, setCourses] = useState<any>([]);
+    const [prompt, setPrompt] = useState("");
 
     const [isActive, setIsActive] = useState<boolean>(false);
 
@@ -96,10 +97,10 @@ export default function EditFeedback() {
             });
     };
 
-    const createFeedback = async () => {
+    const updateFeedback = async (id: any) => {
         const config = {
-            method: "POST",
-            url: `${serverURL}/feedback/`,
+            method: "PUT",
+            url: `${serverURL}/feedback/${id}`,
             headers: {
                 Authorization: `Bearer ${localStorage.getItem("token")}`,
                 "Content-Type": "application/json",
@@ -139,6 +140,30 @@ export default function EditFeedback() {
         axios(config)
             .then((response) => {
                 setCourses([]);
+            })
+            .catch((err) => {
+                toast.error(err.response?.data?.message);
+            });
+    };
+
+    const generateQuestions = async (id: any) => {
+        const config = {
+            method: "POST",
+            url: `${serverURL}/feedback/generate-questions-using-ai`,
+            headers: {
+                Authorization: `Bearer ${localStorage.getItem("token")}`,
+                "Content-Type": "application/json",
+            },
+            data: {
+                feedbackId: id,
+                prompt,
+                maxQuestions: 3,
+            },
+        };
+
+        axios(config)
+            .then((response) => {
+                console.log(response);
             })
             .catch((err) => {
                 toast.error(err.response?.data?.message);
@@ -321,7 +346,7 @@ export default function EditFeedback() {
                             value={title}
                             onChange={(e) => setTitle(e.target.value)}
                         />
-                        <Button className="w-24" onClick={createFeedback}>
+                        <Button className="w-24" onClick={() => updateFeedback(id)}>
                             Save
                         </Button>
                     </div>

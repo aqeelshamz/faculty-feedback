@@ -208,7 +208,7 @@ export default function FacultyFeedback() {
                             </Select>
                         </DialogHeader>
                         <DialogFooter>
-                            <Button>Continue in editor</Button>
+                            <Button onClick={createFeedback}>Continue in editor</Button>
                         </DialogFooter>
                     </DialogContent>
                 </Dialog>
