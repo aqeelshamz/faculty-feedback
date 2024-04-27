@@ -58,11 +58,13 @@ export default function Page() {
     const [search, setSearch] = useState("");
     const [courses, setCourses] = useState<any>([]);
     const [faculties, setFaculties] = useState<any>([]);
+    const [programs, setPrograms] = useState<any>([]);
 
     //New Course
     const [name, setName] = useState("");
     const [courseCode, setCourseCode] = useState("");
     const [semester, setSemester] = useState("");
+    const [program, setProgram] = useState("");
     const [courseFaculties, setCourseFaculties] = useState<any>([]);
 
     //Edit Course
@@ -167,6 +169,25 @@ export default function Page() {
             });
     };
 
+    const getPrograms = async () => {
+        const config = {
+            method: "GET",
+            url: `${serverURL}/program/`,
+            headers: {
+                Authorization: `Bearer ${localStorage.getItem("token")}`,
+                "Content-Type": "application/json",
+            },
+        };
+
+        axios(config)
+            .then((response) => {
+                setPrograms(response?.data?.data);
+            })
+            .catch((err) => {
+                toast.error(err.response?.data?.message);
+            });
+    };
+
     const getFaculties = async () => {
         const config = {
             method: "GET",
@@ -188,6 +209,7 @@ export default function Page() {
 
     useEffect(() => {
         getCourses();
+        getPrograms();
         getFaculties();
     }, []);
 
@@ -245,6 +267,33 @@ export default function Page() {
                                     </div>
                                     <div className="grid grid-cols-4 items-center gap-4">
                                         <Label htmlFor="course" className="text-right">
+                                            Program
+                                        </Label>
+                                        <Select>
+                                            <SelectTrigger className="col-span-3">
+                                                <SelectValue placeholder="Select program" />
+                                            </SelectTrigger>
+                                            <SelectContent>
+                                                <SelectGroup>
+                                                    <SelectLabel>Program</SelectLabel>
+                                                    {programs?.map(
+                                                        (program: any, index: number) => {
+                                                            return (
+                                                                <SelectItem
+                                                                    key={index}
+                                                                    value={program}
+                                                                >
+                                                                    {program}
+                                                                </SelectItem>
+                                                            );
+                                                        },
+                                                    )}
+                                                </SelectGroup>
+                                            </SelectContent>
+                                        </Select>
+                                    </div>
+                                    <div className="grid grid-cols-4 items-center gap-4">
+                                        <Label htmlFor="course" className="text-right">
                                             Semester
                                         </Label>
                                         <Select>
@@ -253,7 +302,7 @@ export default function Page() {
                                             </SelectTrigger>
                                             <SelectContent>
                                                 <SelectGroup>
-                                                    <SelectLabel>Semesters</SelectLabel>
+                                                    <SelectLabel>Semester</SelectLabel>
                                                     {["1", "2", "3", "4", "5", "6", "7", "8"]?.map(
                                                         (semester: any, index: number) => {
                                                             return (
