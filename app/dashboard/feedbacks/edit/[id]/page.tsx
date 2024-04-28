@@ -228,7 +228,7 @@ export default function EditFeedback() {
                 <SelectContent>
                     <SelectGroup>
                         <SelectLabel>Select an option</SelectLabel>
-                        {questionTypes.map((qstnType, index) => (
+                        {questionTypes?.map((qstnType, index) => (
                             <SelectItem
                                 key={index}
                                 value={
@@ -305,7 +305,7 @@ export default function EditFeedback() {
                     <Input placeholder="Question" />
                 </div>
                 <div className="space-y-2">
-                    {options.map((_, index) => (
+                    {options?.map((_, index) => (
                         <div key={index} className="flex space-y-2 items-center space-x-2">
                             <Label>{String.fromCharCode(65 + index) + "."}</Label>
                             <Input placeholder={`Option ${index + 1}`} size={100} />
@@ -318,7 +318,7 @@ export default function EditFeedback() {
                                         const newQuestions = [...prevQuestions];
                                         const currentQuestion = newQuestions[questionNumber - 1];
                                         if (currentQuestion.questionType === "mcq") {
-                                            currentQuestion.options = newOptions.map((option) => ({
+                                            currentQuestion.options = newOptions?.map((option) => ({
                                                 option,
                                             }));
                                         }
@@ -395,7 +395,7 @@ export default function EditFeedback() {
                     </Button>
                 </div>
             </div>
-            {questions.map((question, index) => {
+            {questions?.map((question, index) => {
                 if (question.questionType === "mcq") {
                     return (
                         <Card key={index} className="w-[700px] my-2 py-6 ">
@@ -403,7 +403,7 @@ export default function EditFeedback() {
                                 <div className="flex flex-row space-x-4 justify-between">
                                     <MultipleChoiceQuestionTemplate
                                         questionNumber={index + 1}
-                                        options={question.options.map((option) => option.option)}
+                                        options={question.options?.map((option) => option.option)}
                                     />
                                     <div className="flex flex-row space-x-4">
                                         <SelectQuestionType index={index} />
