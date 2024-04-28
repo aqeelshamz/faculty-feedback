@@ -24,7 +24,7 @@ import {
 } from "@/components/ui/select";
 import { Slider } from "@/components/ui/slider";
 import { Label } from "@/components/ui/label";
-import { CheckIcon, Plus } from "lucide-react";
+import { CheckIcon, Pen, Plus } from "lucide-react";
 import { Trash2 } from "lucide-react";
 import { useParams } from "next/navigation";
 import { cn, serverURL } from "@/lib/utils";
@@ -90,6 +90,7 @@ export default function EditFeedback() {
             .then((response) => {
                 setTitle(response?.data?.title);
                 setDescription(response?.data?.description);
+                setCourse(response?.data?.courseCode);
                 setColor(response?.data?.color);
                 setQuestions(response?.data?.questions);
             })
@@ -119,6 +120,7 @@ export default function EditFeedback() {
                 toast.success(response.data.message);
                 setTitle("");
                 setDescription("");
+                setCourse("");
                 setColor("");
                 setQuestions([]);
                 getFeedback(id);
@@ -348,9 +350,49 @@ export default function EditFeedback() {
                             onChange={(e) => setTitle(e.target.value)}
                         />
                         <Button className="w-48" onClick={() => updateFeedback(id)}>
+                        <div className="flex flex-col justify-between space-y-4">
+                            <div className="flex justfy-between gap-2">
+                                <Select onValueChange={(x) => setCourse(x)} value={course}>
+                                    <SelectTrigger className="w-[180px]">
+                                        <SelectValue placeholder="Course" />
+                                    </SelectTrigger>
+                                    <SelectContent>
+                                        <SelectGroup>
+                                            <SelectLabel>Course</SelectLabel>
+                                            {courses?.map((course: any, index: number) => {
+                                                return (
+                                                    <SelectItem key={index} value={course?._id}>
+                                                        {course?.name}
+                                                    </SelectItem>
+                                                );
+                                            })}
+                                        </SelectGroup>
+                                    </SelectContent>
+                                </Select>
+                                {["black", "black", "black", "black", "black"].map((color) => {
+                                    return (
+                                        <span
+                                            key={color}
+                                            className={`flex h-6 w-6 items-center justify-center rounded-full bg-${color} bg-`}
+                                        >
+                                            {isActive && (
+                                                <CheckIcon className="h-4 w-4 text-white" />
+                                            )}
+                                        </span>
+                                    );
+                                })}
+                            </div>
+                        </div>
+                        <Button className="w-24" onClick={() => updateFeedback(id)}>
                             Save
                         </Button>
                     </div>
+                    <Input
+                        className="text-2xl font-medium w-[50%] h-15"
+                        placeholder="Title"
+                        value={title}
+                        onChange={(e) => setTitle(e.target.value)}
+                    />
                     <Textarea
                         placeholder="Description"
                         className="max-w-screen-lg"
@@ -393,6 +435,17 @@ export default function EditFeedback() {
                             />
                         </div>
                     </div>
+                </div>
+                </div>
+                <div className="flex flex-row  w-[20%] gap-2">
+                    <Button onClick={() => setQuestions([...questions, initialQuestion])}>
+                        <Plus className="mr-2 flex" size={20} />
+                        New question
+                    </Button>
+                    <Button onClick={() => {}}>
+                        <Pen className="mr-2 flex" size={20} />
+                        Generate Questions
+                    </Button>
                 </div>
             </div>
             {questions?.map((question, index) => {

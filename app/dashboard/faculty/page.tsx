@@ -63,6 +63,7 @@ export default function Page() {
     const [facultyRole, setFacultyRole] = useState("");
     const [gender, setGender] = useState("M");
 
+    const [editFacultyId, setEditFacultyId] = useState("");
     const sheetTrigger = useRef<any>();
     const [editMode, setEditMode] = useState(false);
 
@@ -75,11 +76,10 @@ export default function Page() {
                 "Content-Type": "application/json",
             },
             data: {
-                name: name,
-                email: email,
-                password: password,
-                gender: gender,
-                title: title,
+                name,
+                email,
+                password,
+                title,
                 role: facultyRole,
             },
         };
@@ -89,6 +89,39 @@ export default function Page() {
                 toast.success(response.data.message);
                 setName("");
                 setEmail("");
+                setTitle("");
+                setPassword("");
+                setFacultyRole("");
+                getFaculties();
+            })
+            .catch((err) => {
+                toast.error(err.response?.data?.message);
+            });
+    };
+
+    const updateFaculty = async () => {
+        const config = {
+            method: "PUT",
+            url: `${serverURL}/faculty/${editFacultyId}`,
+            headers: {
+                Authorization: `Bearer ${localStorage.getItem("token")}`,
+                "Content-Type": "application/json",
+            },
+            data: {
+                name,
+                email,
+                password,
+                title,
+                role: facultyRole,
+            },
+        };
+
+        axios(config)
+            .then((response) => {
+                toast.success(response.data.message);
+                setName("");
+                setEmail("");
+                setPassword("");
                 setTitle("");
                 setFacultyRole("");
                 getFaculties();
@@ -147,14 +180,27 @@ export default function Page() {
                 <div className="w-full h-screen p-7 overflow-y-auto">
                     <p className="font-semibold text-2xl mb-4">Faculty</p>
                     <div className="flex justify-between">
-                        <Sheet>
-                            <SheetTrigger asChild>
+                        <Sheet
+                            onOpenChange={(x) => {
+                                if (x === false) setEditMode(false);
+                                if (!editMode && x) {
+                                    setName("");
+                                    setEmail("");
+                                    setPassword("");
+                                    setTitle("");
+                                    setFacultyRole("");
+                                }
+                            }}
+                        >
+                            <SheetTrigger ref={sheetTrigger} asChild>
                                 <Button>+ New Faculty</Button>
                             </SheetTrigger>
                             <SheetContent side={"left"}>
                                 <SheetHeader>
-                                    <SheetTitle>New Faculty</SheetTitle>
-                                    <SheetDescription>Create new faculty.</SheetDescription>
+                                    <SheetTitle>{editMode ? "Edit" : "New"} Faculty</SheetTitle>
+                                    <SheetDescription>
+                                        {editMode ? "Edit" : "Create new"} faculty.
+                                    </SheetDescription>
                                 </SheetHeader>
                                 <div className="grid gap-4 py-4">
                                     <div className="grid grid-cols-4 items-center gap-4">
@@ -188,6 +234,7 @@ export default function Page() {
                                             type="password"
                                             value={password}
                                             onChange={(e) => setPassword(e.target.value)}
+                                            disabled={editMode && false}
                                         />
                                     </div>
                                     <div className="grid grid-cols-4 items-center gap-4">
@@ -226,7 +273,10 @@ export default function Page() {
                                         <Label htmlFor="role" className="text-right">
                                             Role
                                         </Label>
-                                        <Select onValueChange={(x) => setFacultyRole(x)} value={facultyRole}>
+                                        <Select
+                                            onValueChange={(x) => setFacultyRole(x)}
+                                            value={facultyRole}
+                                        >
                                             <SelectTrigger className="col-span-3">
                                                 <SelectValue placeholder="Select role" />
                                             </SelectTrigger>
@@ -252,8 +302,17 @@ export default function Page() {
                                 </div>
                                 <SheetFooter>
                                     <SheetClose asChild>
-                                        <Button type="submit" onClick={createFaculty}>
-                                            Create Faculty
+                                        <Button
+                                            type="submit"
+                                            onClick={() => {
+                                                if (editMode) {
+                                                    updateFaculty();
+                                                } else {
+                                                    createFaculty();
+                                                }
+                                            }}
+                                        >
+                                            {editMode ? "Save" : "Create"} Faculty
                                         </Button>
                                     </SheetClose>
                                 </SheetFooter>
@@ -290,10 +349,10 @@ export default function Page() {
                                         .toString()
                                         .toLowerCase()
                                         .includes(search.toLowerCase()) &&
-                                        !faculty.title
-                                            .toString()
-                                            .toLowerCase()
-                                            .includes(search.toLowerCase()) ? (
+                                    !faculty.title
+                                        .toString()
+                                        .toLowerCase()
+                                        .includes(search.toLowerCase()) ? (
                                         ""
                                     ) : (
                                         <TableRow key={index}>
@@ -302,7 +361,19 @@ export default function Page() {
                                             <TableCell>{faculty.title}</TableCell>
                                             <TableCell>{faculty.role}</TableCell>
                                             <TableCell>
-                                                <Button variant={"outline"} size={"icon"}>
+                                                <Button
+                                                    variant={"outline"}
+                                                    size={"icon"}
+                                                    onClick={() => {
+                                                        setEditMode(true);
+                                                        setEditFacultyId(faculty._id);
+                                                        setName(faculty.name);
+                                                        setEmail(faculty.email);
+                                                        setTitle(faculty.title);
+                                                        setFacultyRole(faculty.facultyRole);
+                                                        sheetTrigger.current.click();
+                                                    }}
+                                                >
                                                     <Edit />
                                                 </Button>
                                             </TableCell>
