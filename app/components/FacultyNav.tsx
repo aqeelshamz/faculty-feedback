@@ -25,7 +25,7 @@ export const FacultyNav = () => {
             </Link>
             <Link
                 href="/dashboard/feedbacks"
-                className={`flex items-center gap-3 rounded-lg px-3 py-2 transition-all hover:text-primary ${pathname === "/dashboard/faculty" ? "bg-muted text-primary" : "text-muted-foreground"}`}
+                className={`flex items-center gap-3 rounded-lg px-3 py-2 transition-all hover:text-primary ${pathname === "/dashboard/feedbacks" ? "bg-muted text-primary" : "text-muted-foreground"}`}
             >
                 <User className="h-4 w-4" />
                 Feedbacks

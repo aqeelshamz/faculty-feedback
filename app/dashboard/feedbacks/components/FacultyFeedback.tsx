@@ -267,7 +267,7 @@ export default function FacultyFeedback() {
                                             size={"icon"}
                                             onClick={() =>
                                                 router.push(
-                                                    "/dashboard/feedbacks/edit/{feedback._id}",
+                                                    `/dashboard/feedbacks/edit/${feedback._id}`,
                                                 )
                                             }
                                         >

@@ -165,7 +165,7 @@ export default function Page() {
 
     return (
         <>
-            {role == "admin" ? (
+            {role == "admin" || role == "faculty" ? (
                 <div className="w-full h-screen p-7 overflow-y-auto">
                     <p className="font-semibold text-2xl mb-4">Programs</p>
                     <div className="flex justify-between">

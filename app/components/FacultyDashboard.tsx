@@ -1,10 +1,48 @@
 "use client";
 import { Card, CardContent, CardTitle } from "@/components/ui/card";
+import { serverURL } from "@/lib/utils";
+import axios from "axios";
 import { GraduationCap, StickyNote, User, Users } from "lucide-react";
 import { useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
+import { toast } from "sonner";
 
 export default function FacultyDashboard() {
     const router = useRouter();
+
+    const [allCounts, setAllCounts] = useState({
+        departmentCount: 0,
+        batchCount: 0,
+        programCount: 0,
+        feedbackCount: 0,
+        courseCount: 0,
+        studentCount: 0,
+        semesterCount: 0,
+        facultyCount: 0,
+    });
+
+    const getAllCounts = async () => {
+        const config = {
+            method: "POST",
+            url: `${serverURL}/college/get-all-count`,
+            headers: {
+                Authorization: `Bearer ${localStorage.getItem("token")}`,
+                "Content-Type": "application/json",
+            },
+        };
+
+        axios(config)
+            .then((response) => {
+                setAllCounts(response?.data?.data);
+            })
+            .catch((err) => {
+                toast.error(err.response?.data?.message);
+            });
+    };
+
+    useEffect(() => {
+        getAllCounts();
+    }, []);
 
     return (
         <div className="w-full h-full p-7">
@@ -15,7 +53,7 @@ export default function FacultyDashboard() {
                         <StickyNote className="h-6 w-6" />
                     </div>
                     <CardContent>
-                        <p className="text-4xl font-bold">13</p>
+                        <p className="text-4xl font-bold">{allCounts?.feedbackCount}</p>
                     </CardContent>
                 </Card>
                 <Card
@@ -27,7 +65,7 @@ export default function FacultyDashboard() {
                         <GraduationCap className="h-6 w-6" />
                     </div>
                     <CardContent>
-                        <p className="text-4xl font-bold">0</p>
+                        <p className="text-4xl font-bold">{allCounts?.programCount}</p>
                     </CardContent>
                 </Card>
                 <Card
@@ -39,7 +77,7 @@ export default function FacultyDashboard() {
                         <User className="h-6 w-6" />
                     </div>
                     <CardContent>
-                        <p className="text-4xl font-bold">0</p>
+                        <p className="text-4xl font-bold">{allCounts?.batchCount}</p>
                     </CardContent>
                 </Card>
                 <Card
@@ -51,7 +89,7 @@ export default function FacultyDashboard() {
                         <Users className="h-6 w-6" />
                     </div>
                     <CardContent>
-                        <p className="text-4xl font-bold">0</p>
+                        <p className="text-4xl font-bold">{allCounts?.studentCount}</p>
                     </CardContent>
                 </Card>
             </div>

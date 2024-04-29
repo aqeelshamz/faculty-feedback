@@ -395,7 +395,7 @@ export default function EditFeedback() {
                     </Button>
                 </div>
             </div>
-            {questions.map((question, index) => {
+            {questions?.map((question, index) => {
                 if (question.questionType === "mcq") {
                     return (
                         <Card key={index} className="w-[700px] my-2 py-6 ">
