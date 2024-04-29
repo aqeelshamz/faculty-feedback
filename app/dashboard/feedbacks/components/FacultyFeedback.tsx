@@ -81,9 +81,10 @@ export default function FacultyFeedback() {
                 "Content-Type": "application/json",
             },
             data: {
-                title: title,
-                description: description,
-                course: course,
+                title,
+                description,
+                color: "black",
+                courseId: course,
             },
         };
 
@@ -95,6 +96,9 @@ export default function FacultyFeedback() {
                 setCourse("");
                 getFeedbacks();
                 getCourses();
+                router.push(
+                    `/dashboard/feedbacks/edit/${response.data.data?._id}`,
+                )
             })
             .catch((err) => {
                 toast.error(err.response?.data?.message);
