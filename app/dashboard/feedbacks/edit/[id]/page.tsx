@@ -34,7 +34,7 @@ import {
 } from "@/components/ui/dialog";
 import { Slider } from "@/components/ui/slider";
 import { Label } from "@/components/ui/label";
-import { Sparkles, Pen, Plus } from "lucide-react";
+import { Sparkles, Pen, Plus, Eye } from "lucide-react";
 
 import { Trash2 } from "lucide-react";
 import { useParams } from "next/navigation";
@@ -95,7 +95,7 @@ export default function EditFeedback() {
             });
     };
 
-    const updateFeedback = async (id: any) => {
+    const updateFeedback = async () => {
         const colorData: any = {
             "#000000": "black",
             "#eb4034": "red",
@@ -172,6 +172,7 @@ export default function EditFeedback() {
         axios(config)
             .then((response) => {
                 setQuestions([...questions, ...response.data.data]);
+                updateFeedback();
             })
             .catch((err) => {
                 toast.error(err.response?.data?.message);
@@ -227,8 +228,10 @@ export default function EditFeedback() {
                                 />
                             </div>
                         </div>
-
-                        <Button className="w-44 ml-2" onClick={() => updateFeedback(id)}>
+                        <Button variant={"outline"} className=" ml-2" onClick={() => {}}>
+                            <Eye />
+                        </Button>
+                        <Button className="w-44 ml-2" onClick={updateFeedback}>
                             Save
                         </Button>
                     </div>
@@ -251,91 +254,137 @@ export default function EditFeedback() {
                 return (
                     <Card key={index} className="max-w-screen-lg my-2 py-6 ">
                         <CardContent>
-                            <div className="flex flex-row space-x-4 justify-between">
-                                {question.settings?.type === "text" ? (
-                                    <div className="flex items-center space-x-2">
-                                        <p className="text-lg">{index + 1 + "."}</p>
-                                        <Input type="text" value={question.question} />
-                                    </div>
-                                ) : question.settings?.type === "longtext" ? (
-                                    <div className="flex w-full flex-col space-y-4">
-                                        <div className="flex items-center space-x-2">
+                            <div className="flex flex-col space-y-4">
+                                <div className="flex flex-row space-x-4 justify-between">
+                                    {question.settings?.type === "text" ? (
+                                        <div className="flex items-center space-x-2 w-full">
                                             <p className="text-lg">{index + 1 + "."}</p>
-                                            <Input type="text" value={question.question} />
+                                            <Input
+                                                placeholder="Question"
+                                                type="text"
+                                                value={question.question}
+                                                onChange={(x) => {
+                                                    question.question = x.target.value;
+                                                    setQuestions([...questions]);
+                                                }}
+                                            />
                                         </div>
+                                    ) : question.settings?.type === "longtext" ? (
+                                        <div className="flex w-full flex-col space-y-4">
+                                            <div className="flex items-center space-x-2">
+                                                <p className="text-lg">{index + 1 + "."}</p>
+                                                <Input
+                                                    placeholder="Question"
+                                                    type="text"
+                                                    value={question.question}
+                                                    onChange={(x) => {
+                                                        question.question = x.target.value;
+                                                        setQuestions([...questions]);
+                                                    }}
+                                                />
+                                            </div>
+                                        </div>
+                                    ) : question.settings?.type === "multiplechoice" ? (
+                                        <div className="flex flex-col w-full space-y-4">
+                                            <div className="flex items-center space-x-2">
+                                                <p className="text-lg">{index + 1 + "."}</p>
+                                                <Input
+                                                    placeholder="Question"
+                                                    type="text"
+                                                    value={question.question}
+                                                    onChange={(x) => {
+                                                        question.question = x.target.value;
+                                                        setQuestions([...questions]);
+                                                    }}
+                                                />
+                                            </div>
+                                            <div className="space-y-2 ml-5">
+                                                {question.options?.map(
+                                                    (option: any, index: number) => (
+                                                        <div
+                                                            key={index}
+                                                            className="flex space-y-2 items-center space-x-2"
+                                                        >
+                                                            <Label>
+                                                                {String.fromCharCode(65 + index) +
+                                                                    "."}
+                                                            </Label>
+                                                            <Input
+                                                                placeholder={`Option ${index + 1}`}
+                                                                size={100}
+                                                            />
+                                                        </div>
+                                                    ),
+                                                )}
+                                            </div>
+                                        </div>
+                                    ) : question.settings?.type === "rating" ? (
+                                        <div className="flex flex-col w-full space-y-4">
+                                            <div className="flex items-center space-x-2">
+                                                <p className="text-lg">{index + 1 + "."}</p>
+                                                <Input
+                                                    placeholder="Question"
+                                                    type="text"
+                                                    value={question.question}
+                                                    onChange={(x) => {
+                                                        question.question = x.target.value;
+                                                        setQuestions([...questions]);
+                                                    }}
+                                                />
+                                            </div>
+                                        </div>
+                                    ) : (
+                                        ""
+                                    )}
+
+                                    <div className="flex flex-row space-x-4">
+                                        <Select
+                                            onValueChange={(x) => {
+                                                question.settings.type = x;
+                                                setQuestions([...questions]);
+                                            }}
+                                            value={question.settings.type}
+                                        >
+                                            <SelectTrigger className="w-[180px]">
+                                                <SelectValue placeholder="Course" />
+                                            </SelectTrigger>
+                                            <SelectContent>
+                                                <SelectGroup>
+                                                    <SelectLabel>Question Type</SelectLabel>
+                                                    <SelectItem key={index} value={"text"}>
+                                                        Text
+                                                    </SelectItem>
+                                                    <SelectItem key={index} value={"longtext"}>
+                                                        Long Text
+                                                    </SelectItem>
+                                                    <SelectItem
+                                                        key={index}
+                                                        value={"multiplechoice"}
+                                                    >
+                                                        Multiple Choice
+                                                    </SelectItem>
+                                                    <SelectItem key={index} value={"rating"}>
+                                                        Rating
+                                                    </SelectItem>
+                                                </SelectGroup>
+                                            </SelectContent>
+                                        </Select>
+                                        <Button
+                                            variant={"destructive"}
+                                            onClick={() => {
+                                                setQuestions(
+                                                    questions.filter(
+                                                        (_: any, i: any) => i !== index,
+                                                    ),
+                                                );
+                                            }}
+                                        >
+                                            <Trash2 />
+                                        </Button>
                                     </div>
-                                ) : question.settings?.type === "multiplechoice" ? (
-                                    <div className="flex flex-col w-full space-y-4">
-                                        <div className="flex items-center space-x-2">
-                                            <p className="text-lg">{index + 1 + "."}</p>
-                                            <Input type="text" value={question.question} />
-                                        </div>
-                                        <div className="space-y-2 ml-5">
-                                            {question.options?.map((option: any, index: number) => (
-                                                <div
-                                                    key={index}
-                                                    className="flex space-y-2 items-center space-x-2"
-                                                >
-                                                    <Label>
-                                                        {String.fromCharCode(65 + index) + "."}
-                                                    </Label>
-                                                    <Input
-                                                        placeholder={`Option ${index + 1}`}
-                                                        size={100}
-                                                    />
-                                                </div>
-                                            ))}
-                                        </div>
-                                    </div>
-                                ) : question.settings?.type === "rating" ? (
-                                    <div className="flex flex-col w-full space-y-4">
-                                        <div className="flex items-center space-x-2">
-                                            <p className="text-lg">{index + 1 + "."}</p>
-                                            <Input type="text" value={question.question} />
-                                        </div>
-                                    </div>
-                                ) : (
-                                    ""
-                                )}
-                                <div className="flex flex-row space-x-4">
-                                    <Select
-                                        onValueChange={(x) => {
-                                            question.settings.type = x;
-                                            setQuestions([...questions]);
-                                        }}
-                                        value={question.settings.type}
-                                    >
-                                        <SelectTrigger className="w-[180px]">
-                                            <SelectValue placeholder="Course" />
-                                        </SelectTrigger>
-                                        <SelectContent>
-                                            <SelectGroup>
-                                                <SelectLabel>Question Type</SelectLabel>
-                                                <SelectItem key={index} value={"text"}>
-                                                    Text
-                                                </SelectItem>
-                                                <SelectItem key={index} value={"longtext"}>
-                                                    Long Text
-                                                </SelectItem>
-                                                <SelectItem key={index} value={"multiplechoice"}>
-                                                    Multiple Choice
-                                                </SelectItem>
-                                                <SelectItem key={index} value={"rating"}>
-                                                    Rating
-                                                </SelectItem>
-                                            </SelectGroup>
-                                        </SelectContent>
-                                    </Select>
-                                    <Button
-                                        variant={"destructive"}
-                                        onClick={() => {
-                                            setQuestions(
-                                                questions.filter((_: any, i: any) => i !== index),
-                                            );
-                                        }}
-                                    >
-                                        <Trash2 />
-                                    </Button>
+                                </div>
+                                <div className="flex w-fit">
+                                    <Input placeholder="Answer" type="text" disabled />
                                 </div>
                             </div>
                         </CardContent>
@@ -350,7 +399,7 @@ export default function EditFeedback() {
                         setQuestions([
                             ...questions,
                             {
-                                question: "Question",
+                                question: "",
                                 settings: {
                                     type: "text",
                                     required: false,
