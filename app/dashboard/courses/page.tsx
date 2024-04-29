@@ -82,7 +82,8 @@ export default function Page() {
             data: {
                 name: name,
                 courseCode: courseCode,
-                semester: semester,
+                semesterId: semester,
+                programId: program,
                 faculties: courseFaculties,
             },
         };
@@ -190,6 +191,7 @@ export default function Page() {
     };
 
     const getSemesters = async (programId: string) => {
+        if (programId == "") return setSemesters([]);
         const config = {
             method: "POST",
             url: `${serverURL}/semester/get-all-by-program/${programId}`,
@@ -198,7 +200,7 @@ export default function Page() {
                 "Content-Type": "application/json",
             },
         };
-        
+
         axios(config)
             .then((response) => {
                 setSemesters(response?.data?.data);
@@ -233,9 +235,9 @@ export default function Page() {
         getFaculties();
     }, []);
 
-    useEffect(()=>{
+    useEffect(() => {
         getSemesters(program);
-    },[program])
+    }, [program])
 
     const sheetTrigger = useRef<any>();
     const [editMode, setEditMode] = useState(false);
@@ -293,7 +295,7 @@ export default function Page() {
                                         <Label htmlFor="course" className="text-right">
                                             Program
                                         </Label>
-                                        <Select value={program} onValueChange={(x)=>setProgram(x)}>
+                                        <Select value={program} onValueChange={(x) => setProgram(x)}>
                                             <SelectTrigger className="col-span-3">
                                                 <SelectValue placeholder="Select program" />
                                             </SelectTrigger>
@@ -320,7 +322,7 @@ export default function Page() {
                                         <Label htmlFor="course" className="text-right">
                                             Semester
                                         </Label>
-                                        <Select value={semester} onValueChange={(x)=>setSemester(x)}>
+                                        <Select value={semester} onValueChange={(x) => setSemester(x)}>
                                             <SelectTrigger className="col-span-3">
                                                 <SelectValue placeholder="Select semester" />
                                             </SelectTrigger>
@@ -353,7 +355,9 @@ export default function Page() {
                                                     className="flex items-center space-x-2 my-4"
                                                     key={index}
                                                 >
-                                                    <Checkbox id={faculty + index.toString()} />
+                                                    <Checkbox id={faculty + index.toString()} onCheckedChange={(x) => {
+                                                        courseFaculties.includes(faculty._id) ? setCourseFaculties(courseFaculties.filter((y: any) => y != faculty._id)) : setCourseFaculties([...courseFaculties, faculty._id])
+                                                    }} />
                                                     <label
                                                         htmlFor={faculty + index.toString()}
                                                         className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
@@ -405,17 +409,19 @@ export default function Page() {
                                         .toString()
                                         .toLowerCase()
                                         .includes(search.toLowerCase()) &&
-                                    !course.courseCode
-                                        .toString()
-                                        .toLowerCase()
-                                        .includes(search.toLowerCase()) ? (
+                                        !course.courseCode
+                                            .toString()
+                                            .toLowerCase()
+                                            .includes(search.toLowerCase()) ? (
                                         ""
                                     ) : (
                                         <TableRow key={index}>
                                             <TableCell>{course.name}</TableCell>
                                             <TableCell>{course.courseCode}</TableCell>
-                                            <TableCell>{course.semester}</TableCell>
-                                            <TableCell>{course.courseFaculties}</TableCell>
+                                            <TableCell>{course.semester.name}</TableCell>
+                                            <TableCell>{course?.faculties.map((faculty: any, index: number) => {
+                                                return <p className="mb-2">{faculty?.name}<br /><span className="text-sm opacity-50">{faculty?.email}</span></p>
+                                            })}</TableCell>
                                             <TableCell>
                                                 <Button
                                                     variant={"outline"}
