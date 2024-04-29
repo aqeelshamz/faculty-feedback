@@ -59,6 +59,7 @@ export default function Page() {
     const [courses, setCourses] = useState<any>([]);
     const [faculties, setFaculties] = useState<any>([]);
     const [programs, setPrograms] = useState<any>([]);
+    const [semesters, setSemesters] = useState<any>([]);
 
     //New Course
     const [name, setName] = useState("");
@@ -188,6 +189,25 @@ export default function Page() {
             });
     };
 
+    const getSemesters = async (programId: string) => {
+        const config = {
+            method: "POST",
+            url: `${serverURL}/semester/get-all-by-program/${programId}`,
+            headers: {
+                Authorization: `Bearer ${localStorage.getItem("token")}`,
+                "Content-Type": "application/json",
+            },
+        };
+        
+        axios(config)
+            .then((response) => {
+                setSemesters(response?.data?.data);
+            })
+            .catch((err) => {
+                toast.error(err.response?.data?.message);
+            });
+    };
+
     const getFaculties = async () => {
         const config = {
             method: "GET",
@@ -212,6 +232,10 @@ export default function Page() {
         getPrograms();
         getFaculties();
     }, []);
+
+    useEffect(()=>{
+        getSemesters(program);
+    },[program])
 
     const sheetTrigger = useRef<any>();
     const [editMode, setEditMode] = useState(false);
@@ -269,7 +293,7 @@ export default function Page() {
                                         <Label htmlFor="course" className="text-right">
                                             Program
                                         </Label>
-                                        <Select>
+                                        <Select value={program} onValueChange={(x)=>setProgram(x)}>
                                             <SelectTrigger className="col-span-3">
                                                 <SelectValue placeholder="Select program" />
                                             </SelectTrigger>
@@ -281,9 +305,9 @@ export default function Page() {
                                                             return (
                                                                 <SelectItem
                                                                     key={index}
-                                                                    value={program}
+                                                                    value={program?._id}
                                                                 >
-                                                                    {program}
+                                                                    {program?.name}
                                                                 </SelectItem>
                                                             );
                                                         },
@@ -296,21 +320,21 @@ export default function Page() {
                                         <Label htmlFor="course" className="text-right">
                                             Semester
                                         </Label>
-                                        <Select>
+                                        <Select value={semester} onValueChange={(x)=>setSemester(x)}>
                                             <SelectTrigger className="col-span-3">
                                                 <SelectValue placeholder="Select semester" />
                                             </SelectTrigger>
                                             <SelectContent>
                                                 <SelectGroup>
                                                     <SelectLabel>Semester</SelectLabel>
-                                                    {["1", "2", "3", "4", "5", "6", "7", "8"]?.map(
+                                                    {semesters?.map(
                                                         (semester: any, index: number) => {
                                                             return (
                                                                 <SelectItem
                                                                     key={index}
-                                                                    value={semester}
+                                                                    value={semester?._id}
                                                                 >
-                                                                    {semester}
+                                                                    {semester?.name}
                                                                 </SelectItem>
                                                             );
                                                         },
@@ -334,7 +358,7 @@ export default function Page() {
                                                         htmlFor={faculty + index.toString()}
                                                         className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
                                                     >
-                                                        {faculty.name}
+                                                        {faculty.name} <span className="opacity-50">({faculty.email})</span>
                                                     </label>
                                                 </div>
                                             );

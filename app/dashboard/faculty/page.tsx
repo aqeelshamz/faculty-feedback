@@ -81,6 +81,7 @@ export default function Page() {
                 password,
                 title,
                 role: facultyRole,
+                gender
             },
         };
 
