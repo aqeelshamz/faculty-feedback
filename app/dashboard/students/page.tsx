@@ -370,7 +370,7 @@ export default function Page() {
                                                                 key={index}
                                                                 value={batch?._id}
                                                             >
-                                                                {batch?.name} {batch?.program}
+                                                                {batch?.name} {batch?.program?.name}
                                                             </SelectItem>
                                                         );
                                                     })}

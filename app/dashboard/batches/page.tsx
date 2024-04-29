@@ -225,7 +225,7 @@ export default function Page() {
                                             <SelectContent>
                                                 <SelectGroup>
                                                     <SelectLabel>Depatrments</SelectLabel>
-                                                    {departments?.map(
+                                                    {/* {departments?.map(
                                                         (department: any, index: number) => {
                                                             return (
                                                                 <SelectItem
@@ -236,7 +236,7 @@ export default function Page() {
                                                                 </SelectItem>
                                                             );
                                                         },
-                                                    )}
+                                                    )} */}
                                                 </SelectGroup>
                                             </SelectContent>
                                         </Select>
@@ -252,7 +252,7 @@ export default function Page() {
                                             <SelectContent>
                                                 <SelectGroup>
                                                     <SelectLabel>Programs</SelectLabel>
-                                                    {programs?.map(
+                                                    {/* {programs?.map(
                                                         (program: any, index: number) => {
                                                             return (
                                                                 <SelectItem
@@ -263,7 +263,7 @@ export default function Page() {
                                                                 </SelectItem>
                                                             );
                                                         },
-                                                    )}
+                                                    )} */}
                                                 </SelectGroup>
                                             </SelectContent>
                                         </Select>
@@ -376,23 +376,21 @@ export default function Page() {
                                 </TableRow>
                             </TableHeader>
                             <TableBody>
-                                {batches.map((batch: any, index: number) =>
-                                    !batch.name
-                                        .toString()
+                                {batches?.map((batch: any, index: number) =>
+                                    !batch.name?.toString()
                                         .toLowerCase()
                                         .includes(search.toLowerCase()) &&
-                                    !batch.department
-                                        .toString()
+                                    !batch.department?.toString()
                                         .toLowerCase()
                                         .includes(search.toLowerCase()) ? (
                                         ""
                                     ) : (
                                         <TableRow key={index}>
-                                            <TableCell>{batch.name}</TableCell>
-                                            <TableCell>{batch.department}</TableCell>
-                                            <TableCell>{batch.program}</TableCell>
-                                            <TableCell>{batch.startDate}</TableCell>
-                                            <TableCell>{batch.endDate}</TableCell>
+                                            <TableCell>{batch?.name}</TableCell>
+                                            <TableCell>{batch?.department}</TableCell>
+                                            <TableCell>{batch?.program?.name}</TableCell>
+                                            <TableCell>{batch?.startDate}</TableCell>
+                                            <TableCell>{batch?.endDate}</TableCell>
                                             <TableCell>
                                                 <Button
                                                     variant={"outline"}
