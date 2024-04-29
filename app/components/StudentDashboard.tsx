@@ -19,34 +19,6 @@ export default function StudentDashboard() {
                     </CardContent>
                 </Card>
                 <Card
-                    onClick={() => router.push("/dashboard/programs")}
-                    className="cursor-pointer hover:shadow-md duration-75 w-full max-w-xs mr-4"
-                >
-                    <div className="p-4 flex justify-between">
-                        <CardTitle className="flex">Programs</CardTitle>
-                        <GraduationCap className="h-6 w-6" />
-                    </div>
-                    <CardContent>
-                        <p className="text-4xl font-bold">
-                            0
-                        </p>
-                    </CardContent>
-                </Card>
-                <Card
-                    onClick={() => router.push("/dashboard/faculty")}
-                    className="cursor-pointer hover:shadow-md duration-75 w-full max-w-xs mr-4"
-                >
-                    <div className="p-4 flex justify-between">
-                        <CardTitle className="flex">Faculty</CardTitle>
-                        <User className="h-6 w-6" />
-                    </div>
-                    <CardContent>
-                        <p className="text-4xl font-bold">
-                            0
-                        </p>
-                    </CardContent>
-                </Card>
-                <Card
                     onClick={() => router.push("/dashboard/students")}
                     className="cursor-pointer hover:shadow-md duration-75 w-full max-w-xs mr-4"
                 >
@@ -55,9 +27,7 @@ export default function StudentDashboard() {
                         <Users className="h-6 w-6" />
                     </div>
                     <CardContent>
-                        <p className="text-4xl font-bold">
-                            0
-                        </p>
+                        <p className="text-4xl font-bold">0</p>
                     </CardContent>
                 </Card>
             </div>
