@@ -79,12 +79,12 @@ export default function EditFeedback() {
 
     const getFeedback = async (id: any) => {
         const colorData: any = {
-            "black": "#000000",
-            "red": "#eb4034",
-            "yellow": "#ebc334",
-            "green": "#68eb34",
-            "blue": "#3262e6"
-        }
+            black: "#000000",
+            red: "#eb4034",
+            yellow: "#ebc334",
+            green: "#68eb34",
+            blue: "#3262e6",
+        };
 
         const config = {
             method: "GET",
@@ -106,8 +106,8 @@ export default function EditFeedback() {
                 for (const question of data?.questions) {
                     questions.push({
                         question: question.question,
-                        settings: question.settings
-                    })
+                        settings: question.settings,
+                    });
                 }
                 setQuestions([...questions]);
             })
@@ -122,8 +122,8 @@ export default function EditFeedback() {
             "#eb4034": "red",
             "#ebc334": "yellow",
             "#68eb34": "green",
-            "#3262e6": "blue"
-        }
+            "#3262e6": "blue",
+        };
 
         const config = {
             method: "PUT",
@@ -137,7 +137,7 @@ export default function EditFeedback() {
                 description,
                 color: colorData[color],
                 questions,
-                courseId
+                courseId,
             },
         };
 
@@ -168,7 +168,7 @@ export default function EditFeedback() {
 
         axios(config)
             .then((response) => {
-                setCourses([]);
+                setCourses(response?.data?.data);
             })
             .catch((err) => {
                 toast.error(err.response?.data?.message);
@@ -268,10 +268,10 @@ export default function EditFeedback() {
                                     qstnType === "Multiple Choice"
                                         ? "mcq"
                                         : qstnType === "Rating"
-                                            ? "rating"
-                                            : qstnType === "Long Text"
-                                                ? "longtext"
-                                                : "text"
+                                          ? "rating"
+                                          : qstnType === "Long Text"
+                                            ? "longtext"
+                                            : "text"
                                 }
                             >
                                 {qstnType}
@@ -389,7 +389,7 @@ export default function EditFeedback() {
                     />
                     <div className="flex flex-col justify-between space-y-4">
                         <div className="flex item-center gap-2">
-                            <Select onValueChange={setCourseId}>
+                            <Select onValueChange={setCourseId} value={courseId}>
                                 <SelectTrigger className="w-[180px]">
                                     <SelectValue placeholder="Course" />
                                 </SelectTrigger>
@@ -425,72 +425,71 @@ export default function EditFeedback() {
                 </div>
             </div>
             {questions?.map((question: any, index: number) => {
-                return question?.settings?.type === "multiplechoice" ?
-                    (
-                        <Card key={index} className="max-w-screen-lg my-2 py-6 ">
-                            <CardContent>
-
-                            </CardContent>
-                            <CardFooter className="ml-10">
-
-                            </CardFooter>
-                        </Card>
-                    ) : question?.settings?.type === "rating" ?
-                        (
-                            <Card key={index} className="max-w-screen-lg my-2 pt-6 ">
-                                <CardContent>
-                                    <div className="flex flex-row space-x-4 justify-between">
-                                        <RatingQuestionTemplate questionNumber={index + 1} />
-                                        <div className="flex flex-row space-x-4">
-                                            <SelectQuestionType index={index} />
-                                            <Button size={"default"} variant={"destructive"}>
-                                                Delete
-                                            </Button>
-                                        </div>
-                                    </div>
-                                </CardContent>
-                            </Card>
-                        ) : (question?.settings?.type === "longtext") ?
-                            (
-                                <Card key={index} className="max-w-screen-lg my-2 pt-6 ">
-                                    <CardContent>
-                                        <div className="flex flex-row space-x-4 justify-between">
-                                            <LongTextQuestionTemplate questionNumber={index + 1} />
-                                            <div className="flex flex-row space-x-4">
-                                                <SelectQuestionType index={index} />
-                                                <Button size={"default"} variant={"destructive"}>
-                                                    Delete
-                                                </Button>
-                                            </div>
-                                        </div>
-                                    </CardContent>
-                                </Card>
-                            ) :
-                            <Card key={index} className="max-w-screen-lg my-2 pt-6 ">
-                                <CardContent>
-                                    <div className="flex flex-row space-x-4 justify-between">
-                                        <TextQuestionTemplate questionNumber={index + 1} />
-                                        <div className="flex flex-row space-x-4">
-                                            <SelectQuestionType index={index} />
-                                            <Button size={"default"} variant={"destructive"}>
-                                                Delete
-                                            </Button>
-                                        </div>
-                                    </div>
-                                </CardContent>
-                            </Card>
+                return question?.settings?.type === "multiplechoice" ? (
+                    <Card key={index} className="max-w-screen-lg my-2 py-6 ">
+                        <CardContent></CardContent>
+                        <CardFooter className="ml-10"></CardFooter>
+                    </Card>
+                ) : question?.settings?.type === "rating" ? (
+                    <Card key={index} className="max-w-screen-lg my-2 pt-6 ">
+                        <CardContent>
+                            <div className="flex flex-row space-x-4 justify-between">
+                                <RatingQuestionTemplate questionNumber={index + 1} />
+                                <div className="flex flex-row space-x-4">
+                                    <SelectQuestionType index={index} />
+                                    <Button size={"default"} variant={"destructive"}>
+                                        Delete
+                                    </Button>
+                                </div>
+                            </div>
+                        </CardContent>
+                    </Card>
+                ) : question?.settings?.type === "longtext" ? (
+                    <Card key={index} className="max-w-screen-lg my-2 pt-6 ">
+                        <CardContent>
+                            <div className="flex flex-row space-x-4 justify-between">
+                                <LongTextQuestionTemplate questionNumber={index + 1} />
+                                <div className="flex flex-row space-x-4">
+                                    <SelectQuestionType index={index} />
+                                    <Button size={"default"} variant={"destructive"}>
+                                        Delete
+                                    </Button>
+                                </div>
+                            </div>
+                        </CardContent>
+                    </Card>
+                ) : (
+                    <Card key={index} className="max-w-screen-lg my-2 pt-6 ">
+                        <CardContent>
+                            <div className="flex flex-row space-x-4 justify-between">
+                                <TextQuestionTemplate questionNumber={index + 1} />
+                                <div className="flex flex-row space-x-4">
+                                    <SelectQuestionType index={index} />
+                                    <Button size={"default"} variant={"destructive"}>
+                                        Delete
+                                    </Button>
+                                </div>
+                            </div>
+                        </CardContent>
+                    </Card>
+                );
             })}
 
             <Button
                 className="max-w-screen-lg w-full"
-                onClick={() => setQuestions([...questions, {
-                    "question": "Question",
-                    "settings": {
-                        "type": "text",
-                        "required": false,
-                        "options": []
-                    }
-                }])}
+                onClick={() =>
+                    setQuestions([
+                        ...questions,
+                        {
+                            question: "Question",
+                            settings: {
+                                type: "text",
+                                required: false,
+                                options: [],
+                            },
+                        },
+                    ])
+                }
             >
                 <Plus className="mr-2" size={20} />
                 New question
