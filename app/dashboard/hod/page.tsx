@@ -357,12 +357,10 @@ export default function Page() {
                             </TableHeader>
                             <TableBody>
                                 {hods.map((hod: any, index: number) =>
-                                    !hod.name
-                                        .toString()
+                                    !hod?.name?.toString()
                                         .toLowerCase()
                                         .includes(search.toLowerCase()) &&
-                                    !hod.title
-                                        .toString()
+                                    !hod?.title?.toString()
                                         .toLowerCase()
                                         .includes(search.toLowerCase()) ? (
                                         ""

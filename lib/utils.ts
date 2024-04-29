@@ -6,25 +6,30 @@ export function cn(...inputs: ClassValue[]) {
 }
 
 const feedbackFormColors = <any>{
+    "black": {
+        "lightBg": "#C3DDFD",
+        "darkBg": "#000000",
+        "text": "#1E429F",
+    },
     "red": {
         "lightBg": "#C3DDFD",
-        "darkBg": "#1E429F",
+        "darkBg": "#eb4034",
         "text": "#1E429F",
     },
     "yellow": {
-        "lightBg": "bg-yellow-50",
-        "darkBg": "bg-yellow-700",
-        "text": "text-yellow-700",
+        "lightBg": "#C3DDFD",
+        "darkBg": "#ebc334",
+        "text": "#1E429F",
     },
     "green": {
-        "lightBg": "bg-green-50",
-        "darkBg": "bg-green-700",
-        "text": "text-green-700",
+        "lightBg": "#C3DDFD",
+        "darkBg": "#68eb34",
+        "text": "#1E429F",
     },
     "blue": {
-        "lightBg": "bg-blue-50",
-        "darkBg": "bg-blue-700",
-        "text": "text-blue-700",
+        "lightBg": "#C3DDFD",
+        "darkBg": "#3262e6",
+        "text": "#1E429F",
     },
 };
 
