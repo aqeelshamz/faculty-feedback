@@ -3,7 +3,7 @@
 import { feedbackFormColors, serverURL } from "@/lib/utils";
 import axios from "axios";
 import { useParams } from "next/navigation";
-import { useEffect, useState } from "react";
+import { use, useEffect, useState } from "react";
 import { Toaster, toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
@@ -37,9 +37,47 @@ export default function ViewFeedback() {
             });
     };
 
+    const submitFeedback = () => {
+        const config = {
+            method: "POST",
+            url: `${serverURL}/feedback/submit`,
+            headers: {
+                Authorization: `Bearer ${localStorage.getItem("token")}`,
+                "Content-Type": "application/json",
+            },
+            data: {
+                feedbackId: id,
+                responses,
+            },
+        };
+
+        axios(config)
+            .then((response) => {
+                toast.success(response?.data?.message);
+            })
+            .catch((err) => {
+                toast.error(err.response?.data?.message);
+            });
+    };
+
     useEffect(() => {
         getFeedback();
     }, []);
+
+    const [responses, setResponses] = useState<any>({});
+
+    useEffect(() => {
+        if (feedback.questions) {
+            for (const question of feedback.questions) {
+                responses[question._id] = question.settings.type === "rating" || question.settings.type === "multiplechoice" ? 0 : "";
+            }
+        }
+        setResponses({ ...responses });
+    }, [feedback]);
+
+    useEffect(() => {
+        console.log(responses);
+    }, [responses]);
 
     return (
         <div
@@ -54,8 +92,8 @@ export default function ViewFeedback() {
                     feedback?.questions === undefined
                         ? 0
                         : ((currentStep === -1 ? 0 : currentStep + 1) /
-                              feedback?.questions?.length) *
-                          100
+                            feedback?.questions?.length) *
+                        100
                 }
                 color={feedbackFormColors[feedback?.color]?.primary}
                 className="w-full"
@@ -98,13 +136,22 @@ export default function ViewFeedback() {
                                     ))}
                             </div>
                         ) : feedback?.questions[currentStep]?.settings?.type === "text" ? (
-                            <Input />
+                            <Input onChange={(x) => {
+                                responses[feedback.questions[currentStep]._id] = x.target.value;
+                                setResponses({ ...responses });
+                            }} value={
+                                responses[feedback.questions[currentStep]._id]
+                            } />
                         ) : feedback?.questions[currentStep]?.settings?.type === "longtext" ? (
                             <Textarea />
                         ) : null}
                     </div>
                     <Button
                         onClick={() => {
+                            if (currentStep === feedback.questions.length - 1) {
+                                submitFeedback();
+                                return;
+                            }
                             if (currentStep < feedback.questions.length - 1) {
                                 setCurrentStep(currentStep + 1);
                             }
