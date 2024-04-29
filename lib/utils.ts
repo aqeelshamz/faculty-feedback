@@ -12,9 +12,9 @@ const feedbackFormColors = <any>{
         text: "#1E429F",
     },
     red: {
-        lightBg: "#C3DDFD",
+        lightBg: "#ffa7a1",
         darkBg: "#eb4034",
-        text: "#1E429F",
+        text: "#5c110c",
     },
     yellow: {
         lightBg: "#C3DDFD",

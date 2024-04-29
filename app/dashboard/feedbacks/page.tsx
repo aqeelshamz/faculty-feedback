@@ -18,9 +18,11 @@ import { cn, formatDateString, serverURL } from "@/lib/utils";
 import axios from "axios";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
+import { Loader2 } from 'lucide-react';
 
 export default function Page() {
     const role = useUserStore((state) => state.role);
+    const [loading, setLoading] = useState(false);
     const [search, setSearch] = useState("");
     const [feedbacks, setFeedbacks] = useState<any>([]);
     const [courses, setCourses] = useState<any>([]);
@@ -62,6 +64,7 @@ export default function Page() {
     };
 
     const getFeedbacks = async () => {
+        setLoading(true);
         const config = {
             method: "GET",
             url: `${serverURL}/feedback/`,
@@ -80,9 +83,11 @@ export default function Page() {
                 });
 
                 setFeedbacks(sortedFeedbacks);
+                setLoading(false);
             })
             .catch((err) => {
                 toast.error(err.response?.data?.message);
+                setLoading(false);
             });
     };
 
@@ -193,118 +198,119 @@ export default function Page() {
                 </div>
             </div>
             <div className="m-10">
-                <Table>
-                    <TableCaption>{feedbacks.length} feedbacks</TableCaption>
-                    <TableHeader>
-                        <TableRow>
-                            <TableHead>Date</TableHead>
-                            <TableHead>Title</TableHead>
-                            <TableHead>Desciption</TableHead>
-                            <TableHead>Course</TableHead>
-                            <TableHead>View</TableHead>
-                            <TableHead>Responses</TableHead>
-                            <TableHead>Edit</TableHead>
-                            <TableHead>Delete</TableHead>
-                        </TableRow>
-                    </TableHeader>
-                    <TableBody>
-                        {feedbacks.map((feedback: any, index: number) =>
-                            !feedback.title
-                                .toString()
-                                .toLowerCase()
-                                .includes(search.toLowerCase()) &&
-                                !feedback.course
+                {loading ?
+                    <div className="p-5 flex w-full justify-center"><Loader2 className="mr-2 animate-spin" /> Loading feedbacks...</div> : <Table>
+                        <TableCaption>{feedbacks.length} feedbacks</TableCaption>
+                        <TableHeader>
+                            <TableRow>
+                                <TableHead>Date</TableHead>
+                                <TableHead>Title</TableHead>
+                                <TableHead>Desciption</TableHead>
+                                <TableHead>Course</TableHead>
+                                <TableHead>View</TableHead>
+                                {role === "faculty" ? <TableHead>Responses</TableHead> : ""}
+                                {role === "faculty" ? <TableHead>Edit</TableHead> : ""}
+                                {role === "faculty" ? <TableHead>Delete</TableHead> : ""}
+                            </TableRow>
+                        </TableHeader>
+                        <TableBody>
+                            {feedbacks.map((feedback: any, index: number) =>
+                                !feedback.title
                                     .toString()
                                     .toLowerCase()
                                     .includes(search.toLowerCase()) &&
-                                !feedback.description
-                                    .toString()
-                                    .toLowerCase()
-                                    .includes(search.toLowerCase()) ? (
-                                ""
-                            ) : (
-                                <TableRow key={index}>
-                                    <TableCell>{formatDateString(feedback.createdAt)}</TableCell>
-                                    <TableCell>{feedback.title}</TableCell>
-                                    <TableCell>{feedback.description}</TableCell>
-                                    <TableCell>{feedback.course.name}</TableCell>
-                                    <TableCell>
-                                        <Button
-                                            variant={"outline"}
-                                            size={"icon"}
-                                            onClick={() =>
-                                                router.push(`/feedbacks/view/${feedback._id}`)
-                                            }
-                                        >
-                                            <Eye />
-                                        </Button>
-                                    </TableCell>
-                                    <TableCell>
-                                        <Button
-                                            variant={"outline"}
-                                            size={"icon"}
-                                            onClick={() =>
-                                                router.push(
-                                                    `/dashboard/feedbacks/responses/${feedback._id}`,
-                                                )
-                                            }
-                                        >
-                                            <FileText />
-                                        </Button>
-                                    </TableCell>
-                                    <TableCell>
-                                        <Button
-                                            variant={"outline"}
-                                            size={"icon"}
-                                            onClick={() =>
-                                                router.push(
-                                                    `/dashboard/feedbacks/edit/${feedback._id}`,
-                                                )
-                                            }
-                                        >
-                                            <Edit />
-                                        </Button>
-                                    </TableCell>
-                                    <TableCell>
-                                        <AlertDialog>
-                                            <AlertDialogTrigger asChild>
-                                                <Button variant={"outline"} size={"icon"}>
-                                                    <Trash />
-                                                </Button>
-                                            </AlertDialogTrigger>
-                                            <AlertDialogContent>
-                                                <AlertDialogHeader>
-                                                    <AlertDialogTitle>
-                                                        Delete &apos;{feedback.title}
-                                                        &apos; from feedbacks?
-                                                    </AlertDialogTitle>
-                                                    <AlertDialogDescription>
-                                                        This action cannot be undone. This will
-                                                        permanently delete
-                                                        {feedback.title} from feedback list.
-                                                    </AlertDialogDescription>
-                                                </AlertDialogHeader>
-                                                <AlertDialogFooter>
-                                                    <AlertDialogCancel>Cancel</AlertDialogCancel>
-                                                    <AlertDialogAction
-                                                        className={cn(
-                                                            buttonVariants({
-                                                                variant: "destructive",
-                                                            }),
-                                                        )}
-                                                        onClick={() => deleteFeedback(feedback._id)}
-                                                    >
-                                                        Delete
-                                                    </AlertDialogAction>
-                                                </AlertDialogFooter>
-                                            </AlertDialogContent>
-                                        </AlertDialog>
-                                    </TableCell>
-                                </TableRow>
-                            ),
-                        )}
-                    </TableBody>
-                </Table>
+                                    !feedback.course
+                                        .toString()
+                                        .toLowerCase()
+                                        .includes(search.toLowerCase()) &&
+                                    !feedback.description
+                                        .toString()
+                                        .toLowerCase()
+                                        .includes(search.toLowerCase()) ? (
+                                    ""
+                                ) : (
+                                    <TableRow key={index}>
+                                        <TableCell>{formatDateString(feedback.createdAt)}</TableCell>
+                                        <TableCell>{feedback.title}</TableCell>
+                                        <TableCell>{feedback.description}</TableCell>
+                                        <TableCell>{feedback.course.name}</TableCell>
+                                        <TableCell>
+                                            <Button
+                                                variant={"outline"}
+                                                size={"icon"}
+                                                onClick={() =>
+                                                    window.open(`/feedbacks/view/${feedback._id}`)
+                                                }
+                                            >
+                                                <Eye />
+                                            </Button>
+                                        </TableCell>
+                                        {role === "faculty" ? <TableCell>
+                                            <Button
+                                                variant={"outline"}
+                                                size={"icon"}
+                                                onClick={() =>
+                                                    router.push(
+                                                        `/dashboard/feedbacks/responses/${feedback._id}`,
+                                                    )
+                                                }
+                                            >
+                                                <FileText />
+                                            </Button>
+                                        </TableCell> : ""}
+                                        {role === "faculty" ? <TableCell>
+                                            <Button
+                                                variant={"outline"}
+                                                size={"icon"}
+                                                onClick={() =>
+                                                    router.push(
+                                                        `/dashboard/feedbacks/edit/${feedback._id}`,
+                                                    )
+                                                }
+                                            >
+                                                <Edit />
+                                            </Button>
+                                        </TableCell> : ""}
+                                        {role === "faculty" ? <TableCell>
+                                            <AlertDialog>
+                                                <AlertDialogTrigger asChild>
+                                                    <Button variant={"outline"} size={"icon"}>
+                                                        <Trash />
+                                                    </Button>
+                                                </AlertDialogTrigger>
+                                                <AlertDialogContent>
+                                                    <AlertDialogHeader>
+                                                        <AlertDialogTitle>
+                                                            Delete &apos;{feedback.title}
+                                                            &apos; from feedbacks?
+                                                        </AlertDialogTitle>
+                                                        <AlertDialogDescription>
+                                                            This action cannot be undone. This will
+                                                            permanently delete
+                                                            {feedback.title} from feedback list.
+                                                        </AlertDialogDescription>
+                                                    </AlertDialogHeader>
+                                                    <AlertDialogFooter>
+                                                        <AlertDialogCancel>Cancel</AlertDialogCancel>
+                                                        <AlertDialogAction
+                                                            className={cn(
+                                                                buttonVariants({
+                                                                    variant: "destructive",
+                                                                }),
+                                                            )}
+                                                            onClick={() => deleteFeedback(feedback._id)}
+                                                        >
+                                                            Delete
+                                                        </AlertDialogAction>
+                                                    </AlertDialogFooter>
+                                                </AlertDialogContent>
+                                            </AlertDialog>
+                                        </TableCell> : ""}
+                                    </TableRow>
+                                ),
+                            )}
+                        </TableBody>
+                    </Table>}
             </div>
         </div>
     );
