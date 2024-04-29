@@ -49,13 +49,13 @@ import axios from "axios";
 import { useEffect, useRef, useState } from "react";
 import { LuFilter } from "react-icons/lu";
 import { toast } from "sonner";
-import { Edit, Trash } from "lucide-react";
+import { Edit, Loader2, Trash } from "lucide-react";
 
 export default function Page() {
     const role = useUserStore((state) => state.role);
     const [students, setStudents] = useState<any>([]);
     const [batches, setBatches] = useState<any>([]);
-
+    const [loading, setLoading] = useState(false);
     const sheetTrigger = useRef<any>();
     const [editMode, setEditMode] = useState(false);
     const [editStudentId, setEditStudentId] = useState("");
@@ -152,6 +152,7 @@ export default function Page() {
     };
 
     const getStudents = async () => {
+        setLoading(true);
         const config = {
             method: "GET",
             url: `${serverURL}/student/`,
@@ -164,6 +165,7 @@ export default function Page() {
         axios(config)
             .then((response) => {
                 setStudents(response?.data?.data);
+                setLoading(false);
             })
             .catch((err) => {
                 toast.error(err.response?.data?.message);
@@ -405,94 +407,100 @@ export default function Page() {
                         </div>
                     </div>
                     <div className="m-10">
-                        <Table>
-                            <TableCaption>{students.length} students</TableCaption>
-                            <TableHeader>
-                                <TableRow>
-                                    <TableHead className="w-[100px]">Adm. No.</TableHead>
-                                    <TableHead>Name</TableHead>
-                                    <TableHead>Email</TableHead>
-                                    <TableHead>Phone</TableHead>
-                                    <TableHead>Address</TableHead>
-                                    <TableHead>BatchId</TableHead>
-                                    <TableHead>Edit</TableHead>
-                                    <TableHead>Delete</TableHead>
-                                </TableRow>
-                            </TableHeader>
-                            <TableBody>
-                                {students.map((student: any, index: number) => (
-                                    <TableRow key={index}>
-                                        <TableCell>{student.admNo}</TableCell>
-                                        <TableCell>{student.name}</TableCell>
-                                        <TableCell>{student.email}</TableCell>
-                                        <TableCell>{student.phone}</TableCell>
-                                        <TableCell>{student.address}</TableCell>
-                                        <TableCell>{student.batchId}</TableCell>
-                                        <TableCell>
-                                            <Button
-                                                variant={"outline"}
-                                                size={"icon"}
-                                                onClick={() => {
-                                                    setEditMode(true);
-                                                    setEditStudentId(student._id);
-                                                    setName("");
-                                                    setEmail("");
-                                                    setPassword("");
-                                                    setGender("M");
-                                                    setAdmNo("");
-                                                    setRollNo("");
-                                                    setAddress("");
-                                                    setPhone("");
-                                                    setBatch("");
-                                                    sheetTrigger.current.click();
-                                                }}
-                                            >
-                                                <Edit />
-                                            </Button>
-                                        </TableCell>
-                                        <TableCell>
-                                            <AlertDialog>
-                                                <AlertDialogTrigger asChild>
-                                                    <Button variant={"outline"} size={"icon"}>
-                                                        <Trash />
-                                                    </Button>
-                                                </AlertDialogTrigger>
-                                                <AlertDialogContent>
-                                                    <AlertDialogHeader>
-                                                        <AlertDialogTitle>
-                                                            Delete &apos;{student.name}&apos; from
-                                                            students?
-                                                        </AlertDialogTitle>
-                                                        <AlertDialogDescription>
-                                                            This action cannot be undone. This will
-                                                            permanently delete {student.name} from
-                                                            student list.
-                                                        </AlertDialogDescription>
-                                                    </AlertDialogHeader>
-                                                    <AlertDialogFooter>
-                                                        <AlertDialogCancel>
-                                                            Cancel
-                                                        </AlertDialogCancel>
-                                                        <AlertDialogAction
-                                                            className={cn(
-                                                                buttonVariants({
-                                                                    variant: "destructive",
-                                                                }),
-                                                            )}
-                                                            onClick={() =>
-                                                                deleteStudent(student._id)
-                                                            }
-                                                        >
-                                                            Delete
-                                                        </AlertDialogAction>
-                                                    </AlertDialogFooter>
-                                                </AlertDialogContent>
-                                            </AlertDialog>
-                                        </TableCell>
+                        {loading ? (
+                            <div className="p-5 flex w-full justify-center">
+                                <Loader2 className="mr-2 animate-spin" /> Loading students...
+                            </div>
+                        ) : (
+                            <Table>
+                                <TableCaption>{students.length} students</TableCaption>
+                                <TableHeader>
+                                    <TableRow>
+                                        <TableHead className="w-[100px]">Adm. No.</TableHead>
+                                        <TableHead>Name</TableHead>
+                                        <TableHead>Email</TableHead>
+                                        <TableHead>Phone</TableHead>
+                                        <TableHead>Address</TableHead>
+                                        <TableHead>BatchId</TableHead>
+                                        <TableHead>Edit</TableHead>
+                                        <TableHead>Delete</TableHead>
                                     </TableRow>
-                                ))}
-                            </TableBody>
-                        </Table>
+                                </TableHeader>
+                                <TableBody>
+                                    {students.map((student: any, index: number) => (
+                                        <TableRow key={index}>
+                                            <TableCell>{student.admNo}</TableCell>
+                                            <TableCell>{student.name}</TableCell>
+                                            <TableCell>{student.email}</TableCell>
+                                            <TableCell>{student.phone}</TableCell>
+                                            <TableCell>{student.address}</TableCell>
+                                            <TableCell>{student.batchId}</TableCell>
+                                            <TableCell>
+                                                <Button
+                                                    variant={"outline"}
+                                                    size={"icon"}
+                                                    onClick={() => {
+                                                        setEditMode(true);
+                                                        setEditStudentId(student._id);
+                                                        setName("");
+                                                        setEmail("");
+                                                        setPassword("");
+                                                        setGender("M");
+                                                        setAdmNo("");
+                                                        setRollNo("");
+                                                        setAddress("");
+                                                        setPhone("");
+                                                        setBatch("");
+                                                        sheetTrigger.current.click();
+                                                    }}
+                                                >
+                                                    <Edit />
+                                                </Button>
+                                            </TableCell>
+                                            <TableCell>
+                                                <AlertDialog>
+                                                    <AlertDialogTrigger asChild>
+                                                        <Button variant={"outline"} size={"icon"}>
+                                                            <Trash />
+                                                        </Button>
+                                                    </AlertDialogTrigger>
+                                                    <AlertDialogContent>
+                                                        <AlertDialogHeader>
+                                                            <AlertDialogTitle>
+                                                                Delete &apos;{student.name}&apos;
+                                                                from students?
+                                                            </AlertDialogTitle>
+                                                            <AlertDialogDescription>
+                                                                This action cannot be undone. This
+                                                                will permanently delete{" "}
+                                                                {student.name} from student list.
+                                                            </AlertDialogDescription>
+                                                        </AlertDialogHeader>
+                                                        <AlertDialogFooter>
+                                                            <AlertDialogCancel>
+                                                                Cancel
+                                                            </AlertDialogCancel>
+                                                            <AlertDialogAction
+                                                                className={cn(
+                                                                    buttonVariants({
+                                                                        variant: "destructive",
+                                                                    }),
+                                                                )}
+                                                                onClick={() =>
+                                                                    deleteStudent(student._id)
+                                                                }
+                                                            >
+                                                                Delete
+                                                            </AlertDialogAction>
+                                                        </AlertDialogFooter>
+                                                    </AlertDialogContent>
+                                                </AlertDialog>
+                                            </TableCell>
+                                        </TableRow>
+                                    ))}
+                                </TableBody>
+                            </Table>
+                        )}
                     </div>
                 </div>
             ) : (

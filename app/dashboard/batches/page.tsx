@@ -50,7 +50,7 @@ import { useUserStore } from "@/store";
 import { useRouter } from "next/navigation";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { cn, serverURL } from "@/lib/utils";
-import { CalendarIcon, Edit, Trash } from "lucide-react";
+import { CalendarIcon, Edit, Loader2, Trash } from "lucide-react";
 import { Calendar } from "@/components/ui/calendar";
 import { useEffect, useRef, useState } from "react";
 import axios from "axios";
@@ -70,6 +70,7 @@ export default function Page() {
     const [departments, setDepartments] = useState<any>([]);
     const [programs, setPrograms] = useState<any>([]);
 
+    const [loading, setLoading] = useState(false);
     const [editBatchId, setEditBatchId] = useState("");
     const sheetTrigger = useRef<any>();
     const [editMode, setEditMode] = useState(false);
@@ -158,6 +159,7 @@ export default function Page() {
     };
 
     const getBatches = async () => {
+        setLoading(true);
         const config = {
             method: "GET",
             url: `${serverURL}/batch/`,
@@ -170,6 +172,7 @@ export default function Page() {
         axios(config)
             .then((response) => {
                 setBatches(response?.data?.data);
+                setLoading(false);
             })
             .catch((err) => {
                 toast.error(err.response?.data?.message);
@@ -223,7 +226,7 @@ export default function Page() {
         if (department) {
             getProgramsByDepartment();
         }
-    }, [department])
+    }, [department]);
 
     return (
         <>
@@ -258,13 +261,21 @@ export default function Page() {
                                         <Label htmlFor="name" className="text-right">
                                             Name
                                         </Label>
-                                        <Input className="col-span-3" type="text" value={name} onChange={(x) => setName(x.target.value)} />
+                                        <Input
+                                            className="col-span-3"
+                                            type="text"
+                                            value={name}
+                                            onChange={(x) => setName(x.target.value)}
+                                        />
                                     </div>
                                     <div className="grid grid-cols-4 items-center gap-4">
                                         <Label htmlFor="email" className="text-right">
                                             Department
                                         </Label>
-                                        <Select value={department} onValueChange={(x) => setDepartment(x)}>
+                                        <Select
+                                            value={department}
+                                            onValueChange={(x) => setDepartment(x)}
+                                        >
                                             <SelectTrigger className="col-span-3">
                                                 <SelectValue placeholder="Select department" />
                                             </SelectTrigger>
@@ -291,7 +302,10 @@ export default function Page() {
                                         <Label htmlFor="email" className="text-right">
                                             Program
                                         </Label>
-                                        <Select value={program} onValueChange={(x) => setProgram(x)}>
+                                        <Select
+                                            value={program}
+                                            onValueChange={(x) => setProgram(x)}
+                                        >
                                             <SelectTrigger className="col-span-3">
                                                 <SelectValue placeholder="Select program" />
                                             </SelectTrigger>
@@ -408,97 +422,108 @@ export default function Page() {
                         </div>
                     </div>
                     <div className="m-10">
-                        <Table>
-                            <TableCaption>{batches.length} batches</TableCaption>
-                            <TableHeader>
-                                <TableRow>
-                                    <TableHead>Name</TableHead>
-                                    <TableHead>Department</TableHead>
-                                    <TableHead>Program</TableHead>
-                                    <TableHead>Start Year</TableHead>
-                                    <TableHead>End Year</TableHead>
-                                    <TableHead>Edit</TableHead>
-                                    <TableHead>Delete</TableHead>
-                                </TableRow>
-                            </TableHeader>
-                            <TableBody>
-                                {batches?.map((batch: any, index: number) =>
-                                    !batch.name?.toString()
-                                        .toLowerCase()
-                                        .includes(search.toLowerCase()) &&
-                                        !batch.department?.toString()
+                        {loading ? (
+                            <div className="p-5 flex w-full justify-center">
+                                <Loader2 className="mr-2 animate-spin" /> Loading batches...
+                            </div>
+                        ) : (
+                            <Table>
+                                <TableCaption>{batches.length} batches</TableCaption>
+                                <TableHeader>
+                                    <TableRow>
+                                        <TableHead>Name</TableHead>
+                                        <TableHead>Department</TableHead>
+                                        <TableHead>Program</TableHead>
+                                        <TableHead>Start Year</TableHead>
+                                        <TableHead>End Year</TableHead>
+                                        <TableHead>Edit</TableHead>
+                                        <TableHead>Delete</TableHead>
+                                    </TableRow>
+                                </TableHeader>
+                                <TableBody>
+                                    {batches?.map((batch: any, index: number) =>
+                                        !batch.name
+                                            ?.toString()
+                                            .toLowerCase()
+                                            .includes(search.toLowerCase()) &&
+                                        !batch.department
+                                            ?.toString()
                                             .toLowerCase()
                                             .includes(search.toLowerCase()) ? (
-                                        ""
-                                    ) : (
-                                        <TableRow key={index}>
-                                            <TableCell>{batch?.name}</TableCell>
-                                            <TableCell>{batch?.department?.name}</TableCell>
-                                            <TableCell>{batch?.program?.name}</TableCell>
-                                            <TableCell>{batch?.startYear}</TableCell>
-                                            <TableCell>{batch?.endYear}</TableCell>
-                                            <TableCell>
-                                                <Button
-                                                    variant={"outline"}
-                                                    size={"icon"}
-                                                    onClick={() => {
-                                                        setEditMode(true);
-                                                        setEditBatchId(batch._id);
-                                                        setName(batch.name);
-                                                        setDepartment(batch.department);
-                                                        setProgram(batch.program);
-                                                        setStartDate(batch.startDate);
-                                                        setEndDate(batch.endDate);
-                                                        sheetTrigger.current.click();
-                                                    }}
-                                                >
-                                                    <Edit />
-                                                </Button>
-                                            </TableCell>
-                                            <TableCell>
-                                                <AlertDialog>
-                                                    <AlertDialogTrigger asChild>
-                                                        <Button variant={"outline"} size={"icon"}>
-                                                            <Trash />
-                                                        </Button>
-                                                    </AlertDialogTrigger>
-                                                    <AlertDialogContent>
-                                                        <AlertDialogHeader>
-                                                            <AlertDialogTitle>
-                                                                Delete &apos;{batch.name}&apos; from
-                                                                batches?
-                                                            </AlertDialogTitle>
-                                                            <AlertDialogDescription>
-                                                                This action cannot be undone. This
-                                                                will permanently delete
-                                                                {batch.name} from batch list.
-                                                            </AlertDialogDescription>
-                                                        </AlertDialogHeader>
-                                                        <AlertDialogFooter>
-                                                            <AlertDialogCancel>
-                                                                Cancel
-                                                            </AlertDialogCancel>
-                                                            <AlertDialogAction
-                                                                className={cn(
-                                                                    buttonVariants({
-                                                                        variant: "destructive",
-                                                                    }),
-                                                                )}
-                                                                onClick={() =>
-                                                                    deleteBatch(batch._id)
-                                                                }
+                                            ""
+                                        ) : (
+                                            <TableRow key={index}>
+                                                <TableCell>{batch?.name}</TableCell>
+                                                <TableCell>{batch?.department?.name}</TableCell>
+                                                <TableCell>{batch?.program?.name}</TableCell>
+                                                <TableCell>{batch?.startYear}</TableCell>
+                                                <TableCell>{batch?.endYear}</TableCell>
+                                                <TableCell>
+                                                    <Button
+                                                        variant={"outline"}
+                                                        size={"icon"}
+                                                        onClick={() => {
+                                                            setEditMode(true);
+                                                            setEditBatchId(batch._id);
+                                                            setName(batch.name);
+                                                            setDepartment(batch.department);
+                                                            setProgram(batch.program);
+                                                            setStartDate(batch.startDate);
+                                                            setEndDate(batch.endDate);
+                                                            sheetTrigger.current.click();
+                                                        }}
+                                                    >
+                                                        <Edit />
+                                                    </Button>
+                                                </TableCell>
+                                                <TableCell>
+                                                    <AlertDialog>
+                                                        <AlertDialogTrigger asChild>
+                                                            <Button
+                                                                variant={"outline"}
+                                                                size={"icon"}
                                                             >
-                                                                Delete
-                                                            </AlertDialogAction>
-                                                        </AlertDialogFooter>
-                                                    </AlertDialogContent>
-                                                </AlertDialog>
-                                            </TableCell>
-                                        </TableRow>
-                                    ),
-                                )}
-                            </TableBody>
-                        </Table>
+                                                                <Trash />
+                                                            </Button>
+                                                        </AlertDialogTrigger>
+                                                        <AlertDialogContent>
+                                                            <AlertDialogHeader>
+                                                                <AlertDialogTitle>
+                                                                    Delete &apos;{batch.name}&apos;
+                                                                    from batches?
+                                                                </AlertDialogTitle>
+                                                                <AlertDialogDescription>
+                                                                    This action cannot be undone.
+                                                                    This will permanently delete
+                                                                    {batch.name} from batch list.
+                                                                </AlertDialogDescription>
+                                                            </AlertDialogHeader>
+                                                            <AlertDialogFooter>
+                                                                <AlertDialogCancel>
+                                                                    Cancel
+                                                                </AlertDialogCancel>
+                                                                <AlertDialogAction
+                                                                    className={cn(
+                                                                        buttonVariants({
+                                                                            variant: "destructive",
+                                                                        }),
+                                                                    )}
+                                                                    onClick={() =>
+                                                                        deleteBatch(batch._id)
+                                                                    }
+                                                                >
+                                                                    Delete
+                                                                </AlertDialogAction>
+                                                            </AlertDialogFooter>
+                                                        </AlertDialogContent>
+                                                    </AlertDialog>
+                                                </TableCell>
+                                            </TableRow>
+                                        ),
+                                    )}
+                                </TableBody>
+                            </Table>
+                        )}
                     </div>
                 </div>
             ) : (

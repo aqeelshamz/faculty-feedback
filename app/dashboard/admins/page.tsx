@@ -45,7 +45,7 @@ import {
     AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
 import { useUserStore } from "@/store";
-import { Edit, Trash } from "lucide-react";
+import { Edit, Loader2, Trash } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import { cn, serverURL } from "@/lib/utils";
 import axios from "axios";
@@ -63,6 +63,7 @@ export default function Page() {
     const [facultyRole, setFacultyRole] = useState("");
     const [gender, setGender] = useState("M");
 
+    const [loading, setLoading] = useState(false);
     const sheetTrigger = useRef<any>();
     const [editMode, setEditMode] = useState(false);
 
@@ -119,6 +120,7 @@ export default function Page() {
     };
 
     const getAdmins = async () => {
+        setLoading(true);
         const config = {
             method: "GET",
             url: `${serverURL}/admin`,
@@ -131,6 +133,7 @@ export default function Page() {
         axios(config)
             .then((response) => {
                 setAdmins(response?.data?.data.reverse());
+                setLoading(false);
             })
             .catch((err) => {
                 toast.error(err.response?.data?.message);
@@ -275,83 +278,92 @@ export default function Page() {
                         </div>
                     </div>
                     <div className="m-10">
-                        <Table>
-                            <TableCaption>{admins.length} admins</TableCaption>
-                            <TableHeader>
-                                <TableRow>
-                                    <TableHead>Name</TableHead>
-                                    <TableHead>Email</TableHead>
-                                    <TableHead>Title</TableHead>
-                                    <TableHead>Role</TableHead>
-                                    <TableHead>Edit</TableHead>
-                                    <TableHead>Delete</TableHead>
-                                </TableRow>
-                            </TableHeader>
-                            <TableBody>
-                                {admins.map((admin: any, index: number) =>
-                                    !admin.name
-                                        .toString()
-                                        .toLowerCase()
-                                        .includes(search.toLowerCase()) &&
-                                    !admin.title
-                                        .toString()
-                                        .toLowerCase()
-                                        .includes(search.toLowerCase()) ? (
-                                        ""
-                                    ) : (
-                                        <TableRow key={index}>
-                                            <TableCell>{admin.name}</TableCell>
-                                            <TableCell>{admin.email}</TableCell>
-                                            <TableCell>{admin.title}</TableCell>
-                                            <TableCell>{admin.role}</TableCell>
-                                            <TableCell>
-                                                <Button variant={"outline"} size={"icon"}>
-                                                    <Edit />
-                                                </Button>
-                                            </TableCell>
-                                            <TableCell>
-                                                <AlertDialog>
-                                                    <AlertDialogTrigger asChild>
-                                                        <Button variant={"outline"} size={"icon"}>
-                                                            <Trash />
-                                                        </Button>
-                                                    </AlertDialogTrigger>
-                                                    <AlertDialogContent>
-                                                        <AlertDialogHeader>
-                                                            <AlertDialogTitle>
-                                                                Delete {admin.name} from admins?
-                                                            </AlertDialogTitle>
-                                                            <AlertDialogDescription>
-                                                                This action cannot be undone. This
-                                                                will permanently delete
-                                                                {admin.name} from admin list.
-                                                            </AlertDialogDescription>
-                                                        </AlertDialogHeader>
-                                                        <AlertDialogFooter>
-                                                            <AlertDialogCancel>
-                                                                Cancel
-                                                            </AlertDialogCancel>
-                                                            <AlertDialogAction
-                                                                className={cn(
-                                                                    buttonVariants({
-                                                                        variant: "destructive",
-                                                                    }),
-                                                                )}
-                                                                onClick={() =>
-                                                                    deleteAdmin(admin._id)
-                                                                }
+                        {loading ? (
+                            <div className="p-5 flex w-full justify-center">
+                                <Loader2 className="mr-2 animate-spin" /> Loading admins...
+                            </div>
+                        ) : (
+                            <Table>
+                                <TableCaption>{admins.length} admins</TableCaption>
+                                <TableHeader>
+                                    <TableRow>
+                                        <TableHead>Name</TableHead>
+                                        <TableHead>Email</TableHead>
+                                        <TableHead>Title</TableHead>
+                                        <TableHead>Role</TableHead>
+                                        <TableHead>Edit</TableHead>
+                                        <TableHead>Delete</TableHead>
+                                    </TableRow>
+                                </TableHeader>
+                                <TableBody>
+                                    {admins.map((admin: any, index: number) =>
+                                        !admin.name
+                                            .toString()
+                                            .toLowerCase()
+                                            .includes(search.toLowerCase()) &&
+                                        !admin.title
+                                            .toString()
+                                            .toLowerCase()
+                                            .includes(search.toLowerCase()) ? (
+                                            ""
+                                        ) : (
+                                            <TableRow key={index}>
+                                                <TableCell>{admin.name}</TableCell>
+                                                <TableCell>{admin.email}</TableCell>
+                                                <TableCell>{admin.title}</TableCell>
+                                                <TableCell>{admin.role}</TableCell>
+                                                <TableCell>
+                                                    <Button variant={"outline"} size={"icon"}>
+                                                        <Edit />
+                                                    </Button>
+                                                </TableCell>
+                                                <TableCell>
+                                                    <AlertDialog>
+                                                        <AlertDialogTrigger asChild>
+                                                            <Button
+                                                                variant={"outline"}
+                                                                size={"icon"}
                                                             >
-                                                                Delete
-                                                            </AlertDialogAction>
-                                                        </AlertDialogFooter>
-                                                    </AlertDialogContent>
-                                                </AlertDialog>
-                                            </TableCell>
-                                        </TableRow>
-                                    ),
-                                )}
-                            </TableBody>
-                        </Table>
+                                                                <Trash />
+                                                            </Button>
+                                                        </AlertDialogTrigger>
+                                                        <AlertDialogContent>
+                                                            <AlertDialogHeader>
+                                                                <AlertDialogTitle>
+                                                                    Delete {admin.name} from admins?
+                                                                </AlertDialogTitle>
+                                                                <AlertDialogDescription>
+                                                                    This action cannot be undone.
+                                                                    This will permanently delete
+                                                                    {admin.name} from admin list.
+                                                                </AlertDialogDescription>
+                                                            </AlertDialogHeader>
+                                                            <AlertDialogFooter>
+                                                                <AlertDialogCancel>
+                                                                    Cancel
+                                                                </AlertDialogCancel>
+                                                                <AlertDialogAction
+                                                                    className={cn(
+                                                                        buttonVariants({
+                                                                            variant: "destructive",
+                                                                        }),
+                                                                    )}
+                                                                    onClick={() =>
+                                                                        deleteAdmin(admin._id)
+                                                                    }
+                                                                >
+                                                                    Delete
+                                                                </AlertDialogAction>
+                                                            </AlertDialogFooter>
+                                                        </AlertDialogContent>
+                                                    </AlertDialog>
+                                                </TableCell>
+                                            </TableRow>
+                                        ),
+                                    )}
+                                </TableBody>
+                            </Table>
+                        )}
                     </div>
                 </div>
             ) : (

@@ -46,7 +46,7 @@ import {
     AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
 import { useUserStore } from "@/store";
-import { Edit, Trash } from "lucide-react";
+import { Edit, Loader2, Trash } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import { cn, serverURL } from "@/lib/utils";
 import { Toaster, toast } from "sonner";
@@ -62,12 +62,13 @@ export default function Semesters() {
 
     const [semesters, setSemesters] = useState<any>([]);
     const [programs, setPrograms] = useState<any>([]);
-
+    const [loading, setLoading] = useState(false);
     const sheetTrigger = useRef<any>();
     const [editMode, setEditMode] = useState(false);
     const [editSemesterId, setEditSemesterId] = useState("");
 
     const getSemesters = async () => {
+        setLoading(true);
         const config = {
             method: "GET",
             url: `${serverURL}/semester/`,
@@ -80,6 +81,7 @@ export default function Semesters() {
         axios(config)
             .then((response) => {
                 setSemesters(response?.data?.data);
+                setLoading(false);
             })
             .catch((err) => {
                 toast.error(err.response?.data?.message);
@@ -301,92 +303,102 @@ export default function Semesters() {
                         </div>
                     </div>
                     <div className="m-10">
-                        <Table>
-                            <TableCaption>{semesters.length} semesters.</TableCaption>
-                            <TableHeader>
-                                <TableRow>
-                                    <TableHead>Name</TableHead>
-                                    <TableHead>Number</TableHead>
-                                    <TableHead>Program</TableHead>
-                                    <TableHead>Edit</TableHead>
-                                    <TableHead>Delete</TableHead>
-                                </TableRow>
-                            </TableHeader>
-                            <TableBody>
-                                {semesters.map((semester: any, index: number) =>
-                                    !semester.name
-                                        .toString()
-                                        .toLowerCase()
-                                        .includes(search.toLowerCase()) &&
-                                    !semester.number
-                                        .toString()
-                                        .toLowerCase()
-                                        .includes(search.toLowerCase()) ? (
-                                        ""
-                                    ) : (
-                                        <TableRow key={index}>
-                                            <TableCell>{semester.name}</TableCell>
-                                            <TableCell>{semester.number}</TableCell>
-                                            <TableCell>{semester.program.name}</TableCell>
-                                            <TableCell>
-                                                <Button
-                                                    variant={"outline"}
-                                                    size={"icon"}
-                                                    onClick={() => {
-                                                        setEditMode(true);
-                                                        setEditSemesterId(semester._id);
-                                                        setName(semester.name);
-                                                        setProgramId(semester.progranId);
-                                                        sheetTrigger.current.click();
-                                                    }}
-                                                >
-                                                    <Edit />
-                                                </Button>
-                                            </TableCell>
-                                            <TableCell>
-                                                <AlertDialog>
-                                                    <AlertDialogTrigger asChild>
-                                                        <Button variant={"outline"} size={"icon"}>
-                                                            <Trash />
-                                                        </Button>
-                                                    </AlertDialogTrigger>
-                                                    <AlertDialogContent>
-                                                        <AlertDialogHeader>
-                                                            <AlertDialogTitle>
-                                                                Delete &apos;{semester.name}
-                                                                &apos; from semesters?
-                                                            </AlertDialogTitle>
-                                                            <AlertDialogDescription>
-                                                                This action cannot be undone. This
-                                                                will permanently delete{" "}
-                                                                {semester.name} from semester list.
-                                                            </AlertDialogDescription>
-                                                        </AlertDialogHeader>
-                                                        <AlertDialogFooter>
-                                                            <AlertDialogCancel>
-                                                                Cancel
-                                                            </AlertDialogCancel>
-                                                            <AlertDialogAction
-                                                                className={cn(
-                                                                    buttonVariants({
-                                                                        variant: "destructive",
-                                                                    }),
-                                                                )}
-                                                                onClick={() =>
-                                                                    deleteSemester(semester._id)
-                                                                }
+                        {loading ? (
+                            <div className="p-5 flex w-full justify-center">
+                                <Loader2 className="mr-2 animate-spin" /> Loading semesters...
+                            </div>
+                        ) : (
+                            <Table>
+                                <TableCaption>{semesters.length} semesters.</TableCaption>
+                                <TableHeader>
+                                    <TableRow>
+                                        <TableHead>Name</TableHead>
+                                        <TableHead>Number</TableHead>
+                                        <TableHead>Program</TableHead>
+                                        <TableHead>Edit</TableHead>
+                                        <TableHead>Delete</TableHead>
+                                    </TableRow>
+                                </TableHeader>
+                                <TableBody>
+                                    {semesters.map((semester: any, index: number) =>
+                                        !semester.name
+                                            .toString()
+                                            .toLowerCase()
+                                            .includes(search.toLowerCase()) &&
+                                        !semester.number
+                                            .toString()
+                                            .toLowerCase()
+                                            .includes(search.toLowerCase()) ? (
+                                            ""
+                                        ) : (
+                                            <TableRow key={index}>
+                                                <TableCell>{semester.name}</TableCell>
+                                                <TableCell>{semester.number}</TableCell>
+                                                <TableCell>{semester.program.name}</TableCell>
+                                                <TableCell>
+                                                    <Button
+                                                        variant={"outline"}
+                                                        size={"icon"}
+                                                        onClick={() => {
+                                                            setEditMode(true);
+                                                            setEditSemesterId(semester._id);
+                                                            setName(semester.name);
+                                                            setProgramId(semester.progranId);
+                                                            sheetTrigger.current.click();
+                                                        }}
+                                                    >
+                                                        <Edit />
+                                                    </Button>
+                                                </TableCell>
+                                                <TableCell>
+                                                    <AlertDialog>
+                                                        <AlertDialogTrigger asChild>
+                                                            <Button
+                                                                variant={"outline"}
+                                                                size={"icon"}
                                                             >
-                                                                Delete
-                                                            </AlertDialogAction>
-                                                        </AlertDialogFooter>
-                                                    </AlertDialogContent>
-                                                </AlertDialog>
-                                            </TableCell>
-                                        </TableRow>
-                                    ),
-                                )}
-                            </TableBody>
-                        </Table>
+                                                                <Trash />
+                                                            </Button>
+                                                        </AlertDialogTrigger>
+                                                        <AlertDialogContent>
+                                                            <AlertDialogHeader>
+                                                                <AlertDialogTitle>
+                                                                    Delete &apos;{semester.name}
+                                                                    &apos; from semesters?
+                                                                </AlertDialogTitle>
+                                                                <AlertDialogDescription>
+                                                                    This action cannot be undone.
+                                                                    This will permanently delete{" "}
+                                                                    {semester.name} from semester
+                                                                    list.
+                                                                </AlertDialogDescription>
+                                                            </AlertDialogHeader>
+                                                            <AlertDialogFooter>
+                                                                <AlertDialogCancel>
+                                                                    Cancel
+                                                                </AlertDialogCancel>
+                                                                <AlertDialogAction
+                                                                    className={cn(
+                                                                        buttonVariants({
+                                                                            variant: "destructive",
+                                                                        }),
+                                                                    )}
+                                                                    onClick={() =>
+                                                                        deleteSemester(semester._id)
+                                                                    }
+                                                                >
+                                                                    Delete
+                                                                </AlertDialogAction>
+                                                            </AlertDialogFooter>
+                                                        </AlertDialogContent>
+                                                    </AlertDialog>
+                                                </TableCell>
+                                            </TableRow>
+                                        ),
+                                    )}
+                                </TableBody>
+                            </Table>
+                        )}
                     </div>
                 </div>
             ) : (

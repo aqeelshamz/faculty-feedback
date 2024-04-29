@@ -8,6 +8,7 @@ import {
     Calendar,
     GraduationCap,
     Group,
+    Loader2,
     StickyNote,
     User,
     Users,
@@ -26,6 +27,7 @@ export default function AdminDashboard() {
     const router = useRouter();
     const role = useUserStore((state) => state.role);
     const [isCollege, setIsCollege] = useState(true);
+    const [loading, setLoading] = useState(false);
 
     //New College
     const [name, setName] = useState("");
@@ -47,6 +49,7 @@ export default function AdminDashboard() {
     });
 
     const getAllCounts = async () => {
+        setLoading(true);
         const config = {
             method: "POST",
             url: `${serverURL}/college/get-all-count`,
@@ -59,6 +62,7 @@ export default function AdminDashboard() {
         axios(config)
             .then((response) => {
                 setAllCounts(response?.data?.data);
+                setLoading(false);
             })
             .catch((err) => {
                 if (err.response?.status == 404) setIsCollege(false);
@@ -117,7 +121,11 @@ export default function AdminDashboard() {
                         <StickyNote className="h-6 w-6" />
                     </div>
                     <CardContent>
-                        <p className="text-4xl font-bold">{allCounts?.feedbackCount}</p>
+                        {loading ? (
+                            <Loader2 className="mr-2 animate-spin" />
+                        ) : (
+                            <p className="text-4xl font-bold">{allCounts?.feedbackCount}</p>
+                        )}
                     </CardContent>
                 </Card>
                 <Card
@@ -129,7 +137,11 @@ export default function AdminDashboard() {
                         <GraduationCap className="h-6 w-6" />
                     </div>
                     <CardContent>
-                        <p className="text-4xl font-bold">{allCounts?.programCount}</p>
+                        {loading ? (
+                            <Loader2 className="mr-2 animate-spin" />
+                        ) : (
+                            <p className="text-4xl font-bold">{allCounts?.programCount}</p>
+                        )}
                     </CardContent>
                 </Card>
                 <Card
@@ -141,7 +153,11 @@ export default function AdminDashboard() {
                         <BookOpen className="h-6 w-6" />
                     </div>
                     <CardContent>
-                        <p className="text-4xl font-bold">{allCounts?.courseCount}</p>
+                        {loading ? (
+                            <Loader2 className="mr-2 animate-spin" />
+                        ) : (
+                            <p className="text-4xl font-bold">{allCounts?.courseCount}</p>
+                        )}
                     </CardContent>
                 </Card>
                 <Card
@@ -153,7 +169,11 @@ export default function AdminDashboard() {
                         <Building className="h-6 w-6" />
                     </div>
                     <CardContent>
-                        <p className="text-4xl font-bold">{allCounts?.departmentCount}</p>
+                        {loading ? (
+                            <Loader2 className="mr-2 animate-spin" />
+                        ) : (
+                            <p className="text-4xl font-bold">{allCounts?.departmentCount}</p>
+                        )}
                     </CardContent>
                 </Card>
                 <Card
@@ -165,7 +185,11 @@ export default function AdminDashboard() {
                         <Group className="h-6 w-6" />
                     </div>
                     <CardContent>
-                        <p className="text-4xl font-bold">{allCounts?.batchCount}</p>
+                        {loading ? (
+                            <Loader2 className="mr-2 animate-spin" />
+                        ) : (
+                            <p className="text-4xl font-bold">{allCounts?.batchCount}</p>
+                        )}
                     </CardContent>
                 </Card>
                 <Card
@@ -177,7 +201,11 @@ export default function AdminDashboard() {
                         <Calendar className="h-6 w-6" />
                     </div>
                     <CardContent>
-                        <p className="text-4xl font-bold">{allCounts?.semesterCount}</p>
+                        {loading ? (
+                            <Loader2 className="mr-2 animate-spin" />
+                        ) : (
+                            <p className="text-4xl font-bold">{allCounts?.semesterCount}</p>
+                        )}
                     </CardContent>
                 </Card>
                 <Card
@@ -189,7 +217,11 @@ export default function AdminDashboard() {
                         <User className="h-6 w-6" />
                     </div>
                     <CardContent>
-                        <p className="text-4xl font-bold">{allCounts?.facultyCount}</p>
+                        {loading ? (
+                            <Loader2 className="mr-2 animate-spin" />
+                        ) : (
+                            <p className="text-4xl font-bold">{allCounts?.facultyCount}</p>
+                        )}
                     </CardContent>
                 </Card>
                 <Card
@@ -201,7 +233,11 @@ export default function AdminDashboard() {
                         <Users className="h-6 w-6" />
                     </div>
                     <CardContent>
-                        <p className="text-4xl font-bold">{allCounts?.studentCount}</p>
+                        {loading ? (
+                            <Loader2 className="mr-2 animate-spin" />
+                        ) : (
+                            <p className="text-4xl font-bold">{allCounts?.studentCount}</p>
+                        )}
                     </CardContent>
                 </Card>
             </div>

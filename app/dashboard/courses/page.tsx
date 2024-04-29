@@ -46,7 +46,7 @@ import {
     AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
 import { useUserStore } from "@/store";
-import { Edit, Trash } from "lucide-react";
+import { Edit, Loader2, Trash } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import { Checkbox } from "@/components/ui/checkbox";
 import axios from "axios";
@@ -60,6 +60,8 @@ export default function Page() {
     const [faculties, setFaculties] = useState<any>([]);
     const [programs, setPrograms] = useState<any>([]);
     const [semesters, setSemesters] = useState<any>([]);
+
+    const [loading, setLoading] = useState(false);
 
     //New Course
     const [name, setName] = useState("");
@@ -153,6 +155,7 @@ export default function Page() {
     };
 
     const getCourses = async () => {
+        setLoading(true);
         const config = {
             method: "GET",
             url: `${serverURL}/course/`,
@@ -165,6 +168,7 @@ export default function Page() {
         axios(config)
             .then((response) => {
                 setCourses(response?.data?.data);
+                setLoading(false);
             })
             .catch((err) => {
                 toast.error(err.response?.data?.message);
@@ -238,7 +242,7 @@ export default function Page() {
         if (program) {
             getSemesters(program);
         }
-    }, [program])
+    }, [program]);
 
     const sheetTrigger = useRef<any>();
     const [editMode, setEditMode] = useState(false);
@@ -296,7 +300,10 @@ export default function Page() {
                                         <Label htmlFor="course" className="text-right">
                                             Program
                                         </Label>
-                                        <Select value={program} onValueChange={(x) => setProgram(x)}>
+                                        <Select
+                                            value={program}
+                                            onValueChange={(x) => setProgram(x)}
+                                        >
                                             <SelectTrigger className="col-span-3">
                                                 <SelectValue placeholder="Select program" />
                                             </SelectTrigger>
@@ -323,7 +330,10 @@ export default function Page() {
                                         <Label htmlFor="course" className="text-right">
                                             Semester
                                         </Label>
-                                        <Select value={semester} onValueChange={(x) => setSemester(x)}>
+                                        <Select
+                                            value={semester}
+                                            onValueChange={(x) => setSemester(x)}
+                                        >
                                             <SelectTrigger className="col-span-3">
                                                 <SelectValue placeholder="Select semester" />
                                             </SelectTrigger>
@@ -356,14 +366,30 @@ export default function Page() {
                                                     className="flex items-center space-x-2 my-4"
                                                     key={index}
                                                 >
-                                                    <Checkbox id={faculty + index.toString()} onCheckedChange={(x) => {
-                                                        courseFaculties.includes(faculty._id) ? setCourseFaculties(courseFaculties.filter((y: any) => y != faculty._id)) : setCourseFaculties([...courseFaculties, faculty._id])
-                                                    }} />
+                                                    <Checkbox
+                                                        id={faculty + index.toString()}
+                                                        onCheckedChange={(x) => {
+                                                            courseFaculties.includes(faculty._id)
+                                                                ? setCourseFaculties(
+                                                                      courseFaculties.filter(
+                                                                          (y: any) =>
+                                                                              y != faculty._id,
+                                                                      ),
+                                                                  )
+                                                                : setCourseFaculties([
+                                                                      ...courseFaculties,
+                                                                      faculty._id,
+                                                                  ]);
+                                                        }}
+                                                    />
                                                     <label
                                                         htmlFor={faculty + index.toString()}
                                                         className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
                                                     >
-                                                        {faculty.name} <span className="opacity-50">({faculty.email})</span>
+                                                        {faculty.name}{" "}
+                                                        <span className="opacity-50">
+                                                            ({faculty.email})
+                                                        </span>
                                                     </label>
                                                 </div>
                                             );
@@ -392,98 +418,121 @@ export default function Page() {
                         </div>
                     </div>
                     <div className="m-10">
-                        <Table>
-                            <TableCaption>{courses.length} courses</TableCaption>
-                            <TableHeader>
-                                <TableRow>
-                                    <TableHead>Name</TableHead>
-                                    <TableHead>Course Code</TableHead>
-                                    <TableHead>Semester</TableHead>
-                                    <TableHead>Faculties</TableHead>
-                                    <TableHead>Edit</TableHead>
-                                    <TableHead>Delete</TableHead>
-                                </TableRow>
-                            </TableHeader>
-                            <TableBody>
-                                {courses.map((course: any, index: number) =>
-                                    !course.name
-                                        .toString()
-                                        .toLowerCase()
-                                        .includes(search.toLowerCase()) &&
+                        {loading ? (
+                            <div className="p-5 flex w-full justify-center">
+                                <Loader2 className="mr-2 animate-spin" /> Loading courses...
+                            </div>
+                        ) : (
+                            <Table>
+                                <TableCaption>{courses.length} courses</TableCaption>
+                                <TableHeader>
+                                    <TableRow>
+                                        <TableHead>Name</TableHead>
+                                        <TableHead>Course Code</TableHead>
+                                        <TableHead>Semester</TableHead>
+                                        <TableHead>Faculties</TableHead>
+                                        <TableHead>Edit</TableHead>
+                                        <TableHead>Delete</TableHead>
+                                    </TableRow>
+                                </TableHeader>
+                                <TableBody>
+                                    {courses.map((course: any, index: number) =>
+                                        !course.name
+                                            .toString()
+                                            .toLowerCase()
+                                            .includes(search.toLowerCase()) &&
                                         !course.courseCode
                                             .toString()
                                             .toLowerCase()
                                             .includes(search.toLowerCase()) ? (
-                                        ""
-                                    ) : (
-                                        <TableRow key={index}>
-                                            <TableCell>{course.name}</TableCell>
-                                            <TableCell>{course.courseCode}</TableCell>
-                                            <TableCell>{course.semester.name}</TableCell>
-                                            <TableCell>{course?.faculties.map((faculty: any, index: number) => {
-                                                return <p className="mb-2">{faculty?.name}<br /><span className="text-sm opacity-50">{faculty?.email}</span></p>
-                                            })}</TableCell>
-                                            <TableCell>
-                                                <Button
-                                                    variant={"outline"}
-                                                    size={"icon"}
-                                                    onClick={() => {
-                                                        setEditMode(true);
-                                                        setEditCourseId(course._id);
-                                                        setName(course.name);
-                                                        setCourseCode(course.courseCode);
-                                                        setSemester(course.semester);
-                                                        setCourseFaculties(course.courseFaculties);
-                                                        sheetTrigger.current.click();
-                                                    }}
-                                                >
-                                                    <Edit />
-                                                </Button>
-                                            </TableCell>
-                                            <TableCell>
-                                                <AlertDialog>
-                                                    <AlertDialogTrigger asChild>
-                                                        <Button variant={"outline"} size={"icon"}>
-                                                            <Trash />
-                                                        </Button>
-                                                    </AlertDialogTrigger>
-                                                    <AlertDialogContent>
-                                                        <AlertDialogHeader>
-                                                            <AlertDialogTitle>
-                                                                Delete &apos;{course.name}
-                                                                &apos; from courses?
-                                                            </AlertDialogTitle>
-                                                            <AlertDialogDescription>
-                                                                This action cannot be undone. This
-                                                                will permanently delete
-                                                                {course.name} from course list.
-                                                            </AlertDialogDescription>
-                                                        </AlertDialogHeader>
-                                                        <AlertDialogFooter>
-                                                            <AlertDialogCancel>
-                                                                Cancel
-                                                            </AlertDialogCancel>
-                                                            <AlertDialogAction
-                                                                className={cn(
-                                                                    buttonVariants({
-                                                                        variant: "destructive",
-                                                                    }),
-                                                                )}
-                                                                onClick={() =>
-                                                                    deleteCourse(course._id)
-                                                                }
+                                            ""
+                                        ) : (
+                                            <TableRow key={index}>
+                                                <TableCell>{course.name}</TableCell>
+                                                <TableCell>{course.courseCode}</TableCell>
+                                                <TableCell>{course.semester.name}</TableCell>
+                                                <TableCell>
+                                                    {course?.faculties.map(
+                                                        (faculty: any, index: number) => {
+                                                            return (
+                                                                <p className="mb-2">
+                                                                    {faculty?.name}
+                                                                    <br />
+                                                                    <span className="text-sm opacity-50">
+                                                                        {faculty?.email}
+                                                                    </span>
+                                                                </p>
+                                                            );
+                                                        },
+                                                    )}
+                                                </TableCell>
+                                                <TableCell>
+                                                    <Button
+                                                        variant={"outline"}
+                                                        size={"icon"}
+                                                        onClick={() => {
+                                                            setEditMode(true);
+                                                            setEditCourseId(course._id);
+                                                            setName(course.name);
+                                                            setCourseCode(course.courseCode);
+                                                            setSemester(course.semester);
+                                                            setCourseFaculties(
+                                                                course.courseFaculties,
+                                                            );
+                                                            sheetTrigger.current.click();
+                                                        }}
+                                                    >
+                                                        <Edit />
+                                                    </Button>
+                                                </TableCell>
+                                                <TableCell>
+                                                    <AlertDialog>
+                                                        <AlertDialogTrigger asChild>
+                                                            <Button
+                                                                variant={"outline"}
+                                                                size={"icon"}
                                                             >
-                                                                Delete
-                                                            </AlertDialogAction>
-                                                        </AlertDialogFooter>
-                                                    </AlertDialogContent>
-                                                </AlertDialog>
-                                            </TableCell>
-                                        </TableRow>
-                                    ),
-                                )}
-                            </TableBody>
-                        </Table>
+                                                                <Trash />
+                                                            </Button>
+                                                        </AlertDialogTrigger>
+                                                        <AlertDialogContent>
+                                                            <AlertDialogHeader>
+                                                                <AlertDialogTitle>
+                                                                    Delete &apos;{course.name}
+                                                                    &apos; from courses?
+                                                                </AlertDialogTitle>
+                                                                <AlertDialogDescription>
+                                                                    This action cannot be undone.
+                                                                    This will permanently delete
+                                                                    {course.name} from course list.
+                                                                </AlertDialogDescription>
+                                                            </AlertDialogHeader>
+                                                            <AlertDialogFooter>
+                                                                <AlertDialogCancel>
+                                                                    Cancel
+                                                                </AlertDialogCancel>
+                                                                <AlertDialogAction
+                                                                    className={cn(
+                                                                        buttonVariants({
+                                                                            variant: "destructive",
+                                                                        }),
+                                                                    )}
+                                                                    onClick={() =>
+                                                                        deleteCourse(course._id)
+                                                                    }
+                                                                >
+                                                                    Delete
+                                                                </AlertDialogAction>
+                                                            </AlertDialogFooter>
+                                                        </AlertDialogContent>
+                                                    </AlertDialog>
+                                                </TableCell>
+                                            </TableRow>
+                                        ),
+                                    )}
+                                </TableBody>
+                            </Table>
+                        )}
                     </div>
                 </div>
             ) : (

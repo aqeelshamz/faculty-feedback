@@ -35,7 +35,7 @@ import {
     AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
 import { useUserStore } from "@/store";
-import { Edit, Trash } from "lucide-react";
+import { Edit, Loader2, Trash } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import { Textarea } from "@/components/ui/textarea";
 import axios from "axios";
@@ -44,7 +44,8 @@ import { Toaster, toast } from "sonner";
 
 export default function Page() {
     const role = useUserStore((state) => state.role);
-    const [search, setSearch] = useState("");
+    const [search, setSearch] = useState("");    
+    const [loading, setLoading] = useState(false);
 
     //New Department
     const [name, setName] = useState("");
@@ -134,6 +135,7 @@ export default function Page() {
     };
 
     const getDepartments = async () => {
+        setLoading(true);
         const config = {
             method: "GET",
             url: `${serverURL}/department/`,
@@ -146,6 +148,7 @@ export default function Page() {
         axios(config)
             .then((response) => {
                 setDepartments(response?.data?.data);
+                setLoading(false);
             })
             .catch((err) => {
                 toast.error(err.response?.data?.message);
@@ -249,100 +252,109 @@ export default function Page() {
                         </div>
                     </div>
                     <div className="m-10">
-                        <Table>
-                            <TableCaption>{departments.length} departments.</TableCaption>
-                            <TableHeader>
-                                <TableRow>
-                                    <TableHead>Name</TableHead>
-                                    <TableHead>Vision</TableHead>
-                                    <TableHead>Mission</TableHead>
-                                    <TableHead>Edit</TableHead>
-                                    <TableHead>Delete</TableHead>
-                                </TableRow>
-                            </TableHeader>
-                            <TableBody>
-                                {departments &&
-                                    departments?.map((department: any, index: number) =>
-                                        !department.name
-                                            .toString()
-                                            .toLowerCase()
-                                            .includes(search.toLowerCase()) &&
-                                        !department.createdBy
-                                            ?.toString()
-                                            .toLowerCase()
-                                            .includes(search.toLowerCase()) ? (
-                                            ""
-                                        ) : (
-                                            <TableRow key={index}>
-                                                <TableCell>{department.name}</TableCell>
-                                                <TableCell>{department.vision}</TableCell>
-                                                <TableCell>{department.mission}</TableCell>
-                                                <TableCell>
-                                                    <Button
-                                                        variant={"outline"}
-                                                        size={"icon"}
-                                                        onClick={() => {
-                                                            setEditMode(true);
-                                                            setEditDepartmentId(department._id);
-                                                            setName(department.name);
-                                                            setVision(department.vision);
-                                                            setMission(department.mission);
-                                                            sheetTrigger.current.click();
-                                                        }}
-                                                    >
-                                                        <Edit />
-                                                    </Button>
-                                                </TableCell>
-                                                <TableCell>
-                                                    <AlertDialog>
-                                                        <AlertDialogTrigger asChild>
-                                                            <Button
-                                                                variant={"outline"}
-                                                                size={"icon"}
-                                                            >
-                                                                <Trash />
-                                                            </Button>
-                                                        </AlertDialogTrigger>
-                                                        <AlertDialogContent>
-                                                            <AlertDialogHeader>
-                                                                <AlertDialogTitle>
-                                                                    Delete &apos;{department.name}
-                                                                    &apos; from departments?
-                                                                </AlertDialogTitle>
-                                                                <AlertDialogDescription>
-                                                                    This action cannot be undone.
-                                                                    This will permanently delete
-                                                                    {department.name} from deparment
-                                                                    list.
-                                                                </AlertDialogDescription>
-                                                            </AlertDialogHeader>
-                                                            <AlertDialogFooter>
-                                                                <AlertDialogCancel>
-                                                                    Cancel
-                                                                </AlertDialogCancel>
-                                                                <AlertDialogAction
-                                                                    className={cn(
-                                                                        buttonVariants({
-                                                                            variant: "destructive",
-                                                                        }),
-                                                                    )}
-                                                                    onClick={() =>
-                                                                        deleteDepartment(
-                                                                            department._id,
-                                                                        )
-                                                                    }
+                        {loading ? (
+                            <div className="p-5 flex w-full justify-center">
+                                <Loader2 className="mr-2 animate-spin" /> Loading departments...
+                            </div>
+                        ) : (
+                            <Table>
+                                <TableCaption>{departments.length} departments.</TableCaption>
+                                <TableHeader>
+                                    <TableRow>
+                                        <TableHead>Name</TableHead>
+                                        <TableHead>Vision</TableHead>
+                                        <TableHead>Mission</TableHead>
+                                        <TableHead>Edit</TableHead>
+                                        <TableHead>Delete</TableHead>
+                                    </TableRow>
+                                </TableHeader>
+                                <TableBody>
+                                    {departments &&
+                                        departments?.map((department: any, index: number) =>
+                                            !department.name
+                                                .toString()
+                                                .toLowerCase()
+                                                .includes(search.toLowerCase()) &&
+                                            !department.createdBy
+                                                ?.toString()
+                                                .toLowerCase()
+                                                .includes(search.toLowerCase()) ? (
+                                                ""
+                                            ) : (
+                                                <TableRow key={index}>
+                                                    <TableCell>{department.name}</TableCell>
+                                                    <TableCell>{department.vision}</TableCell>
+                                                    <TableCell>{department.mission}</TableCell>
+                                                    <TableCell>
+                                                        <Button
+                                                            variant={"outline"}
+                                                            size={"icon"}
+                                                            onClick={() => {
+                                                                setEditMode(true);
+                                                                setEditDepartmentId(department._id);
+                                                                setName(department.name);
+                                                                setVision(department.vision);
+                                                                setMission(department.mission);
+                                                                sheetTrigger.current.click();
+                                                            }}
+                                                        >
+                                                            <Edit />
+                                                        </Button>
+                                                    </TableCell>
+                                                    <TableCell>
+                                                        <AlertDialog>
+                                                            <AlertDialogTrigger asChild>
+                                                                <Button
+                                                                    variant={"outline"}
+                                                                    size={"icon"}
                                                                 >
-                                                                    Delete
-                                                                </AlertDialogAction>
-                                                            </AlertDialogFooter>
-                                                        </AlertDialogContent>
-                                                    </AlertDialog>
-                                                </TableCell>
-                                            </TableRow>
-                                        ),
-                                    )}
-                            </TableBody>
-                        </Table>
+                                                                    <Trash />
+                                                                </Button>
+                                                            </AlertDialogTrigger>
+                                                            <AlertDialogContent>
+                                                                <AlertDialogHeader>
+                                                                    <AlertDialogTitle>
+                                                                        Delete &apos;
+                                                                        {department.name}
+                                                                        &apos; from departments?
+                                                                    </AlertDialogTitle>
+                                                                    <AlertDialogDescription>
+                                                                        This action cannot be
+                                                                        undone. This will
+                                                                        permanently delete
+                                                                        {department.name} from
+                                                                        deparment list.
+                                                                    </AlertDialogDescription>
+                                                                </AlertDialogHeader>
+                                                                <AlertDialogFooter>
+                                                                    <AlertDialogCancel>
+                                                                        Cancel
+                                                                    </AlertDialogCancel>
+                                                                    <AlertDialogAction
+                                                                        className={cn(
+                                                                            buttonVariants({
+                                                                                variant:
+                                                                                    "destructive",
+                                                                            }),
+                                                                        )}
+                                                                        onClick={() =>
+                                                                            deleteDepartment(
+                                                                                department._id,
+                                                                            )
+                                                                        }
+                                                                    >
+                                                                        Delete
+                                                                    </AlertDialogAction>
+                                                                </AlertDialogFooter>
+                                                            </AlertDialogContent>
+                                                        </AlertDialog>
+                                                    </TableCell>
+                                                </TableRow>
+                                            ),
+                                        )}
+                                </TableBody>
+                            </Table>
+                        )}
                     </div>
                 </div>
             ) : (
