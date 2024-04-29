@@ -2,9 +2,10 @@ import { create } from "zustand";
 import { devtools, persist } from "zustand/middleware";
 
 type UserStore = {
+    name: string;
     email: string;
     role: string;
-    setData: (email: string, role: string) => void;
+    setData: (name: string, email: string, role: string) => void;
 };
 
 // const myMiddlewares = (f: any) => devtools(persist(f, { name: "userStore" }));
@@ -13,10 +14,11 @@ export const useUserStore = create<UserStore>()(
     devtools(
         persist(
             (set, get) => ({
+                name: "",
                 email: "",
                 role: "",
-                setData: (email, role) => {
-                    set(() => ({ email: email, role: role }));
+                setData: (name, email, role) => {
+                    set(() => ({ name: name, email: email, role: role }));
                 },
             }),
             { name: "userStore" },

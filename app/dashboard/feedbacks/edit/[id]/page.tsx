@@ -22,6 +22,16 @@ import {
     SelectTrigger,
     SelectValue,
 } from "@/components/ui/select";
+import {
+    Dialog,
+    DialogClose,
+    DialogContent,
+    DialogDescription,
+    DialogFooter,
+    DialogHeader,
+    DialogTitle,
+    DialogTrigger,
+} from "@/components/ui/dialog";
 import { Slider } from "@/components/ui/slider";
 import { Label } from "@/components/ui/label";
 import { Sparkles, Pen, Plus } from "lucide-react";
@@ -144,7 +154,7 @@ export default function EditFeedback() {
             });
     };
 
-    const generateQuestions = async (id: any) => {
+    const generateQuestions = async () => {
         const config = {
             method: "POST",
             url: `${serverURL}/feedback/generate-questions-using-ai`,
@@ -161,7 +171,7 @@ export default function EditFeedback() {
 
         axios(config)
             .then((response) => {
-                console.log(response);
+                setQuestions([...questions, ...response.data.data]);
             })
             .catch((err) => {
                 toast.error(err.response?.data?.message);
@@ -182,17 +192,52 @@ export default function EditFeedback() {
             <div className="flex flex-col gap-y-3">
                 <div className="flex flex-col justify-between space-y-4">
                     <div className="flex justify-between">
-                        <Input
-                            className="text-2xl font-semibold max-w-screen-lg h-15"
-                            placeholder="Title"
-                            value={title}
-                            onChange={(e) => setTitle(e.target.value)}
-                        />
+                        <div className="flex flex-col justify-between space-y-4">
+                            <div className="flex item-center gap-2">
+                                <Select onValueChange={setCourseId} value={courseId}>
+                                    <SelectTrigger className="w-[180px]">
+                                        <SelectValue placeholder="Course" />
+                                    </SelectTrigger>
+                                    <SelectContent>
+                                        <SelectGroup>
+                                            <SelectLabel>Course</SelectLabel>
+                                            {courses?.map((course: any, index: number) => {
+                                                return (
+                                                    <SelectItem key={index} value={course?._id}>
+                                                        {course?.name}
+                                                    </SelectItem>
+                                                );
+                                            })}
+                                        </SelectGroup>
+                                    </SelectContent>
+                                </Select>
+
+                                <CirclePicker
+                                    onChange={handleColorChange}
+                                    className="mt-1"
+                                    circleSize={28}
+                                    color={color}
+                                    colors={[
+                                        feedbackFormColors["black"]["darkBg"],
+                                        feedbackFormColors["red"]["darkBg"],
+                                        feedbackFormColors["yellow"]["darkBg"],
+                                        feedbackFormColors["green"]["darkBg"],
+                                        feedbackFormColors["blue"]["darkBg"],
+                                    ]}
+                                />
+                            </div>
+                        </div>
 
                         <Button className="w-44 ml-2" onClick={() => updateFeedback(id)}>
                             Save
                         </Button>
                     </div>
+                    <Input
+                        className="text-2xl font-semibold max-w-screen-lg h-15"
+                        placeholder="Title"
+                        value={title}
+                        onChange={(e) => setTitle(e.target.value)}
+                    />
 
                     <Textarea
                         placeholder="Description"
@@ -200,41 +245,6 @@ export default function EditFeedback() {
                         value={description}
                         onChange={(e) => setDescription(e.target.value)}
                     />
-                    <div className="flex flex-col justify-between space-y-4">
-                        <div className="flex item-center gap-2">
-                            <Select onValueChange={setCourseId} value={courseId}>
-                                <SelectTrigger className="w-[180px]">
-                                    <SelectValue placeholder="Course" />
-                                </SelectTrigger>
-                                <SelectContent>
-                                    <SelectGroup>
-                                        <SelectLabel>Course</SelectLabel>
-                                        {courses?.map((course: any, index: number) => {
-                                            return (
-                                                <SelectItem key={index} value={course?._id}>
-                                                    {course?.name}
-                                                </SelectItem>
-                                            );
-                                        })}
-                                    </SelectGroup>
-                                </SelectContent>
-                            </Select>
-
-                            <CirclePicker
-                                onChange={handleColorChange}
-                                className="mt-1"
-                                circleSize={28}
-                                color={color}
-                                colors={[
-                                    feedbackFormColors["black"]["darkBg"],
-                                    feedbackFormColors["red"]["darkBg"],
-                                    feedbackFormColors["yellow"]["darkBg"],
-                                    feedbackFormColors["green"]["darkBg"],
-                                    feedbackFormColors["blue"]["darkBg"],
-                                ]}
-                            />
-                        </div>
-                    </div>
                 </div>
             </div>
             {questions?.map((question: any, index: number) => {
@@ -242,6 +252,51 @@ export default function EditFeedback() {
                     <Card key={index} className="max-w-screen-lg my-2 py-6 ">
                         <CardContent>
                             <div className="flex flex-row space-x-4 justify-between">
+                                {question.settings?.type === "text" ? (
+                                    <div className="flex items-center space-x-2">
+                                        <p className="text-lg">{index + 1 + "."}</p>
+                                        <Input type="text" value={question.question} />
+                                    </div>
+                                ) : question.settings?.type === "longtext" ? (
+                                    <div className="flex w-full flex-col space-y-4">
+                                        <div className="flex items-center space-x-2">
+                                            <p className="text-lg">{index + 1 + "."}</p>
+                                            <Input type="text" value={question.question} />
+                                        </div>
+                                    </div>
+                                ) : question.settings?.type === "multiplechoice" ? (
+                                    <div className="flex flex-col w-full space-y-4">
+                                        <div className="flex items-center space-x-2">
+                                            <p className="text-lg">{index + 1 + "."}</p>
+                                            <Input type="text" value={question.question} />
+                                        </div>
+                                        <div className="space-y-2 ml-5">
+                                            {question.options?.map((option: any, index: number) => (
+                                                <div
+                                                    key={index}
+                                                    className="flex space-y-2 items-center space-x-2"
+                                                >
+                                                    <Label>
+                                                        {String.fromCharCode(65 + index) + "."}
+                                                    </Label>
+                                                    <Input
+                                                        placeholder={`Option ${index + 1}`}
+                                                        size={100}
+                                                    />
+                                                </div>
+                                            ))}
+                                        </div>
+                                    </div>
+                                ) : question.settings?.type === "rating" ? (
+                                    <div className="flex flex-col w-full space-y-4">
+                                        <div className="flex items-center space-x-2">
+                                            <p className="text-lg">{index + 1 + "."}</p>
+                                            <Input type="text" value={question.question} />
+                                        </div>
+                                    </div>
+                                ) : (
+                                    ""
+                                )}
                                 <div className="flex flex-row space-x-4">
                                     <Select
                                         onValueChange={(x) => {
@@ -270,7 +325,7 @@ export default function EditFeedback() {
                                                 </SelectItem>
                                             </SelectGroup>
                                         </SelectContent>
-                                    </Select>{" "}
+                                    </Select>
                                     <Button
                                         variant={"destructive"}
                                         onClick={() => {
@@ -282,45 +337,66 @@ export default function EditFeedback() {
                                         <Trash2 />
                                     </Button>
                                 </div>
-                                {question.settings?.type === "text" ? (
-                                    <Input type="text" value={question.question} />
-                                ) : question.settings?.type === "longtext" ? (
-                                    <Textarea value={question.question} />
-                                ) : question.settings?.type === "longtext" ? (
-                                    <Textarea value={question.question} />
-                                ) : question.settings?.type === "multiplechoice" ? (
-                                    <Textarea value={question.question} />
-                                ) : question.settings?.type === "rating" ? (
-                                    <Slider defaultValue={[0]} max={5} step={1} />
-                                ) : (
-                                    ""
-                                )}
                             </div>
                         </CardContent>
                         <CardFooter className="ml-10"></CardFooter>
                     </Card>
                 );
             })}
-            <Button
-                className="max-w-screen-lg w-full"
-                onClick={() =>
-                    setQuestions([
-                        ...questions,
-                        {
-                            question: "Question",
-                            settings: {
-                                type: "text",
-                                required: false,
-                                options: [],
+            <div className="flex flex-row justify-between item-center max-w-5xl gap-6">
+                <Button
+                    className="max-w-screen-lg w-full flex h-17"
+                    onClick={() =>
+                        setQuestions([
+                            ...questions,
+                            {
+                                question: "Question",
+                                settings: {
+                                    type: "text",
+                                    required: false,
+                                    options: [],
+                                },
                             },
-                        },
-                    ])
-                }
-            >
-                <Plus className="mr-2" size={20} />
-                New question
-            </Button>
-
+                        ])
+                    }
+                >
+                    <Plus className="mr-2" size={20} />
+                    New question
+                </Button>
+                <Dialog>
+                    <DialogTrigger className="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 bg-primary text-primary-foreground hover:bg-primary/90 max-w-screen-lg w-full item-center bg-gradient-to-r from-indigo-700 to-purple-600 text-white shadow-none focus:ring-4 focus:ring-blue-300 px-7 py-3 focus:outline-none dark:focus:ring-blue-800">
+                        <Sparkles className="mr-2" size={20} />
+                        Generate Questions
+                    </DialogTrigger>
+                    <DialogContent>
+                        <DialogHeader>
+                            <DialogTitle>Generate Questions with AI</DialogTitle>
+                            <DialogDescription>
+                                Write your prompt to generate questions.
+                            </DialogDescription>
+                        </DialogHeader>
+                        <div className="grid gap-4 py-4">
+                            <Textarea
+                                id="prompt"
+                                className="col-span-3"
+                                value={prompt}
+                                placeholder="Write AI prompt"
+                                onChange={(e) => setPrompt(e.target.value)}
+                            />
+                        </div>
+                        <DialogFooter>
+                            <div className="flex justify-end w-full">
+                                <DialogClose asChild>
+                                    <Button type="submit" onClick={generateQuestions}>
+                                        <Sparkles className="mr-2" size={20} />
+                                        Generate
+                                    </Button>
+                                </DialogClose>
+                            </div>
+                        </DialogFooter>
+                    </DialogContent>
+                </Dialog>
+            </div>
             <Toaster />
         </div>
     );

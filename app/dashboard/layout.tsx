@@ -37,7 +37,7 @@ import axios from "axios";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 
-export default function Dashboard({
+export default function DashboardLayout({
     children,
 }: Readonly<{
     children: React.ReactNode;
@@ -47,7 +47,8 @@ export default function Dashboard({
     const [oldPassword, setOldPassword] = useState("");
     const [newPassword, setNewPassword] = useState("");
 
-    const { email, role, setData } = useUserStore((state) => ({
+    const { name, email, role, setData } = useUserStore((state) => ({
+        name: state.name,
         email: state.email,
         role: state.role,
         setData: state.setData,
@@ -84,6 +85,8 @@ export default function Dashboard({
                 toast.error(err.response?.data?.message);
             });
     };
+
+    const getUser = async () => {};
 
     useEffect(() => {}, [role]);
 
@@ -208,7 +211,11 @@ export default function Dashboard({
                                     </Button>
                                 </DropdownMenuTrigger>
                                 <DropdownMenuContent align="end">
-                                    <DropdownMenuLabel>My Account</DropdownMenuLabel>
+                                    <DropdownMenuLabel>
+                                        <span className="text-bold text-lg">{name}</span>
+                                        <br />
+                                        <span className="text-normal opacity-60">{email}</span>
+                                    </DropdownMenuLabel>
                                     <DropdownMenuSeparator />
                                     <DialogTrigger asChild>
                                         <DropdownMenuItem>Reset Password</DropdownMenuItem>
