@@ -28,56 +28,64 @@ import { Sparkles, Pen, Plus } from "lucide-react";
 
 import { Trash2 } from "lucide-react";
 import { useParams } from "next/navigation";
-import { cn, serverURL } from "@/lib/utils";
+import { cn, feedbackFormColors, serverURL } from "@/lib/utils";
 import axios from "axios";
 import { Toaster, toast } from "sonner";
 import { Textarea } from "@/components/ui/textarea";
 
 // create interface question where it should have questionType and question as string
-type LongTextQuestion = {
-    questionType: "longtext";
-    question: string;
-};
+// type LongTextQuestion = {
+//     questionType: "longtext";
+//     question: string;
+// };
 
-type TextQuestion = {
-    questionType: "text";
-    question: string;
-};
+// type TextQuestion = {
+//     questionType: "text";
+//     question: string;
+// };
 
-type MCQQuestion = {
-    questionType: "mcq";
-    question: string;
-    options: { option: string }[];
-};
+// type MCQQuestion = {
+//     questionType: "mcq";
+//     question: string;
+//     options: { option: string }[];
+// };
 
-type RatingQuestion = {
-    questionType: "rating";
-    question: string;
-    rating: number;
-};
+// type RatingQuestion = {
+//     questionType: "rating";
+//     question: string;
+//     rating: number;
+// };
 
-type Question = LongTextQuestion | MCQQuestion | RatingQuestion | TextQuestion;
+// type Question = LongTextQuestion | MCQQuestion | RatingQuestion | TextQuestion;
 
-const initialQuestion: Question = {
-    questionType: "mcq",
-    question: "",
-    options: [{ option: "" }, { option: "" }, { option: "" }, { option: "" }],
-};
+// const initialQuestion: Question = {
+//     questionType: "mcq",
+//     question: "",
+//     options: [{ option: "" }, { option: "" }, { option: "" }, { option: "" }],
+// };
 
 export default function EditFeedback() {
     const { id } = useParams();
 
     const [title, setTitle] = useState("");
     const [description, setDescription] = useState("");
-    const [color, setColor] = useState("#EC7777");
-    const [course, setCourse] = useState("");
-    const [questions, setQuestions] = useState<Question[]>([initialQuestion]);
+    const [color, setColor] = useState<any>("");
+    const [courseId, setCourseId] = useState("");
+    const [questions, setQuestions] = useState<any>([]);
     const [courses, setCourses] = useState<any>([]);
     const [prompt, setPrompt] = useState("");
 
     const [isActive, setIsActive] = useState<boolean>(false);
 
     const getFeedback = async (id: any) => {
+        const colorData: any = {
+            "black": "#000000",
+            "red": "#eb4034",
+            "yellow": "#ebc334",
+            "green": "#68eb34",
+            "blue": "#3262e6"
+        }
+
         const config = {
             method: "GET",
             url: `${serverURL}/feedback/${id}`,
@@ -89,11 +97,19 @@ export default function EditFeedback() {
 
         axios(config)
             .then((response) => {
-                setTitle(response?.data?.title);
-                setDescription(response?.data?.description);
-                setCourse(response?.data?.courseCode);
-                setColor(response?.data?.color);
-                setQuestions(response?.data?.questions);
+                const data = response.data?.data;
+                setTitle(data?.title);
+                setDescription(data?.description);
+                setCourseId(data?.courseId);
+                setColor(colorData[data?.color]);
+                var questions = [];
+                for (const question of data?.questions) {
+                    questions.push({
+                        question: question.question,
+                        settings: question.settings
+                    })
+                }
+                setQuestions([...questions]);
             })
             .catch((err) => {
                 toast.error(err.response?.data?.message);
@@ -101,6 +117,14 @@ export default function EditFeedback() {
     };
 
     const updateFeedback = async (id: any) => {
+        const colorData: any = {
+            "#000000": "black",
+            "#eb4034": "red",
+            "#ebc334": "yellow",
+            "#68eb34": "green",
+            "#3262e6": "blue"
+        }
+
         const config = {
             method: "PUT",
             url: `${serverURL}/feedback/${id}`,
@@ -111,8 +135,9 @@ export default function EditFeedback() {
             data: {
                 title,
                 description,
-                color,
+                color: colorData[color],
                 questions,
+                courseId
             },
         };
 
@@ -121,7 +146,7 @@ export default function EditFeedback() {
                 toast.success(response.data.message);
                 setTitle("");
                 setDescription("");
-                setCourse("");
+                setCourseId("");
                 setColor("");
                 setQuestions([]);
                 getFeedback(id);
@@ -198,7 +223,7 @@ export default function EditFeedback() {
 
         const handleOnValueChange = (questionType: string) => {
             if (questionType === "mcq") {
-                setQuestions((prevQuestions: Question[]) => {
+                setQuestions((prevQuestions: any) => {
                     const newQuestions = [...prevQuestions];
                     newQuestions[index] = {
                         questionType: "mcq",
@@ -208,19 +233,19 @@ export default function EditFeedback() {
                     return newQuestions;
                 });
             } else if (questionType === "rating") {
-                setQuestions((prevQuestions: Question[]) => {
+                setQuestions((prevQuestions: any) => {
                     const newQuestions = [...prevQuestions];
                     newQuestions[index] = { questionType: "rating", question: "", rating: 0 };
                     return newQuestions;
                 });
             } else if (questionType === "longtext") {
-                setQuestions((prevQuestions: Question[]) => {
+                setQuestions((prevQuestions: any) => {
                     const newQuestions = [...prevQuestions];
                     newQuestions[index] = { questionType: "longtext", question: "" };
                     return newQuestions;
                 });
             } else {
-                setQuestions((prevQuestions: Question[]) => {
+                setQuestions((prevQuestions: any) => {
                     const newQuestions = [...prevQuestions];
                     newQuestions[index] = { questionType: "text", question: "" };
                     return newQuestions;
@@ -243,10 +268,10 @@ export default function EditFeedback() {
                                     qstnType === "Multiple Choice"
                                         ? "mcq"
                                         : qstnType === "Rating"
-                                          ? "rating"
-                                          : qstnType === "Long Text"
-                                            ? "longtext"
-                                            : "text"
+                                            ? "rating"
+                                            : qstnType === "Long Text"
+                                                ? "longtext"
+                                                : "text"
                                 }
                             >
                                 {qstnType}
@@ -318,7 +343,7 @@ export default function EditFeedback() {
                                 variant={"ghost"}
                                 onClick={() => {
                                     const newOptions = options.filter((_, i) => i !== index);
-                                    setQuestions((prevQuestions: Question[]) => {
+                                    setQuestions((prevQuestions: any) => {
                                         const newQuestions = [...prevQuestions];
                                         const currentQuestion = newQuestions[questionNumber - 1];
                                         if (currentQuestion.questionType === "mcq") {
@@ -364,7 +389,7 @@ export default function EditFeedback() {
                     />
                     <div className="flex flex-col justify-between space-y-4">
                         <div className="flex item-center gap-2">
-                            <Select onValueChange={setCourse}>
+                            <Select onValueChange={setCourseId}>
                                 <SelectTrigger className="w-[180px]">
                                     <SelectValue placeholder="Course" />
                                 </SelectTrigger>
@@ -388,111 +413,84 @@ export default function EditFeedback() {
                                 circleSize={28}
                                 color={color}
                                 colors={[
-                                    "#EC7777",
-                                    "#AAEC77",
-                                    "#77ECC2",
-                                    "#779FEC",
-                                    "#EC77BD",
-                                    "#ECA177",
+                                    feedbackFormColors["black"]["darkBg"],
+                                    feedbackFormColors["red"]["darkBg"],
+                                    feedbackFormColors["yellow"]["darkBg"],
+                                    feedbackFormColors["green"]["darkBg"],
+                                    feedbackFormColors["blue"]["darkBg"],
                                 ]}
                             />
                         </div>
                     </div>
                 </div>
             </div>
-            {questions?.map((question, index) => {
-                if (question.questionType === "mcq") {
-                    return (
+            {questions?.map((question: any, index: number) => {
+                return question?.settings?.type === "multiplechoice" ?
+                    (
                         <Card key={index} className="max-w-screen-lg my-2 py-6 ">
                             <CardContent>
-                                <div className="flex flex-row space-x-4 justify-between">
-                                    <MultipleChoiceQuestionTemplate
-                                        questionNumber={index + 1}
-                                        options={question.options?.map((option) => option.option)}
-                                    />
-                                    <div className="flex flex-row space-x-4">
-                                        <SelectQuestionType index={index} />
-                                        <Button size={"default"} variant={"destructive"}>
-                                            Delete
-                                        </Button>
-                                    </div>
-                                </div>
+
                             </CardContent>
                             <CardFooter className="ml-10">
-                                <Button
-                                    className="lg:w-[70%] md:w-[60%] w-[80%]"
-                                    onClick={() => {
-                                        const newOptions = [...question.options, { option: "" }];
-                                        setQuestions((prevQuestions: Question[]) => {
-                                            const newQuestions = [...prevQuestions];
-                                            const currentQuestion = newQuestions[index];
-                                            if (currentQuestion.questionType === "mcq") {
-                                                currentQuestion.options = newOptions;
-                                            }
-                                            return newQuestions;
-                                        });
-                                    }}
-                                >
-                                    <Plus className="mr-2" size={20} />
-                                    Add Option
-                                </Button>
+
                             </CardFooter>
                         </Card>
-                    );
-                } else if (question.questionType === "rating") {
-                    return (
-                        <Card key={index} className="max-w-screen-lg my-2 pt-6 ">
-                            <CardContent>
-                                <div className="flex flex-row space-x-4 justify-between">
-                                    <RatingQuestionTemplate questionNumber={index + 1} />
-                                    <div className="flex flex-row space-x-4">
-                                        <SelectQuestionType index={index} />
-                                        <Button size={"default"} variant={"destructive"}>
-                                            Delete
-                                        </Button>
+                    ) : question?.settings?.type === "rating" ?
+                        (
+                            <Card key={index} className="max-w-screen-lg my-2 pt-6 ">
+                                <CardContent>
+                                    <div className="flex flex-row space-x-4 justify-between">
+                                        <RatingQuestionTemplate questionNumber={index + 1} />
+                                        <div className="flex flex-row space-x-4">
+                                            <SelectQuestionType index={index} />
+                                            <Button size={"default"} variant={"destructive"}>
+                                                Delete
+                                            </Button>
+                                        </div>
                                     </div>
-                                </div>
-                            </CardContent>
-                        </Card>
-                    );
-                } else if (question.questionType === "longtext") {
-                    return (
-                        <Card key={index} className="max-w-screen-lg my-2 pt-6 ">
-                            <CardContent>
-                                <div className="flex flex-row space-x-4 justify-between">
-                                    <LongTextQuestionTemplate questionNumber={index + 1} />
-                                    <div className="flex flex-row space-x-4">
-                                        <SelectQuestionType index={index} />
-                                        <Button size={"default"} variant={"destructive"}>
-                                            Delete
-                                        </Button>
+                                </CardContent>
+                            </Card>
+                        ) : (question?.settings?.type === "longtext") ?
+                            (
+                                <Card key={index} className="max-w-screen-lg my-2 pt-6 ">
+                                    <CardContent>
+                                        <div className="flex flex-row space-x-4 justify-between">
+                                            <LongTextQuestionTemplate questionNumber={index + 1} />
+                                            <div className="flex flex-row space-x-4">
+                                                <SelectQuestionType index={index} />
+                                                <Button size={"default"} variant={"destructive"}>
+                                                    Delete
+                                                </Button>
+                                            </div>
+                                        </div>
+                                    </CardContent>
+                                </Card>
+                            ) :
+                            <Card key={index} className="max-w-screen-lg my-2 pt-6 ">
+                                <CardContent>
+                                    <div className="flex flex-row space-x-4 justify-between">
+                                        <TextQuestionTemplate questionNumber={index + 1} />
+                                        <div className="flex flex-row space-x-4">
+                                            <SelectQuestionType index={index} />
+                                            <Button size={"default"} variant={"destructive"}>
+                                                Delete
+                                            </Button>
+                                        </div>
                                     </div>
-                                </div>
-                            </CardContent>
-                        </Card>
-                    );
-                } else {
-                    return (
-                        <Card key={index} className="max-w-screen-lg my-2 pt-6 ">
-                            <CardContent>
-                                <div className="flex flex-row space-x-4 justify-between">
-                                    <TextQuestionTemplate questionNumber={index + 1} />
-                                    <div className="flex flex-row space-x-4">
-                                        <SelectQuestionType index={index} />
-                                        <Button size={"default"} variant={"destructive"}>
-                                            Delete
-                                        </Button>
-                                    </div>
-                                </div>
-                            </CardContent>
-                        </Card>
-                    );
-                }
+                                </CardContent>
+                            </Card>
             })}
 
             <Button
                 className="max-w-screen-lg w-full"
-                onClick={() => setQuestions([...questions, initialQuestion])}
+                onClick={() => setQuestions([...questions, {
+                    "question": "Question",
+                    "settings": {
+                        "type": "text",
+                        "required": false,
+                        "options": []
+                    }
+                }])}
             >
                 <Plus className="mr-2" size={20} />
                 New question
