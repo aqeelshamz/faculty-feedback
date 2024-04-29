@@ -368,7 +368,17 @@ export default function Page() {
                                         ""
                                     ) : (
                                         <TableRow key={index}>
-                                            <TableCell><span className="text-md">{hod?.name}</span><br/><span className="text-sm">{hod?.faculty?.title}</span><br/><span className="text-sm opacity-50">{hod?.email}</span></TableCell>
+                                            <TableCell>
+                                                <span className="text-md">{hod?.name}</span>
+                                                <br />
+                                                <span className="text-sm">
+                                                    {hod?.faculty?.title}
+                                                </span>
+                                                <br />
+                                                <span className="text-sm opacity-50">
+                                                    {hod?.email}
+                                                </span>
+                                            </TableCell>
                                             <TableCell>{hod.department.name}</TableCell>
                                             <TableCell>
                                                 <Button

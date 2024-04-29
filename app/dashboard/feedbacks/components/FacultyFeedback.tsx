@@ -81,9 +81,9 @@ export default function FacultyFeedback() {
                 "Content-Type": "application/json",
             },
             data: {
-                title,
-                description,
-                course,
+                title: title,
+                description: description,
+                course: course,
             },
         };
 
@@ -189,7 +189,7 @@ export default function FacultyFeedback() {
                                 value={description}
                                 onChange={(e) => setDescription(e.target.value)}
                             />
-                            <Select value={course} onValueChange={(x) => setCourse(x)}>
+                            <Select value={course} onValueChange={setCourse}>
                                 <SelectTrigger className="col-span-3">
                                     <SelectValue placeholder="Select course" />
                                 </SelectTrigger>

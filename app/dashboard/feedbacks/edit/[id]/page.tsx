@@ -111,6 +111,7 @@ export default function EditFeedback() {
             data: {
                 title,
                 description,
+                course,
                 color,
                 questions,
             },
@@ -364,7 +365,7 @@ export default function EditFeedback() {
                     />
                     <div className="flex flex-col justify-between space-y-4">
                         <div className="flex item-center gap-2">
-                            <Select onValueChange={setCourse}>
+                            <Select onValueChange={setCourse} value={course}>
                                 <SelectTrigger className="w-[180px]">
                                     <SelectValue placeholder="Course" />
                                 </SelectTrigger>
