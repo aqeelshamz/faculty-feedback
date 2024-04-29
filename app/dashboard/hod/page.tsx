@@ -47,7 +47,7 @@ import {
 } from "@/components/ui/alert-dialog";
 import { useUserStore } from "@/store";
 import { faculties } from "@/lib/data";
-import { Edit, Trash } from "lucide-react";
+import { Edit, Loader2, Trash } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import { Textarea } from "@/components/ui/textarea";
 import { departments, programs } from "@/lib/data";
@@ -66,7 +66,7 @@ export default function Page() {
 
     const [facultyId, setFacultyId] = useState("");
     const [departmentId, setDepartmentId] = useState("");
-
+    const [loading, setLoading] = useState(false);
     const [editHodId, setEditHodId] = useState("");
     const sheetTrigger = useRef<any>();
     const [editMode, setEditMode] = useState(false);
@@ -110,6 +110,7 @@ export default function Page() {
     };
 
     const getHods = async () => {
+        setLoading(true);
         const config = {
             method: "GET",
             url: `${serverURL}/hod`,
@@ -122,6 +123,7 @@ export default function Page() {
         axios(config)
             .then((response) => {
                 setHods(response?.data?.data);
+                setLoading(false);
             })
             .catch((err) => {
                 toast.error(err.response?.data?.message);
@@ -345,96 +347,109 @@ export default function Page() {
                         </div>
                     </div>
                     <div className="m-10">
-                        <Table>
-                            <TableCaption>{hods.length} HODs</TableCaption>
-                            <TableHeader>
-                                <TableRow>
-                                    <TableHead>Faculty</TableHead>
-                                    <TableHead>Department</TableHead>
-                                    <TableHead>Edit</TableHead>
-                                    <TableHead>Delete</TableHead>
-                                </TableRow>
-                            </TableHeader>
-                            <TableBody>
-                                {hods.map((hod: any, index: number) =>
-                                    !hod?.name?.toString()
-                                        .toLowerCase()
-                                        .includes(search.toLowerCase()) &&
-                                    !hod?.title?.toString()
-                                        .toLowerCase()
-                                        .includes(search.toLowerCase()) ? (
-                                        ""
-                                    ) : (
-                                        <TableRow key={index}>
-                                            <TableCell>
-                                                <span className="text-md">{hod?.name}</span>
-                                                <br />
-                                                <span className="text-sm">
-                                                    {hod?.faculty?.title}
-                                                </span>
-                                                <br />
-                                                <span className="text-sm opacity-50">
-                                                    {hod?.email}
-                                                </span>
-                                            </TableCell>
-                                            <TableCell>{hod.department.name}</TableCell>
-                                            <TableCell>
-                                                <Button
-                                                    variant={"outline"}
-                                                    size={"icon"}
-                                                    onClick={() => {
-                                                        setEditMode(true);
-                                                        setEditHodId(hod._id);
-                                                        setFacultyId(hod.facultyId);
-                                                        setDepartmentId(hod.departmentId);
-                                                        sheetTrigger.current.click();
-                                                    }}
-                                                >
-                                                    <Edit />
-                                                </Button>
-                                            </TableCell>
-                                            <TableCell>
-                                                <AlertDialog>
-                                                    <AlertDialogTrigger asChild>
-                                                        <Button variant={"outline"} size={"icon"}>
-                                                            <Trash />
-                                                        </Button>
-                                                    </AlertDialogTrigger>
-                                                    <AlertDialogContent>
-                                                        <AlertDialogHeader>
-                                                            <AlertDialogTitle>
-                                                                Delete &apos;{hod.name}
-                                                                &apos; from HODs?
-                                                            </AlertDialogTitle>
-                                                            <AlertDialogDescription>
-                                                                This action cannot be undone. This
-                                                                will permanently delete {hod.name}{" "}
-                                                                from HOD list.
-                                                            </AlertDialogDescription>
-                                                        </AlertDialogHeader>
-                                                        <AlertDialogFooter>
-                                                            <AlertDialogCancel>
-                                                                Cancel
-                                                            </AlertDialogCancel>
-                                                            <AlertDialogAction
-                                                                className={cn(
-                                                                    buttonVariants({
-                                                                        variant: "destructive",
-                                                                    }),
-                                                                )}
-                                                                onClick={() => deleteHod(hod._id)}
+                        {loading ? (
+                            <div className="p-5 flex w-full justify-center">
+                                <Loader2 className="mr-2 animate-spin" /> Loading HODs...
+                            </div>
+                        ) : (
+                            <Table>
+                                <TableCaption>{hods.length} HODs</TableCaption>
+                                <TableHeader>
+                                    <TableRow>
+                                        <TableHead>Faculty</TableHead>
+                                        <TableHead>Department</TableHead>
+                                        <TableHead>Edit</TableHead>
+                                        <TableHead>Delete</TableHead>
+                                    </TableRow>
+                                </TableHeader>
+                                <TableBody>
+                                    {hods.map((hod: any, index: number) =>
+                                        !hod?.name
+                                            ?.toString()
+                                            .toLowerCase()
+                                            .includes(search.toLowerCase()) &&
+                                        !hod?.title
+                                            ?.toString()
+                                            .toLowerCase()
+                                            .includes(search.toLowerCase()) ? (
+                                            ""
+                                        ) : (
+                                            <TableRow key={index}>
+                                                <TableCell>
+                                                    <span className="text-md">{hod?.name}</span>
+                                                    <br />
+                                                    <span className="text-sm">
+                                                        {hod?.faculty?.title}
+                                                    </span>
+                                                    <br />
+                                                    <span className="text-sm opacity-50">
+                                                        {hod?.email}
+                                                    </span>
+                                                </TableCell>
+                                                <TableCell>{hod.department.name}</TableCell>
+                                                <TableCell>
+                                                    <Button
+                                                        variant={"outline"}
+                                                        size={"icon"}
+                                                        onClick={() => {
+                                                            setEditMode(true);
+                                                            setEditHodId(hod._id);
+                                                            setFacultyId(hod.facultyId);
+                                                            setDepartmentId(hod.departmentId);
+                                                            sheetTrigger.current.click();
+                                                        }}
+                                                    >
+                                                        <Edit />
+                                                    </Button>
+                                                </TableCell>
+                                                <TableCell>
+                                                    <AlertDialog>
+                                                        <AlertDialogTrigger asChild>
+                                                            <Button
+                                                                variant={"outline"}
+                                                                size={"icon"}
                                                             >
-                                                                Delete
-                                                            </AlertDialogAction>
-                                                        </AlertDialogFooter>
-                                                    </AlertDialogContent>
-                                                </AlertDialog>
-                                            </TableCell>
-                                        </TableRow>
-                                    ),
-                                )}
-                            </TableBody>
-                        </Table>
+                                                                <Trash />
+                                                            </Button>
+                                                        </AlertDialogTrigger>
+                                                        <AlertDialogContent>
+                                                            <AlertDialogHeader>
+                                                                <AlertDialogTitle>
+                                                                    Delete &apos;{hod.name}
+                                                                    &apos; from HODs?
+                                                                </AlertDialogTitle>
+                                                                <AlertDialogDescription>
+                                                                    This action cannot be undone.
+                                                                    This will permanently delete{" "}
+                                                                    {hod.name} from HOD list.
+                                                                </AlertDialogDescription>
+                                                            </AlertDialogHeader>
+                                                            <AlertDialogFooter>
+                                                                <AlertDialogCancel>
+                                                                    Cancel
+                                                                </AlertDialogCancel>
+                                                                <AlertDialogAction
+                                                                    className={cn(
+                                                                        buttonVariants({
+                                                                            variant: "destructive",
+                                                                        }),
+                                                                    )}
+                                                                    onClick={() =>
+                                                                        deleteHod(hod._id)
+                                                                    }
+                                                                >
+                                                                    Delete
+                                                                </AlertDialogAction>
+                                                            </AlertDialogFooter>
+                                                        </AlertDialogContent>
+                                                    </AlertDialog>
+                                                </TableCell>
+                                            </TableRow>
+                                        ),
+                                    )}
+                                </TableBody>
+                            </Table>
+                        )}
                     </div>
                 </div>
             ) : (

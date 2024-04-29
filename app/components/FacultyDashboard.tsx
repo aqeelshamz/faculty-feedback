@@ -2,13 +2,14 @@
 import { Card, CardContent, CardTitle } from "@/components/ui/card";
 import { serverURL } from "@/lib/utils";
 import axios from "axios";
-import { GraduationCap, StickyNote, User, Users } from "lucide-react";
+import { GraduationCap, Loader2, StickyNote, User, Users } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
 
 export default function FacultyDashboard() {
     const router = useRouter();
+    const [loading, setLoading] = useState(false);
 
     const [allCounts, setAllCounts] = useState({
         departmentCount: 0,
@@ -53,7 +54,11 @@ export default function FacultyDashboard() {
                         <StickyNote className="h-6 w-6" />
                     </div>
                     <CardContent>
-                        <p className="text-4xl font-bold">{allCounts?.feedbackCount}</p>
+                        {loading ? (
+                            <Loader2 className="mr-2 animate-spin" />
+                        ) : (
+                            <p className="text-4xl font-bold">{allCounts?.feedbackCount}</p>
+                        )}
                     </CardContent>
                 </Card>
                 <Card
@@ -65,7 +70,11 @@ export default function FacultyDashboard() {
                         <GraduationCap className="h-6 w-6" />
                     </div>
                     <CardContent>
-                        <p className="text-4xl font-bold">{allCounts?.programCount}</p>
+                        {loading ? (
+                            <Loader2 className="mr-2 animate-spin" />
+                        ) : (
+                            <p className="text-4xl font-bold">{allCounts?.programCount}</p>
+                        )}
                     </CardContent>
                 </Card>
                 <Card
@@ -77,7 +86,11 @@ export default function FacultyDashboard() {
                         <User className="h-6 w-6" />
                     </div>
                     <CardContent>
-                        <p className="text-4xl font-bold">{allCounts?.batchCount}</p>
+                        {loading ? (
+                            <Loader2 className="mr-2 animate-spin" />
+                        ) : (
+                            <p className="text-4xl font-bold">{allCounts?.batchCount}</p>
+                        )}
                     </CardContent>
                 </Card>
                 <Card
@@ -89,7 +102,11 @@ export default function FacultyDashboard() {
                         <Users className="h-6 w-6" />
                     </div>
                     <CardContent>
-                        <p className="text-4xl font-bold">{allCounts?.studentCount}</p>
+                        {loading ? (
+                            <Loader2 className="mr-2 animate-spin" />
+                        ) : (
+                            <p className="text-4xl font-bold">{allCounts?.studentCount}</p>
+                        )}
                     </CardContent>
                 </Card>
             </div>

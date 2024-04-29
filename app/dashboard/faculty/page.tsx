@@ -45,7 +45,7 @@ import {
     AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
 import { useUserStore } from "@/store";
-import { Edit, Trash } from "lucide-react";
+import { Edit, Loader2, Trash } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import { cn, serverURL } from "@/lib/utils";
 import axios from "axios";
@@ -63,6 +63,7 @@ export default function Page() {
     const [facultyRole, setFacultyRole] = useState("");
     const [gender, setGender] = useState("M");
 
+    const [loading, setLoading] = useState(false);
     const [editFacultyId, setEditFacultyId] = useState("");
     const sheetTrigger = useRef<any>();
     const [editMode, setEditMode] = useState(false);
@@ -81,7 +82,7 @@ export default function Page() {
                 password,
                 title,
                 role: facultyRole,
-                gender
+                gender,
             },
         };
 
@@ -153,6 +154,7 @@ export default function Page() {
     };
 
     const getFaculties = async () => {
+        setLoading(true);
         const config = {
             method: "GET",
             url: `${serverURL}/faculty`,
@@ -165,6 +167,7 @@ export default function Page() {
         axios(config)
             .then((response) => {
                 setFaculties(response?.data?.data.reverse());
+                setLoading(false);
             })
             .catch((err) => {
                 toast.error(err.response?.data?.message);
@@ -332,96 +335,106 @@ export default function Page() {
                         </div>
                     </div>
                     <div className="m-10">
-                        <Table>
-                            <TableCaption>{faculties.length} faculties</TableCaption>
-                            <TableHeader>
-                                <TableRow>
-                                    <TableHead>Name</TableHead>
-                                    <TableHead>Email</TableHead>
-                                    <TableHead>Title</TableHead>
-                                    <TableHead>Role</TableHead>
-                                    <TableHead>Edit</TableHead>
-                                    <TableHead>Delete</TableHead>
-                                </TableRow>
-                            </TableHeader>
-                            <TableBody>
-                                {faculties.map((faculty: any, index: number) =>
-                                    !faculty.name
-                                        .toString()
-                                        .toLowerCase()
-                                        .includes(search.toLowerCase()) &&
-                                    !faculty.title
-                                        .toString()
-                                        .toLowerCase()
-                                        .includes(search.toLowerCase()) ? (
-                                        ""
-                                    ) : (
-                                        <TableRow key={index}>
-                                            <TableCell>{faculty.name}</TableCell>
-                                            <TableCell>{faculty.email}</TableCell>
-                                            <TableCell>{faculty.title}</TableCell>
-                                            <TableCell>{faculty.role}</TableCell>
-                                            <TableCell>
-                                                <Button
-                                                    variant={"outline"}
-                                                    size={"icon"}
-                                                    onClick={() => {
-                                                        setEditMode(true);
-                                                        setEditFacultyId(faculty._id);
-                                                        setName(faculty.name);
-                                                        setEmail(faculty.email);
-                                                        setTitle(faculty.title);
-                                                        setFacultyRole(faculty.facultyRole);
-                                                        sheetTrigger.current.click();
-                                                    }}
-                                                >
-                                                    <Edit />
-                                                </Button>
-                                            </TableCell>
-                                            <TableCell>
-                                                <AlertDialog>
-                                                    <AlertDialogTrigger asChild>
-                                                        <Button variant={"outline"} size={"icon"}>
-                                                            <Trash />
-                                                        </Button>
-                                                    </AlertDialogTrigger>
-                                                    <AlertDialogContent>
-                                                        <AlertDialogHeader>
-                                                            <AlertDialogTitle>
-                                                                Delete {faculty.name} from
-                                                                faculties?
-                                                            </AlertDialogTitle>
-                                                            <AlertDialogDescription>
-                                                                This action cannot be undone. This
-                                                                will permanently delete
-                                                                {faculty.name} from faculty list.
-                                                            </AlertDialogDescription>
-                                                        </AlertDialogHeader>
-                                                        <AlertDialogFooter>
-                                                            <AlertDialogCancel>
-                                                                Cancel
-                                                            </AlertDialogCancel>
-                                                            <AlertDialogAction
-                                                                className={cn(
-                                                                    buttonVariants({
-                                                                        variant: "destructive",
-                                                                    }),
-                                                                )}
-                                                                onClick={() =>
-                                                                    deleteFaculty(faculty._id)
-                                                                }
+                        {loading ? (
+                            <div className="p-5 flex w-full justify-center">
+                                <Loader2 className="mr-2 animate-spin" /> Loading faculties...
+                            </div>
+                        ) : (
+                            <Table>
+                                <TableCaption>{faculties.length} faculties</TableCaption>
+                                <TableHeader>
+                                    <TableRow>
+                                        <TableHead>Name</TableHead>
+                                        <TableHead>Email</TableHead>
+                                        <TableHead>Title</TableHead>
+                                        <TableHead>Role</TableHead>
+                                        <TableHead>Edit</TableHead>
+                                        <TableHead>Delete</TableHead>
+                                    </TableRow>
+                                </TableHeader>
+                                <TableBody>
+                                    {faculties.map((faculty: any, index: number) =>
+                                        !faculty.name
+                                            .toString()
+                                            .toLowerCase()
+                                            .includes(search.toLowerCase()) &&
+                                        !faculty.title
+                                            .toString()
+                                            .toLowerCase()
+                                            .includes(search.toLowerCase()) ? (
+                                            ""
+                                        ) : (
+                                            <TableRow key={index}>
+                                                <TableCell>{faculty.name}</TableCell>
+                                                <TableCell>{faculty.email}</TableCell>
+                                                <TableCell>{faculty.title}</TableCell>
+                                                <TableCell>{faculty.role}</TableCell>
+                                                <TableCell>
+                                                    <Button
+                                                        variant={"outline"}
+                                                        size={"icon"}
+                                                        onClick={() => {
+                                                            setEditMode(true);
+                                                            setEditFacultyId(faculty._id);
+                                                            setName(faculty.name);
+                                                            setEmail(faculty.email);
+                                                            setTitle(faculty.title);
+                                                            setFacultyRole(faculty.facultyRole);
+                                                            sheetTrigger.current.click();
+                                                        }}
+                                                    >
+                                                        <Edit />
+                                                    </Button>
+                                                </TableCell>
+                                                <TableCell>
+                                                    <AlertDialog>
+                                                        <AlertDialogTrigger asChild>
+                                                            <Button
+                                                                variant={"outline"}
+                                                                size={"icon"}
                                                             >
-                                                                Delete
-                                                            </AlertDialogAction>
-                                                        </AlertDialogFooter>
-                                                    </AlertDialogContent>
-                                                </AlertDialog>
-                                            </TableCell>
-                                        </TableRow>
-                                    ),
-                                )}
-                            </TableBody>
-                        </Table>
+                                                                <Trash />
+                                                            </Button>
+                                                        </AlertDialogTrigger>
+                                                        <AlertDialogContent>
+                                                            <AlertDialogHeader>
+                                                                <AlertDialogTitle>
+                                                                    Delete {faculty.name} from
+                                                                    faculties?
+                                                                </AlertDialogTitle>
+                                                                <AlertDialogDescription>
+                                                                    This action cannot be undone.
+                                                                    This will permanently delete
+                                                                    {faculty.name} from faculty
+                                                                    list.
+                                                                </AlertDialogDescription>
+                                                            </AlertDialogHeader>
+                                                            <AlertDialogFooter>
+                                                                <AlertDialogCancel>
+                                                                    Cancel
+                                                                </AlertDialogCancel>
+                                                                <AlertDialogAction
+                                                                    className={cn(
+                                                                        buttonVariants({
+                                                                            variant: "destructive",
+                                                                        }),
+                                                                    )}
+                                                                    onClick={() =>
+                                                                        deleteFaculty(faculty._id)
+                                                                    }
+                                                                >
+                                                                    Delete
+                                                                </AlertDialogAction>
+                                                            </AlertDialogFooter>
+                                                        </AlertDialogContent>
+                                                    </AlertDialog>
+                                                </TableCell>
+                                            </TableRow>
+                                        ),
+                                    )}
+                                </TableBody>
+                            </Table>
+                        )}
                     </div>
                 </div>
             ) : (
