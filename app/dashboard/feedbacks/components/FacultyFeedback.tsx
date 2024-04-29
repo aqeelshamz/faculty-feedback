@@ -83,7 +83,8 @@ export default function FacultyFeedback() {
             data: {
                 title,
                 description,
-                course,
+                color: "black",
+                courseId: course,
             },
         };
 
@@ -95,6 +96,9 @@ export default function FacultyFeedback() {
                 setCourse("");
                 getFeedbacks();
                 getCourses();
+                router.push(
+                    `/dashboard/feedbacks/edit/${response.data.data?._id}`,
+                )
             })
             .catch((err) => {
                 toast.error(err.response?.data?.message);
