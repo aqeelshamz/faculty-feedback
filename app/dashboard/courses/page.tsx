@@ -452,7 +452,7 @@ export default function Page() {
                                                 <TableCell>{course.courseCode}</TableCell>
                                                 <TableCell>{course.semester.name}</TableCell>
                                                 <TableCell>
-                                                    {course?.faculties.map(
+                                                    {course?.faculties?.map(
                                                         (faculty: any, index: number) => {
                                                             return (
                                                                 <p className="mb-2">
