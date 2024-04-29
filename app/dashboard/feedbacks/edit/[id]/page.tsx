@@ -42,6 +42,7 @@ import { cn, feedbackFormColors, serverURL } from "@/lib/utils";
 import axios from "axios";
 import { Toaster, toast } from "sonner";
 import { Textarea } from "@/components/ui/textarea";
+import { Switch } from "@/components/ui/switch";
 
 export default function EditFeedback() {
     const { id } = useParams();
@@ -55,6 +56,8 @@ export default function EditFeedback() {
     const [prompt, setPrompt] = useState("");
 
     const [isActive, setIsActive] = useState<boolean>(false);
+
+    console.log(questions);
 
     const getFeedback = async (id: any) => {
         const colorData: any = {
@@ -259,9 +262,8 @@ export default function EditFeedback() {
                                     {question.settings?.type === "text" ? (
                                         <div className="flex items-center space-x-2 w-full">
                                             <p className="text-lg">{index + 1 + "."}</p>
-                                            <Input
+                                            <Textarea
                                                 placeholder="Question"
-                                                type="text"
                                                 value={question.question}
                                                 onChange={(x) => {
                                                     question.question = x.target.value;
@@ -273,9 +275,8 @@ export default function EditFeedback() {
                                         <div className="flex w-full flex-col space-y-4">
                                             <div className="flex items-center space-x-2">
                                                 <p className="text-lg">{index + 1 + "."}</p>
-                                                <Input
+                                                <Textarea
                                                     placeholder="Question"
-                                                    type="text"
                                                     value={question.question}
                                                     onChange={(x) => {
                                                         question.question = x.target.value;
@@ -288,9 +289,9 @@ export default function EditFeedback() {
                                         <div className="flex flex-col w-full space-y-4">
                                             <div className="flex items-center space-x-2">
                                                 <p className="text-lg">{index + 1 + "."}</p>
-                                                <Input
+                                                <Textarea
+                                                    className="w-[90%]"
                                                     placeholder="Question"
-                                                    type="text"
                                                     value={question.question}
                                                     onChange={(x) => {
                                                         question.question = x.target.value;
@@ -322,9 +323,8 @@ export default function EditFeedback() {
                                         <div className="flex flex-col w-full space-y-4">
                                             <div className="flex items-center space-x-2">
                                                 <p className="text-lg">{index + 1 + "."}</p>
-                                                <Input
+                                                <Textarea
                                                     placeholder="Question"
-                                                    type="text"
                                                     value={question.question}
                                                     onChange={(x) => {
                                                         question.question = x.target.value;
@@ -337,54 +337,63 @@ export default function EditFeedback() {
                                         ""
                                     )}
 
-                                    <div className="flex flex-row space-x-4">
-                                        <Select
-                                            onValueChange={(x) => {
-                                                question.settings.type = x;
-                                                setQuestions([...questions]);
-                                            }}
-                                            value={question.settings.type}
-                                        >
-                                            <SelectTrigger className="w-[180px]">
-                                                <SelectValue placeholder="Course" />
-                                            </SelectTrigger>
-                                            <SelectContent>
-                                                <SelectGroup>
-                                                    <SelectLabel>Question Type</SelectLabel>
-                                                    <SelectItem key={index} value={"text"}>
-                                                        Text
-                                                    </SelectItem>
-                                                    <SelectItem key={index} value={"longtext"}>
-                                                        Long Text
-                                                    </SelectItem>
-                                                    <SelectItem
-                                                        key={index}
-                                                        value={"multiplechoice"}
-                                                    >
-                                                        Multiple Choice
-                                                    </SelectItem>
-                                                    <SelectItem key={index} value={"rating"}>
-                                                        Rating
-                                                    </SelectItem>
-                                                </SelectGroup>
-                                            </SelectContent>
-                                        </Select>
-                                        <Button
-                                            variant={"destructive"}
-                                            onClick={() => {
-                                                setQuestions(
-                                                    questions.filter(
-                                                        (_: any, i: any) => i !== index,
-                                                    ),
-                                                );
-                                            }}
-                                        >
-                                            <Trash2 />
-                                        </Button>
+                                    <div className="">
+                                        <div className="flex flex-row space-x-4">
+                                            <Select
+                                                onValueChange={(x) => {
+                                                    question.settings.type = x;
+                                                    setQuestions([...questions]);
+                                                }}
+                                                value={question.settings.type}
+                                            >
+                                                <SelectTrigger className="w-[180px]">
+                                                    <SelectValue placeholder="Course" />
+                                                </SelectTrigger>
+                                                <SelectContent>
+                                                    <SelectGroup>
+                                                        <SelectLabel>Question Type</SelectLabel>
+                                                        <SelectItem key={index} value={"text"}>
+                                                            Text
+                                                        </SelectItem>
+                                                        <SelectItem key={index} value={"longtext"}>
+                                                            Long Text
+                                                        </SelectItem>
+                                                        <SelectItem
+                                                            key={index}
+                                                            value={"multiplechoice"}
+                                                        >
+                                                            Multiple Choice
+                                                        </SelectItem>
+                                                        <SelectItem key={index} value={"rating"}>
+                                                            Rating
+                                                        </SelectItem>
+                                                    </SelectGroup>
+                                                </SelectContent>
+                                            </Select>
+                                            <Button
+                                                variant={"destructive"}
+                                                onClick={() => {
+                                                    setQuestions(
+                                                        questions.filter(
+                                                            (_: any, i: any) => i !== index,
+                                                        ),
+                                                    );
+                                                }}
+                                            >
+                                                <Trash2 />
+                                            </Button>
+                                        </div>
+                                        <div className="flex flex-row justify-center space-x-2 mt-5 mx-auto">
+                                            <p>Required</p>
+                                            <Switch
+                                                checked={question.settings.required}
+                                                onCheckedChange={(x) => {
+                                                    question.settings.required = x;
+                                                    setQuestions([...questions]);
+                                                }}
+                                            />
+                                        </div>
                                     </div>
-                                </div>
-                                <div className="flex w-fit">
-                                    <Input placeholder="Answer" type="text" disabled />
                                 </div>
                             </div>
                         </CardContent>
