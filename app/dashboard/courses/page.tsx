@@ -191,7 +191,6 @@ export default function Page() {
     };
 
     const getSemesters = async (programId: string) => {
-        if (programId == "") return setSemesters([]);
         const config = {
             method: "POST",
             url: `${serverURL}/semester/get-all-by-program/${programId}`,
@@ -236,7 +235,9 @@ export default function Page() {
     }, []);
 
     useEffect(() => {
-        getSemesters(program);
+        if (program) {
+            getSemesters(program);
+        }
     }, [program])
 
     const sheetTrigger = useRef<any>();

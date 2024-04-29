@@ -48,7 +48,6 @@ import {
 } from "@/components/ui/alert-dialog";
 import { useUserStore } from "@/store";
 import { useRouter } from "next/navigation";
-import { departments, programs } from "@/lib/data";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { cn, serverURL } from "@/lib/utils";
 import { CalendarIcon, Edit, Trash } from "lucide-react";
@@ -68,6 +67,9 @@ export default function Page() {
     const [search, setSearch] = useState("");
 
     const [batches, setBatches] = useState<any>([]);
+    const [departments, setDepartments] = useState<any>([]);
+    const [programs, setPrograms] = useState<any>([]);
+
     const [editBatchId, setEditBatchId] = useState("");
     const sheetTrigger = useRef<any>();
     const [editMode, setEditMode] = useState(false);
@@ -82,10 +84,9 @@ export default function Page() {
             },
             data: {
                 name: name,
-                department: department,
-                porgram: program,
-                startDate: startDate,
-                endDate: endDate,
+                programId: program,
+                startYear: startDate?.getFullYear(),
+                endYear: endDate?.getFullYear(),
             },
         };
 
@@ -175,9 +176,54 @@ export default function Page() {
             });
     };
 
+    const getDepartments = async () => {
+        const config = {
+            method: "GET",
+            url: `${serverURL}/department`,
+            headers: {
+                Authorization: `Bearer ${localStorage.getItem("token")}`,
+                "Content-Type": "application/json",
+            },
+        };
+
+        axios(config)
+            .then((response) => {
+                setDepartments(response?.data?.data);
+            })
+            .catch((err) => {
+                toast.error(err.response?.data?.message);
+            });
+    };
+
+    const getProgramsByDepartment = async () => {
+        const config = {
+            method: "POST",
+            url: `${serverURL}/program/get-all-by-department/${department}`,
+            headers: {
+                Authorization: `Bearer ${localStorage.getItem("token")}`,
+                "Content-Type": "application/json",
+            },
+        };
+
+        axios(config)
+            .then((response) => {
+                setPrograms(response?.data?.data);
+            })
+            .catch((err) => {
+                toast.error(err.response?.data?.message);
+            });
+    };
+
     useEffect(() => {
         getBatches();
+        getDepartments();
     }, []);
+
+    useEffect(() => {
+        if (department) {
+            getProgramsByDepartment();
+        }
+    }, [department])
 
     return (
         <>
@@ -212,31 +258,31 @@ export default function Page() {
                                         <Label htmlFor="name" className="text-right">
                                             Name
                                         </Label>
-                                        <Input className="col-span-3" type="text" />
+                                        <Input className="col-span-3" type="text" value={name} onChange={(x) => setName(x.target.value)} />
                                     </div>
                                     <div className="grid grid-cols-4 items-center gap-4">
                                         <Label htmlFor="email" className="text-right">
                                             Department
                                         </Label>
-                                        <Select>
+                                        <Select value={department} onValueChange={(x) => setDepartment(x)}>
                                             <SelectTrigger className="col-span-3">
                                                 <SelectValue placeholder="Select department" />
                                             </SelectTrigger>
                                             <SelectContent>
                                                 <SelectGroup>
-                                                    <SelectLabel>Depatrments</SelectLabel>
-                                                    {/* {departments?.map(
+                                                    <SelectLabel>Departments</SelectLabel>
+                                                    {departments?.map(
                                                         (department: any, index: number) => {
                                                             return (
                                                                 <SelectItem
                                                                     key={index}
-                                                                    value={department?.name}
+                                                                    value={department?._id}
                                                                 >
                                                                     {department?.name}
                                                                 </SelectItem>
                                                             );
                                                         },
-                                                    )} */}
+                                                    )}
                                                 </SelectGroup>
                                             </SelectContent>
                                         </Select>
@@ -245,25 +291,25 @@ export default function Page() {
                                         <Label htmlFor="email" className="text-right">
                                             Program
                                         </Label>
-                                        <Select>
+                                        <Select value={program} onValueChange={(x) => setProgram(x)}>
                                             <SelectTrigger className="col-span-3">
                                                 <SelectValue placeholder="Select program" />
                                             </SelectTrigger>
                                             <SelectContent>
                                                 <SelectGroup>
                                                     <SelectLabel>Programs</SelectLabel>
-                                                    {/* {programs?.map(
+                                                    {programs?.map(
                                                         (program: any, index: number) => {
                                                             return (
                                                                 <SelectItem
                                                                     key={index}
-                                                                    value={program?.name}
+                                                                    value={program?._id}
                                                                 >
                                                                     {program?.name}
                                                                 </SelectItem>
                                                             );
                                                         },
-                                                    )} */}
+                                                    )}
                                                 </SelectGroup>
                                             </SelectContent>
                                         </Select>
@@ -369,8 +415,8 @@ export default function Page() {
                                     <TableHead>Name</TableHead>
                                     <TableHead>Department</TableHead>
                                     <TableHead>Program</TableHead>
-                                    <TableHead>Start Date</TableHead>
-                                    <TableHead>End Date</TableHead>
+                                    <TableHead>Start Year</TableHead>
+                                    <TableHead>End Year</TableHead>
                                     <TableHead>Edit</TableHead>
                                     <TableHead>Delete</TableHead>
                                 </TableRow>
@@ -380,17 +426,17 @@ export default function Page() {
                                     !batch.name?.toString()
                                         .toLowerCase()
                                         .includes(search.toLowerCase()) &&
-                                    !batch.department?.toString()
-                                        .toLowerCase()
-                                        .includes(search.toLowerCase()) ? (
+                                        !batch.department?.toString()
+                                            .toLowerCase()
+                                            .includes(search.toLowerCase()) ? (
                                         ""
                                     ) : (
                                         <TableRow key={index}>
                                             <TableCell>{batch?.name}</TableCell>
-                                            <TableCell>{batch?.department}</TableCell>
+                                            <TableCell>{batch?.department?.name}</TableCell>
                                             <TableCell>{batch?.program?.name}</TableCell>
-                                            <TableCell>{batch?.startDate}</TableCell>
-                                            <TableCell>{batch?.endDate}</TableCell>
+                                            <TableCell>{batch?.startYear}</TableCell>
+                                            <TableCell>{batch?.endYear}</TableCell>
                                             <TableCell>
                                                 <Button
                                                     variant={"outline"}
