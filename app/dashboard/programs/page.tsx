@@ -59,6 +59,8 @@ export default function Page() {
     const [name, setName] = useState("");
     const [hod, setHod] = useState("");
 
+    const [hods, setHods] = useState([]);
+
     //Edit Program
     const [editProgramId, setEditProgramId] = useState("");
 
@@ -77,7 +79,7 @@ export default function Page() {
             },
             data: {
                 name: name,
-                hod: hod,
+                hodId: hod,
             },
         };
 
@@ -103,7 +105,7 @@ export default function Page() {
             },
             data: {
                 name: name,
-                hod: hod,
+                hodId: hod,
             },
         };
 
@@ -159,8 +161,28 @@ export default function Page() {
             });
     };
 
+    const getHODs = async () => {
+        const config = {
+            method: "GET",
+            url: `${serverURL}/hod`,
+            headers: {
+                Authorization: `Bearer ${localStorage.getItem("token")}`,
+                "Content-Type": "application/json",
+            },
+        };
+
+        axios(config)
+            .then((response) => {
+                setHods(response?.data?.data);
+            })
+            .catch((err) => {
+                toast.error(err.response?.data?.message);
+            });
+    };
+
     useEffect(() => {
         getPrograms();
+        getHODs();
     }, []);
 
     return (
@@ -204,21 +226,24 @@ export default function Page() {
                                         <Label htmlFor="hod" className="text-right">
                                             HOD
                                         </Label>
-                                        <Select>
+                                        <Select
+                                            onValueChange={(x) => setHod(x)}
+                                            value={hod}
+                                        >
                                             <SelectTrigger className="col-span-3">
                                                 <SelectValue placeholder="Select HOD" />
                                             </SelectTrigger>
                                             <SelectContent>
                                                 <SelectGroup>
                                                     <SelectLabel>HOD</SelectLabel>
-                                                    {departments?.map(
-                                                        (department: any, index: number) => {
+                                                    {hods?.map(
+                                                        (hod: any, index: number) => {
                                                             return (
                                                                 <SelectItem
                                                                     key={index}
-                                                                    value={department?.name}
+                                                                    value={hod?._id}
                                                                 >
-                                                                    {department?.name}
+                                                                    {hod?.name}
                                                                 </SelectItem>
                                                             );
                                                         },
