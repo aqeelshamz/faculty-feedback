@@ -227,7 +227,7 @@ export default function EditFeedback() {
                                 />
                             </div>
                         </div>
-                        <Button variant={"outline"} className=" ml-2" onClick={() => { }}>
+                        <Button variant={"outline"} className=" ml-2" onClick={() => {}}>
                             <Eye />
                         </Button>
                         <Button className="w-44 ml-2" onClick={updateFeedback}>
@@ -286,7 +286,7 @@ export default function EditFeedback() {
                                             <div className="flex items-center space-x-2">
                                                 <p className="text-lg">{index + 1 + "."}</p>
                                                 <Textarea
-                                                    className="w-[90%]"
+                                                    className=""
                                                     placeholder="Question"
                                                     value={question.question}
                                                     onChange={(x) => {
@@ -308,12 +308,64 @@ export default function EditFeedback() {
                                                             </Label>
                                                             <Input
                                                                 placeholder={`Option ${index + 1}`}
-                                                                size={100}
+                                                                className="w-[90%]"
+                                                                value={option}
+                                                                onChange={(e) => {
+                                                                    question.options[index] =
+                                                                        e.target.value;
+
+                                                                    setQuestions([...questions]);
+                                                                }}
                                                             />
+                                                            <Button
+                                                                size={"sm"}
+                                                                variant={"ghost"}
+                                                                onClick={() => {
+                                                                    const updatedOptions = [
+                                                                        ...question.options,
+                                                                    ];
+                                                                    updatedOptions.splice(index, 1); // Remove the option at the specified index
+                                                                    setQuestions(
+                                                                        (prevQuestions) => {
+                                                                            const updatedQuestions =
+                                                                                [...prevQuestions];
+                                                                            updatedQuestions.forEach(
+                                                                                (q) => {
+                                                                                    if (
+                                                                                        q ===
+                                                                                        question
+                                                                                    ) {
+                                                                                        q.options =
+                                                                                            updatedOptions;
+                                                                                    }
+                                                                                },
+                                                                            );
+                                                                            return updatedQuestions;
+                                                                        },
+                                                                    );
+                                                                }}
+                                                            >
+                                                                <Trash2 size={16} />
+                                                            </Button>
                                                         </div>
                                                     ),
                                                 )}
                                             </div>
+                                            <Button
+                                                className="lg:w-[70%] md:w-[60%] w-[80%] ml-10 mx-auto"
+                                                onClick={() => {
+                                                    if (!question) return; // Ensure question exists before proceeding
+
+                                                    const updatedOptions = question.options
+                                                        ? [...question.options, ""]
+                                                        : [""];
+
+                                                    question.options = updatedOptions;
+                                                    setQuestions([...questions]); // Update the state with the modified questions array
+                                                }}
+                                            >
+                                                Add Option
+                                            </Button>
                                         </div>
                                     ) : question.settings?.type === "rating" ? (
                                         <div className="flex flex-col w-full space-y-4">
@@ -407,7 +459,7 @@ export default function EditFeedback() {
                                 question: "",
                                 settings: {
                                     type: "text",
-                                    required: false,
+                                    required: true,
                                     options: [],
                                 },
                             },
