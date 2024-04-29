@@ -1,7 +1,7 @@
 "use client";
 import { Button, buttonVariants } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { LuFilter } from "react-icons/lu";
+import { LuEye, LuFilter } from "react-icons/lu";
 import {
     Table,
     TableBody,
@@ -38,7 +38,7 @@ import { cn, serverURL } from "@/lib/utils";
 import axios from "axios";
 import { toast } from "sonner";
 import { Label } from "@/components/ui/label";
-import { Edit, Eye, Trash } from "lucide-react";
+import { Edit, Eye, FileText, Trash } from "lucide-react";
 import { DialogTrigger } from "@radix-ui/react-dialog";
 import {
     Dialog,
@@ -60,6 +60,7 @@ import {
     SelectValue,
 } from "@/components/ui/select";
 import { useRouter } from "next/navigation";
+import { formatDateString } from "@/lib/utils";
 
 export default function FacultyFeedback() {
     const role = useUserStore((state) => state.role);
@@ -96,9 +97,7 @@ export default function FacultyFeedback() {
                 setCourse("");
                 getFeedbacks();
                 getCourses();
-                router.push(
-                    `/dashboard/feedbacks/edit/${response.data.data?._id}`,
-                )
+                router.push(`/dashboard/feedbacks/edit/${response.data.data?._id}`);
             })
             .catch((err) => {
                 toast.error(err.response?.data?.message);
@@ -117,7 +116,13 @@ export default function FacultyFeedback() {
 
         axios(config)
             .then((response) => {
-                setFeedbacks(response?.data?.data);
+                const sortedFeedbacks = response?.data?.data.sort((a: any, b: any) => {
+                    const dateA = new Date(a.updatedAt);
+                    const dateB = new Date(b.updatedAt);
+                    return dateB.getTime() - dateA.getTime();
+                });
+
+                setFeedbacks(sortedFeedbacks);
             })
             .catch((err) => {
                 toast.error(err.response?.data?.message);
@@ -234,9 +239,12 @@ export default function FacultyFeedback() {
                     <TableCaption>{feedbacks.length} feedbacks</TableCaption>
                     <TableHeader>
                         <TableRow>
+                            <TableHead>Date</TableHead>
                             <TableHead>Title</TableHead>
                             <TableHead>Desciption</TableHead>
                             <TableHead>Course</TableHead>
+                            <TableHead>View</TableHead>
+                            <TableHead>Responses</TableHead>
                             <TableHead>Edit</TableHead>
                             <TableHead>Delete</TableHead>
                         </TableRow>
@@ -251,10 +259,6 @@ export default function FacultyFeedback() {
                                 .toString()
                                 .toLowerCase()
                                 .includes(search.toLowerCase()) &&
-                            !feedback.createdby
-                                .toString()
-                                .toLowerCase()
-                                .includes(search.toLowerCase()) &&
                             !feedback.description
                                 .toString()
                                 .toLowerCase()
@@ -262,9 +266,34 @@ export default function FacultyFeedback() {
                                 ""
                             ) : (
                                 <TableRow key={index}>
+                                    <TableCell>{formatDateString(feedback.createdAt)}</TableCell>
                                     <TableCell>{feedback.title}</TableCell>
                                     <TableCell>{feedback.description}</TableCell>
                                     <TableCell>{feedback.course.name}</TableCell>
+                                    <TableCell>
+                                        <Button
+                                            variant={"outline"}
+                                            size={"icon"}
+                                            onClick={() =>
+                                                router.push(`/feedbacks/view/${feedback._id}`)
+                                            }
+                                        >
+                                            <Eye />
+                                        </Button>
+                                    </TableCell>
+                                    <TableCell>
+                                        <Button
+                                            variant={"outline"}
+                                            size={"icon"}
+                                            onClick={() =>
+                                                router.push(
+                                                    `/dashboard/feedbacks/responses/${feedback._id}`,
+                                                )
+                                            }
+                                        >
+                                            <FileText />
+                                        </Button>
+                                    </TableCell>
                                     <TableCell>
                                         <Button
                                             variant={"outline"}
@@ -288,13 +317,13 @@ export default function FacultyFeedback() {
                                             <AlertDialogContent>
                                                 <AlertDialogHeader>
                                                     <AlertDialogTitle>
-                                                        Delete &apos;{feedback.name}
+                                                        Delete &apos;{feedback.title}
                                                         &apos; from feedbacks?
                                                     </AlertDialogTitle>
                                                     <AlertDialogDescription>
                                                         This action cannot be undone. This will
                                                         permanently delete
-                                                        {feedback.name} from feedback list.
+                                                        {feedback.title} from feedback list.
                                                     </AlertDialogDescription>
                                                 </AlertDialogHeader>
                                                 <AlertDialogFooter>

@@ -1,9 +1,5 @@
 "use client";
 
-export default function Page() {
-    return (
-        <>
-            Feedback Responses
-        </>
-    );
+export default function FeedbackResponses() {
+    return <>Feedback Responses</>;
 }

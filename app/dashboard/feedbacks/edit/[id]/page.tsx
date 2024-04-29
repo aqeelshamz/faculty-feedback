@@ -33,37 +33,6 @@ import axios from "axios";
 import { Toaster, toast } from "sonner";
 import { Textarea } from "@/components/ui/textarea";
 
-// create interface question where it should have questionType and question as string
-// type LongTextQuestion = {
-//     questionType: "longtext";
-//     question: string;
-// };
-
-// type TextQuestion = {
-//     questionType: "text";
-//     question: string;
-// };
-
-// type MCQQuestion = {
-//     questionType: "mcq";
-//     question: string;
-//     options: { option: string }[];
-// };
-
-// type RatingQuestion = {
-//     questionType: "rating";
-//     question: string;
-//     rating: number;
-// };
-
-// type Question = LongTextQuestion | MCQQuestion | RatingQuestion | TextQuestion;
-
-// const initialQuestion: Question = {
-//     questionType: "mcq",
-//     question: "",
-//     options: [{ option: "" }, { option: "" }, { option: "" }, { option: "" }],
-// };
-
 export default function EditFeedback() {
     const { id } = useParams();
 
@@ -214,7 +183,7 @@ export default function EditFeedback() {
                 <div className="flex flex-col justify-between space-y-4">
                     <div className="flex justify-between">
                         <Input
-                            className="text-2xl font-medium max-w-screen-lg h-15"
+                            className="text-2xl font-semibold max-w-screen-lg h-15"
                             placeholder="Title"
                             value={title}
                             onChange={(e) => setTitle(e.target.value)}
@@ -227,7 +196,7 @@ export default function EditFeedback() {
 
                     <Textarea
                         placeholder="Description"
-                        className="max-w-screen-lg"
+                        className="max-w-screen-lg text-lg font-medium"
                         value={description}
                         onChange={(e) => setDescription(e.target.value)}
                     />
@@ -269,40 +238,68 @@ export default function EditFeedback() {
                 </div>
             </div>
             {questions?.map((question: any, index: number) => {
-                return <Card key={index} className="max-w-screen-lg my-2 py-6 ">
-                    <CardContent>
-                        <Button variant={"destructive"} onClick={() => {
-                            setQuestions(questions.filter((_: any, i: any) => i !== index))
-                        }}><Trash2 /></Button>
-                        <Select onValueChange={(x)=>{
-                            question.settings.type = x;
-                            setQuestions([...questions]);
-                        }} value={question.settings.type}>
-                            <SelectTrigger className="w-[180px]">
-                                <SelectValue placeholder="Course" />
-                            </SelectTrigger>
-                            <SelectContent>
-                                <SelectGroup>
-                                    <SelectLabel>Question Type</SelectLabel>
-                                    <SelectItem key={index} value={"text"}>
-                                        Text
-                                    </SelectItem>
-                                    <SelectItem key={index} value={"longtext"}>
-                                        Long Text
-                                    </SelectItem>
-                                    <SelectItem key={index} value={"multiplechoice"}>
-                                        Multiple Choice
-                                    </SelectItem>
-                                    <SelectItem key={index} value={"rating"}>
-                                        Rating
-                                    </SelectItem>
-                                </SelectGroup>
-                            </SelectContent>
-                        </Select>
-                        {question.settings?.type === "text" ? <Input value={question.question} /> : ""}
-                    </CardContent>
-                    <CardFooter className="ml-10"></CardFooter>
-                </Card>
+                return (
+                    <Card key={index} className="max-w-screen-lg my-2 py-6 ">
+                        <CardContent>
+                            <div className="flex flex-row space-x-4 justify-between">
+                                <div className="flex flex-row space-x-4">
+                                    <Select
+                                        onValueChange={(x) => {
+                                            question.settings.type = x;
+                                            setQuestions([...questions]);
+                                        }}
+                                        value={question.settings.type}
+                                    >
+                                        <SelectTrigger className="w-[180px]">
+                                            <SelectValue placeholder="Course" />
+                                        </SelectTrigger>
+                                        <SelectContent>
+                                            <SelectGroup>
+                                                <SelectLabel>Question Type</SelectLabel>
+                                                <SelectItem key={index} value={"text"}>
+                                                    Text
+                                                </SelectItem>
+                                                <SelectItem key={index} value={"longtext"}>
+                                                    Long Text
+                                                </SelectItem>
+                                                <SelectItem key={index} value={"multiplechoice"}>
+                                                    Multiple Choice
+                                                </SelectItem>
+                                                <SelectItem key={index} value={"rating"}>
+                                                    Rating
+                                                </SelectItem>
+                                            </SelectGroup>
+                                        </SelectContent>
+                                    </Select>{" "}
+                                    <Button
+                                        variant={"destructive"}
+                                        onClick={() => {
+                                            setQuestions(
+                                                questions.filter((_: any, i: any) => i !== index),
+                                            );
+                                        }}
+                                    >
+                                        <Trash2 />
+                                    </Button>
+                                </div>
+                                {question.settings?.type === "text" ? (
+                                    <Input type="text" value={question.question} />
+                                ) : question.settings?.type === "longtext" ? (
+                                    <Textarea value={question.question} />
+                                ) : question.settings?.type === "longtext" ? (
+                                    <Textarea value={question.question} />
+                                ) : question.settings?.type === "multiplechoice" ? (
+                                    <Textarea value={question.question} />
+                                ) : question.settings?.type === "rating" ? (
+                                    <Slider defaultValue={[0]} max={5} step={1} />
+                                ) : (
+                                    ""
+                                )}
+                            </div>
+                        </CardContent>
+                        <CardFooter className="ml-10"></CardFooter>
+                    </Card>
+                );
             })}
             <Button
                 className="max-w-screen-lg w-full"
