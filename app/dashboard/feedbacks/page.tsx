@@ -14,7 +14,7 @@ import { LuFilter } from "react-icons/lu";
 import { Table, TableBody, TableCaption, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Edit, ExternalLink, Eye, FileText, Trash } from "lucide-react";
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from "@/components/ui/alert-dialog";
-import { cn, formatDateString, serverURL } from "@/lib/utils";
+import { cn, feedbackFormColors, formatDateString, serverURL } from "@/lib/utils";
 import axios from "axios";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
@@ -231,7 +231,7 @@ export default function Page() {
                                 ) : (
                                     <TableRow key={index}>
                                         <TableCell>{formatDateString(feedback.createdAt)}</TableCell>
-                                        <TableCell>{feedback.title}</TableCell>
+                                        <TableCell><div className="flex items-center"><div className="w-4 h-4 rounded-full mr-2" style={{ background: feedbackFormColors[feedback.color].darkBg }}></div>{feedback.title}</div></TableCell>
                                         <TableCell>{feedback.description}</TableCell>
                                         <TableCell>{feedback.course.name}</TableCell>
                                         <TableCell>
