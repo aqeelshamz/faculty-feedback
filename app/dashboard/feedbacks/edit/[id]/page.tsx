@@ -172,11 +172,12 @@ export default function EditFeedback() {
         axios(config)
             .then((response) => {
                 setQuestions([...questions, ...response.data.data]);
-                updateFeedback();
             })
             .catch((err) => {
                 toast.error(err.response?.data?.message);
             });
+
+        await updateFeedback();
     };
 
     useEffect(() => {
