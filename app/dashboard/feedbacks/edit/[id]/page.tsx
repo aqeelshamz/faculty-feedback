@@ -126,11 +126,6 @@ export default function EditFeedback() {
         axios(config)
             .then((response) => {
                 toast.success(response.data.message);
-                setTitle("");
-                setDescription("");
-                setCourseId("");
-                setColor("");
-                setQuestions([]);
                 getFeedback(id);
             })
             .catch((err) => {

@@ -12,7 +12,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { LuFilter } from "react-icons/lu";
 import { Table, TableBody, TableCaption, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import { Edit, Eye, FileText, Trash } from "lucide-react";
+import { Edit, ExternalLink, Eye, FileText, Trash } from "lucide-react";
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from "@/components/ui/alert-dialog";
 import { cn, formatDateString, serverURL } from "@/lib/utils";
 import axios from "axios";
@@ -242,7 +242,7 @@ export default function Page() {
                                                     window.open(`/feedbacks/view/${feedback._id}`)
                                                 }
                                             >
-                                                <Eye />
+                                                <ExternalLink />
                                             </Button>
                                         </TableCell>
                                         {role === "faculty" ? <TableCell>

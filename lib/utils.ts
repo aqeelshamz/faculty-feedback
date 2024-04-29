@@ -7,9 +7,9 @@ export function cn(...inputs: ClassValue[]) {
 
 const feedbackFormColors = <any>{
     black: {
-        lightBg: "#C3DDFD",
+        lightBg: "#ffffff",
         darkBg: "#000000",
-        text: "#1E429F",
+        text: "#000000",
     },
     red: {
         lightBg: "#ffa7a1",
@@ -17,14 +17,14 @@ const feedbackFormColors = <any>{
         text: "#5c110c",
     },
     yellow: {
-        lightBg: "#C3DDFD",
+        lightBg: "#ffefb0",
         darkBg: "#ebc334",
-        text: "#1E429F",
+        text: "#423916",
     },
     green: {
-        lightBg: "#C3DDFD",
+        lightBg: "#c7f5b5",
         darkBg: "#68eb34",
-        text: "#1E429F",
+        text: "#1e4011",
     },
     blue: {
         lightBg: "#C3DDFD",
