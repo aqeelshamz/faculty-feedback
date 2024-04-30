@@ -12,8 +12,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { CheckCircle2, ChevronDown, ChevronUp, XCircle } from "lucide-react";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Label } from "@/components/ui/label";
-import Confetti from "react-canvas-confetti";
-import FireworksConfetti from "../../../components/Fireworks";
+import Fireworks from "react-canvas-confetti/dist/presets/fireworks";
 
 export default function ViewFeedback() {
     const { id } = useParams();
@@ -110,6 +109,8 @@ export default function ViewFeedback() {
         console.log(responses);
     }, [responses]);
 
+    const [showConfetti, setShowConfetti] = useState(false);
+
     return (
         <div
             className={`flex w-screen h-screen flex-col justify-between items-center`}
@@ -118,7 +119,7 @@ export default function ViewFeedback() {
                 color: feedbackFormColors[feedback?.color]?.text,
             }}
         >
-            <FireworksConfetti durationUntilStop={5000} />
+            {status.success ? <Fireworks autorun={{speed: 1}} />: ""}
             <Progress
                 value={
                     feedback?.questions === undefined
