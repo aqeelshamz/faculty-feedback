@@ -34,7 +34,7 @@ import {
 } from "@/components/ui/dialog";
 import { Slider } from "@/components/ui/slider";
 import { Label } from "@/components/ui/label";
-import { Sparkles, Pen, Plus, Eye } from "lucide-react";
+import { Sparkles, Pen, Plus, Eye, Star, ListIcon, TextCursorInputIcon, Text } from "lucide-react";
 
 import { Trash2 } from "lucide-react";
 import { useParams } from "next/navigation";
@@ -43,6 +43,7 @@ import axios from "axios";
 import { Toaster, toast } from "sonner";
 import { Textarea } from "@/components/ui/textarea";
 import { Switch } from "@/components/ui/switch";
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 
 export default function EditFeedback() {
     const { id } = useParams();
@@ -227,7 +228,9 @@ export default function EditFeedback() {
                                 />
                             </div>
                         </div>
-                        <Button variant={"outline"} className=" ml-2" onClick={() => { }}>
+                        <Button variant={"outline"} className=" ml-2" onClick={() => {
+                            window.open(`/feedbacks/view/${id}`);
+                        }}>
                             <Eye />
                         </Button>
                         <Button className="w-44 ml-2" onClick={updateFeedback}>
@@ -256,9 +259,9 @@ export default function EditFeedback() {
                             <div className="flex flex-col space-y-4">
                                 <div className="flex flex-row space-x-4 justify-between">
                                     {question.settings?.type === "text" ? (
-                                        <div className="flex items-center space-x-2 w-full">
+                                        <div className="flex space-x-2 w-full">
                                             <p className="text-lg">{index + 1 + "."}</p>
-                                            <Textarea
+                                            <Input
                                                 placeholder="Question"
                                                 value={question.question}
                                                 onChange={(x) => {
@@ -271,7 +274,7 @@ export default function EditFeedback() {
                                         <div className="flex w-full flex-col space-y-4">
                                             <div className="flex items-center space-x-2">
                                                 <p className="text-lg">{index + 1 + "."}</p>
-                                                <Textarea
+                                                <Input
                                                     placeholder="Question"
                                                     value={question.question}
                                                     onChange={(x) => {
@@ -285,7 +288,7 @@ export default function EditFeedback() {
                                         <div className="flex flex-col w-full space-y-4">
                                             <div className="flex items-center space-x-2">
                                                 <p className="text-lg">{index + 1 + "."}</p>
-                                                <Textarea
+                                                <Input
                                                     className=""
                                                     placeholder="Question"
                                                     value={question.question}
@@ -351,21 +354,23 @@ export default function EditFeedback() {
                                                     ),
                                                 )}
                                             </div>
-                                            <Button
-                                                className="lg:w-[70%] md:w-[60%] w-[80%] ml-10 mx-auto"
-                                                onClick={() => {
-                                                    if (!question) return; // Ensure question exists before proceeding
+                                            <div>
+                                                <Button
+                                                    className="lg:w-[70%] md:w-[60%] w-[80%] ml-10 mx-auto"
+                                                    onClick={() => {
+                                                        if (!question) return; // Ensure question exists before proceeding
 
-                                                    const updatedOptions = question.settings.options
-                                                        ? [...question.settings.options, ""]
-                                                        : [""];
+                                                        const updatedOptions = question.settings.options
+                                                            ? [...question.settings.options, ""]
+                                                            : [""];
 
-                                                    question.settings.options = updatedOptions;
-                                                    setQuestions([...questions]); // Update the state with the modified questions array
-                                                }}
-                                            >
-                                                Add Option
-                                            </Button>
+                                                        question.settings.options = updatedOptions;
+                                                        setQuestions([...questions]); // Update the state with the modified questions array
+                                                    }}
+                                                >
+                                                    + Add Option
+                                                </Button>
+                                            </div>
                                         </div>
                                     ) : question.settings?.type === "rating" ? (
                                         <div className="flex flex-col w-full space-y-4">
@@ -379,6 +384,18 @@ export default function EditFeedback() {
                                                         setQuestions([...questions]);
                                                     }}
                                                 />
+                                            </div>
+                                            <div className="flex">
+                                                {Array(5)
+                                                    .fill(0)
+                                                    .map((_, index) => (
+                                                        <div
+                                                            key={index}
+                                                            className={"flex duration-100 items-center justify-center w-14 h-14 rounded-full border-2 hover:scale-110 cursor-pointer mr-2 text-xl font-semibold"}
+                                                        >
+                                                            {index + 1}
+                                                        </div>
+                                                    ))}
                                             </div>
                                         </div>
                                     ) : (
@@ -401,19 +418,19 @@ export default function EditFeedback() {
                                                     <SelectGroup>
                                                         <SelectLabel>Question Type</SelectLabel>
                                                         <SelectItem key={index} value={"text"}>
-                                                            Text
+                                                            <div className="flex items-center"><TextCursorInputIcon className="mr-2" />Text</div>
                                                         </SelectItem>
                                                         <SelectItem key={index} value={"longtext"}>
-                                                            Long Text
+                                                            <div className="flex items-center"><Text className="mr-2" />Long Text</div>
                                                         </SelectItem>
                                                         <SelectItem
                                                             key={index}
                                                             value={"multiplechoice"}
                                                         >
-                                                            Multiple Choice
+                                                            <div className="flex items-center"><ListIcon className="mr-2" />Multiple Choice</div>
                                                         </SelectItem>
                                                         <SelectItem key={index} value={"rating"}>
-                                                            Rating
+                                                            <div className="flex items-center"><Star className="mr-2" />Rating</div>
                                                         </SelectItem>
                                                     </SelectGroup>
                                                 </SelectContent>
@@ -449,26 +466,72 @@ export default function EditFeedback() {
                     </Card>
                 );
             })}
-            <div className="flex flex-row justify-between item-center max-w-5xl gap-6">
-                <Button
-                    className="max-w-screen-lg w-full flex h-17"
-                    onClick={() =>
-                        setQuestions([
-                            ...questions,
-                            {
-                                question: "",
-                                settings: {
-                                    type: "text",
-                                    required: true,
-                                    options: [],
+            <div className="h-20"></div>
+            <div className="fixed bottom-0 right-0 p-10 flex flex-row justify-between item-center max-w-5xl gap-6">
+                <DropdownMenu>
+                    <DropdownMenuTrigger><Button
+                        className="max-w-screen-lg w-full flex h-17"
+                    >
+                        <Plus className="mr-2" size={20} />
+                        New question
+                    </Button></DropdownMenuTrigger>
+                    <DropdownMenuContent>
+                        <DropdownMenuLabel>Question Type</DropdownMenuLabel>
+                        <DropdownMenuSeparator />
+                        <DropdownMenuItem onClick={() =>
+                            setQuestions([
+                                ...questions,
+                                {
+                                    question: "",
+                                    settings: {
+                                        type: "text",
+                                        required: true,
+                                        options: [],
+                                    },
                                 },
-                            },
-                        ])
-                    }
-                >
-                    <Plus className="mr-2" size={20} />
-                    New question
-                </Button>
+                            ])
+                        }><TextCursorInputIcon className="mr-2" /> Text</DropdownMenuItem>
+                        <DropdownMenuItem onClick={() =>
+                            setQuestions([
+                                ...questions,
+                                {
+                                    question: "",
+                                    settings: {
+                                        type: "longtext",
+                                        required: true,
+                                        options: [],
+                                    },
+                                },
+                            ])
+                        }><Text className="mr-2" /> Long Text</DropdownMenuItem>
+                        <DropdownMenuItem onClick={() =>
+                            setQuestions([
+                                ...questions,
+                                {
+                                    question: "",
+                                    settings: {
+                                        type: "multiplechoice",
+                                        required: true,
+                                        options: [],
+                                    },
+                                },
+                            ])
+                        }><ListIcon className="mr-2" /> Multiple Choice</DropdownMenuItem>
+                        <DropdownMenuItem onClick={() =>
+                            setQuestions([
+                                ...questions,
+                                {
+                                    question: "",
+                                    settings: {
+                                        type: "rating",
+                                        required: true,
+                                        options: [],
+                                    },
+                                },
+                            ])
+                        }><Star className="mr-2" /> Rating</DropdownMenuItem>
+                    </DropdownMenuContent>
+                </DropdownMenu>
                 <Dialog>
                     <DialogTrigger className="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 bg-primary text-primary-foreground hover:bg-primary/90 max-w-screen-lg w-full item-center bg-gradient-to-r from-indigo-700 to-purple-600 text-white shadow-none focus:ring-4 focus:ring-blue-300 px-7 py-3 focus:outline-none dark:focus:ring-blue-800">
                         <Sparkles className="mr-2" size={20} />
