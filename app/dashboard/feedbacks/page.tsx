@@ -207,8 +207,8 @@ export default function Page() {
                                 <TableHead>Title</TableHead>
                                 <TableHead>Desciption</TableHead>
                                 <TableHead>Course</TableHead>
-                                <TableHead>View</TableHead>
                                 {role === "faculty" ? <TableHead>Responses</TableHead> : ""}
+                                <TableHead>View</TableHead>
                                 {role === "faculty" ? <TableHead>Edit</TableHead> : ""}
                                 {role === "faculty" ? <TableHead>Delete</TableHead> : ""}
                             </TableRow>
@@ -234,6 +234,19 @@ export default function Page() {
                                         <TableCell><div className="flex items-center"><div className="w-4 h-4 rounded-full mr-2" style={{ background: feedbackFormColors[feedback.color].darkBg }}></div>{feedback.title}</div></TableCell>
                                         <TableCell>{feedback.description}</TableCell>
                                         <TableCell>{feedback.course.name}</TableCell>
+                                        {role === "faculty" ? <TableCell>
+                                            <Button
+                                                variant={"outline"}
+                                                onClick={() =>
+                                                    router.push(
+                                                        `/dashboard/feedbacks/responses/${feedback._id}`,
+                                                    )
+                                                }
+                                            >
+                                                <FileText />
+                                                <p className="px-4">{feedback.responsesCount}</p>
+                                            </Button>
+                                        </TableCell> : ""}
                                         <TableCell>
                                             <Button
                                                 variant={"outline"}
@@ -245,19 +258,6 @@ export default function Page() {
                                                 <ExternalLink />
                                             </Button>
                                         </TableCell>
-                                        {role === "faculty" ? <TableCell>
-                                            <Button
-                                                variant={"outline"}
-                                                size={"icon"}
-                                                onClick={() =>
-                                                    router.push(
-                                                        `/dashboard/feedbacks/responses/${feedback._id}`,
-                                                    )
-                                                }
-                                            >
-                                                <FileText />
-                                            </Button>
-                                        </TableCell> : ""}
                                         {role === "faculty" ? <TableCell>
                                             <Button
                                                 variant={"outline"}
