@@ -418,19 +418,19 @@ export default function EditFeedback() {
                                                     <SelectGroup>
                                                         <SelectLabel>Question Type</SelectLabel>
                                                         <SelectItem key={index} value={"text"}>
-                                                            <div className="flex items-center"><TextCursorInputIcon className="mr-2" />Text</div>
+                                                            <p className="flex items-center"><TextCursorInputIcon className="mr-2" />Text</p>
                                                         </SelectItem>
                                                         <SelectItem key={index} value={"longtext"}>
-                                                            <div className="flex items-center"><Text className="mr-2" />Long Text</div>
+                                                            <p className="flex items-center"><Text className="mr-2" />Long Text</p>
                                                         </SelectItem>
                                                         <SelectItem
                                                             key={index}
                                                             value={"multiplechoice"}
                                                         >
-                                                            <div className="flex items-center"><ListIcon className="mr-2" />Multiple Choice</div>
+                                                            <p className="flex items-center"><ListIcon className="mr-2" />Multiple Choice</p>
                                                         </SelectItem>
                                                         <SelectItem key={index} value={"rating"}>
-                                                            <div className="flex items-center"><Star className="mr-2" />Rating</div>
+                                                            <p className="flex items-center"><Star className="mr-2" />Rating</p>
                                                         </SelectItem>
                                                     </SelectGroup>
                                                 </SelectContent>
@@ -469,12 +469,13 @@ export default function EditFeedback() {
             <div className="h-20"></div>
             <div className="fixed bottom-0 right-0 p-10 flex flex-row justify-between item-center max-w-5xl gap-6">
                 <DropdownMenu>
-                    <DropdownMenuTrigger><Button
+                    <DropdownMenuTrigger asChild><Button
                         className="max-w-screen-lg w-full flex h-17"
                     >
                         <Plus className="mr-2" size={20} />
                         New question
-                    </Button></DropdownMenuTrigger>
+                    </Button>
+                    </DropdownMenuTrigger>
                     <DropdownMenuContent>
                         <DropdownMenuLabel>Question Type</DropdownMenuLabel>
                         <DropdownMenuSeparator />
