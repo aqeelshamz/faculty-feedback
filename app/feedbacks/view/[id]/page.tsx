@@ -113,7 +113,7 @@ export default function ViewFeedback() {
 
     return (
         <div
-            className={`flex w-screen h-screen flex-col justify-between items-center`}
+            className={`p-10 sm:p-0 flex w-screen h-screen flex-col justify-between items-center`}
             style={{
                 background: feedbackFormColors[feedback?.color]?.lightBg,
                 color: feedbackFormColors[feedback?.color]?.text,
@@ -129,7 +129,7 @@ export default function ViewFeedback() {
                           100
                 }
                 color={feedbackFormColors[feedback?.color]?.primary}
-                className="w-full"
+                className="w-full bg-transparent"
             />
             {status.message ? (
                 <div className="flex flex-col">
