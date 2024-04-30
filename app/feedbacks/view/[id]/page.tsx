@@ -9,7 +9,9 @@ import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-import { ChevronDown, ChevronUp } from "lucide-react";
+import { CheckCircle2, ChevronDown, ChevronUp, XCircle } from "lucide-react";
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
+import { Label } from "@/components/ui/label";
 
 export default function ViewFeedback() {
     const { id } = useParams();
@@ -17,6 +19,11 @@ export default function ViewFeedback() {
     const [feedback, setFeedback] = useState<any>({});
 
     const [currentStep, setCurrentStep] = useState(-1);
+
+    const [status, setStatus] = useState({
+        message: "",
+        success: false,
+    });
 
     const getFeedback = () => {
         const config = {
@@ -53,10 +60,16 @@ export default function ViewFeedback() {
 
         axios(config)
             .then((response) => {
-                toast.success(response?.data?.message);
+                setStatus({
+                    message: response?.data?.message,
+                    success: true,
+                });
             })
             .catch((err) => {
-                toast.error(err.response?.data?.message);
+                setStatus({
+                    message: err.response?.data?.message ? err.response?.data?.message : err.response?.data,
+                    success: false,
+                });
             });
     };
 
@@ -69,7 +82,7 @@ export default function ViewFeedback() {
     useEffect(() => {
         if (feedback.questions) {
             for (const question of feedback.questions) {
-                responses[question._id] = question.settings.type === "rating" || question.settings.type === "multiplechoice" ? 0 : "";
+                responses[question._id] = question.settings.type === "rating" ? 0 : "";
             }
         }
         setResponses({ ...responses });
@@ -98,76 +111,111 @@ export default function ViewFeedback() {
                 color={feedbackFormColors[feedback?.color]?.primary}
                 className="w-full"
             />
-            {currentStep === -1 ? (
-                <div className="flex flex-col items-center">
-                    <h1 className={`text-3xl font-bold`}>{feedback?.title}</h1>
-                    <p className="mb-10">{feedback.description}</p>
-                    <Button onClick={() => setCurrentStep(0)}>Start</Button>
-                </div>
-            ) : (
-                <div className="flex flex-col items-center">
-                    <h1 className={`text-3xl font-bold flex`}>
-                        {feedback?.questions[currentStep]?.question}
-                        {feedback?.questions[currentStep]?.settings?.required ? (
-                            <span className="text-red-700 font-normal text-md">*</span>
-                        ) : (
-                            ""
-                        )}
-                    </h1>
-                    <p className="mb-10">{feedback?.questions[currentStep]?.question}</p>
-                    <div className="mb-10 w-full">
-                        {feedback?.questions[currentStep]?.settings?.type === "rating" ? (
-                            <div className="flex">
-                                {Array(5)
-                                    .fill(0)
-                                    .map((_, index) => (
-                                        <div
-                                            key={index}
-                                            className="flex items-center justify-center w-10 h-10 rounded-full border-2 border-gray-300 cursor-pointer hover:border-gray-500"
-                                            onClick={() => {
-                                                const newFeedback = { ...feedback };
-                                                newFeedback.questions[currentStep].response =
-                                                    index + 1;
-                                                setFeedback(newFeedback);
-                                            }}
-                                        >
-                                            {index + 1}
-                                        </div>
-                                    ))}
-                            </div>
-                        ) : feedback?.questions[currentStep]?.settings?.type === "text" ? (
-                            <Input onChange={(x) => {
-                                responses[feedback.questions[currentStep]._id] = x.target.value;
-                                setResponses({ ...responses });
-                            }} value={
-                                responses[feedback.questions[currentStep]._id]
-                            } />
-                        ) : feedback?.questions[currentStep]?.settings?.type === "longtext" ? (
-                            <Textarea />
-                        ) : null}
+            {status.message ?
+                <div className="flex flex-col">
+                    <p className="text-2xl flex items-center">{status.success ? <CheckCircle2 className="mr-2" /> : <XCircle className="mr-2" />} {status.message}</p>
+                    <Button className="mt-5" onClick={() => window.location.reload()}> {status.success ? "Submit again" : "Reload"}</Button>
+                </div> : currentStep === -1 ? (
+                    <div className="flex flex-col items-center">
+                        <h1 className={`text-3xl font-bold`}>{feedback?.title}</h1>
+                        <p className="mb-10">{feedback.description}</p>
+                        <Button onClick={() => setCurrentStep(0)}>Start</Button>
                     </div>
-                    <Button
-                        onClick={() => {
-                            if (currentStep === feedback.questions.length - 1) {
-                                submitFeedback();
-                                return;
-                            }
-                            if (currentStep < feedback.questions.length - 1) {
-                                setCurrentStep(currentStep + 1);
-                            }
-                        }}
-                    >
-                        {currentStep === feedback.questions.length - 1 ? "Submit" : "Next"}
-                    </Button>
-                </div>
-            )}
+                ) : (
+                    <div className="flex flex-col items-center">
+                        <h1 className={`text-3xl font-bold flex`}>
+                            {feedback?.questions[currentStep]?.question}
+                            {feedback?.questions[currentStep]?.settings?.required ? (
+                                <span className="text-red-700 font-normal text-md">*</span>
+                            ) : (
+                                ""
+                            )}
+                        </h1>
+                        <p className="mb-10">{feedback?.questions[currentStep]?.question}</p>
+                        <div className="mb-10 w-full">
+                            {feedback?.questions[currentStep]?.settings?.type === "rating" ? (
+                                <div className="flex w-full justify-center">
+                                    {Array(5)
+                                        .fill(0)
+                                        .map((_, index) => (
+                                            <div
+                                                key={index}
+                                                className={"flex duration-100 items-center justify-center w-14 h-14 rounded-full border-2 hover:scale-110 cursor-pointer mr-2 text-xl font-semibold"}
+                                                style={{
+                                                    background:
+                                                        responses[feedback.questions[currentStep]._id] >=
+                                                            index + 1
+                                                            ? feedbackFormColors[feedback.color].text
+                                                            : "transparent",
+                                                    color:
+                                                        responses[feedback.questions[currentStep]._id] >=
+                                                            index + 1
+                                                            ? "white"
+                                                            : feedbackFormColors[feedback.color].text,
+                                                    borderColor:
+                                                        responses[feedback.questions[currentStep]._id] >=
+                                                            index + 1
+                                                            ? feedbackFormColors[feedback.color].darkBg
+                                                            : feedbackFormColors[feedback.color].text,
+                                                }}
+                                                onClick={() => {
+                                                    responses[feedback.questions[currentStep]._id] = index + 1;
+                                                    setResponses({ ...responses });
+                                                }}
+                                            >
+                                                {index + 1}
+                                            </div>
+                                        ))}
+                                </div>
+                            ) : feedback?.questions[currentStep]?.settings?.type === "text" ? (
+                                <Input onChange={(x) => {
+                                    responses[feedback.questions[currentStep]._id] = x.target.value;
+                                    setResponses({ ...responses });
+                                }} value={
+                                    responses[feedback.questions[currentStep]._id]
+                                } />
+                            ) : feedback?.questions[currentStep]?.settings?.type === "longtext" ? (
+                                <Textarea />
+                            ) : feedback?.questions[currentStep]?.settings?.type === "multiplechoice" ? <div className="flex flex-col w-full">
+                                <RadioGroup value={
+                                    responses[feedback.questions[currentStep]._id]
+                                } onValueChange={(x) => {
+                                    responses[feedback.questions[currentStep]._id] = x;
+                                    setResponses({ ...responses });
+                                }}>
+                                    {
+                                        feedback?.questions[currentStep]?.settings?.options.map((option: any, index: number) => {
+                                            return <div className="flex items-center space-x-2">
+                                                <RadioGroupItem value={option} id={"option" + index} />
+                                                <Label className="w-full text-2xl cursor-pointer" htmlFor={"option" + index}>{option}</Label>
+                                            </div>
+                                        })
+                                    }
+                                </RadioGroup>
+                            </div> : null}
+                        </div>
+                        <Button
+                            onClick={() => {
+                                if (currentStep === feedback.questions.length - 1) {
+                                    submitFeedback();
+                                    return;
+                                }
+                                if (currentStep < feedback.questions.length - 1) {
+                                    setCurrentStep(currentStep + 1);
+                                }
+                            }}
+                        >
+                            {currentStep === feedback.questions.length - 1 ? "Submit" : "Next"}
+                        </Button>
+                    </div>
+                )}
             <div className="flex w-full p-5">
                 <Button
                     className="mr-2"
                     size={"icon"}
                     onClick={() => {
                         if (currentStep > -1) {
-                            setCurrentStep(-1);
+                            setCurrentStep(currentStep - 1);
                         }
                     }}
                 >
