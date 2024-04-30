@@ -192,7 +192,7 @@ export default function ViewFeedback() {
                                 }}>
                                     {
                                         feedback?.questions[currentStep]?.settings?.options.map((option: any, index: number) => {
-                                            return <div className="flex items-center space-x-2">
+                                            return <div key={index} className="flex items-center space-x-2">
                                                 <RadioGroupItem value={option} id={"option" + index} />
                                                 <Label className="w-full text-2xl cursor-pointer" htmlFor={"option" + index}>{option}</Label>
                                             </div>

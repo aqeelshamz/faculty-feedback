@@ -50,7 +50,7 @@ export default function StudentDashboard() {
                     </div>
                     <div className="grid gap-4 md:grid-cols-2 md:gap-8 lg:grid-cols-4">
                         {pendingFeedbacks?.map((feedback: any, index: number) => {
-                            return <Card className="cursor-pointer hover:shadow-md duration-75 w-full max-w-xs mr-4">
+                            return <Card key={index} className="cursor-pointer hover:shadow-md duration-75 w-full max-w-xs mr-4">
                                 <div className="p-4 flex justify-between">
                                     <CardTitle className="flex">
                                         <div className="flex items-center">

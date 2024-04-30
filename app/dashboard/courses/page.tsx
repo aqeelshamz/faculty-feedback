@@ -371,15 +371,15 @@ export default function Page() {
                                                         onCheckedChange={(x) => {
                                                             courseFaculties.includes(faculty._id)
                                                                 ? setCourseFaculties(
-                                                                      courseFaculties.filter(
-                                                                          (y: any) =>
-                                                                              y != faculty._id,
-                                                                      ),
-                                                                  )
+                                                                    courseFaculties.filter(
+                                                                        (y: any) =>
+                                                                            y != faculty._id,
+                                                                    ),
+                                                                )
                                                                 : setCourseFaculties([
-                                                                      ...courseFaculties,
-                                                                      faculty._id,
-                                                                  ]);
+                                                                    ...courseFaculties,
+                                                                    faculty._id,
+                                                                ]);
                                                         }}
                                                     />
                                                     <label
@@ -441,10 +441,10 @@ export default function Page() {
                                             .toString()
                                             .toLowerCase()
                                             .includes(search.toLowerCase()) &&
-                                        !course.courseCode
-                                            .toString()
-                                            .toLowerCase()
-                                            .includes(search.toLowerCase()) ? (
+                                            !course.courseCode
+                                                .toString()
+                                                .toLowerCase()
+                                                .includes(search.toLowerCase()) ? (
                                             ""
                                         ) : (
                                             <TableRow key={index}>
@@ -455,7 +455,7 @@ export default function Page() {
                                                     {course?.faculties?.map(
                                                         (faculty: any, index: number) => {
                                                             return (
-                                                                <p className="mb-2">
+                                                                <p key={index} className="mb-2">
                                                                     {faculty?.name}
                                                                     <br />
                                                                     <span className="text-sm opacity-50">
