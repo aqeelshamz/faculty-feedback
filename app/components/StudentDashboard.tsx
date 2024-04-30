@@ -1,6 +1,13 @@
 "use client";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardDescription, CardFooter, CardTitle } from "@/components/ui/card";
+import {
+    Card,
+    CardContent,
+    CardDescription,
+    CardFooter,
+    CardHeader,
+    CardTitle,
+} from "@/components/ui/card";
 import { feedbackFormColors, serverURL } from "@/lib/utils";
 import axios from "axios";
 import { ExternalLink, Loader2, StickyNote } from "lucide-react";
@@ -42,46 +49,55 @@ export default function StudentDashboard() {
                     <Loader2 className="mr-2 animate-spin" /> Loading overview...
                 </div>
             ) : (
-                <div className="w-full h-full p-7 space-y-4">
+                <div className="w-full h-full p-6 space-y-4">
                     <div>
                         <h1 className="text-2xl font-semibold">
                             You have {pendingFeedbacks.length} pending feedbacks.
                         </h1>
                     </div>
-                    <div className="grid gap-4 md:grid-cols-2 md:gap-8 lg:grid-cols-4">
+                    <div className="grid gap-2 md:grid-cols-2 md:gap-6 lg:grid-cols-4">
                         {pendingFeedbacks?.map((feedback: any, index: number) => {
-                            return <Card key={index} className="cursor-pointer hover:shadow-md duration-75 w-full max-w-xs mr-4">
-                                <div className="p-4 flex justify-between">
-                                    <CardTitle className="flex">
-                                        <div className="flex items-center">
-                                            <div
-                                                className="w-4 h-4 rounded-full mr-2"
-                                                style={{
-                                                    background:
-                                                        feedbackFormColors[feedback.color].darkBg,
-                                                }}
-                                            ></div>
-                                            {feedback.title}
-                                        </div>
-                                    </CardTitle>
-                                    <StickyNote className="h-6 w-6" />
-                                </div>
-                                <CardContent>
-                                    <CardDescription>{feedback.course.name}</CardDescription>
-                                    <p className="text-xl font-bold">{feedback.description}</p>
-                                </CardContent>
-                                <CardFooter>
-                                    <Button
-                                        variant={"outline"}
-                                        size={"icon"}
-                                        onClick={() =>
-                                            window.open(`/feedbacks/view/${feedback._id}`)
-                                        }
-                                    >
-                                        <ExternalLink />
-                                    </Button>
-                                </CardFooter>
-                            </Card>;
+                            return (
+                                <Card
+                                    key={index}
+                                    className="cursor-pointer hover:shadow-md duration-75 w-full max-w-xs mr-4"
+                                >
+                                    <div className="flex justify-between">
+                                        <CardHeader>
+                                            <CardTitle className="flex">
+                                                <div className="flex mr-2">{feedback.title}</div>
+                                            </CardTitle>
+                                            <CardDescription>
+                                                {feedback.course.name}
+                                            </CardDescription>
+                                        </CardHeader>
+                                        <Button
+                                            variant={"outline"}
+                                            size={"icon"}
+                                            className="m-3"
+                                            onClick={() =>
+                                                window.open(`/feedbacks/view/${feedback._id}`)
+                                            }
+                                        >
+                                            <ExternalLink />
+                                        </Button>
+                                    </div>
+                                    <CardContent>
+                                        <p className="text-md font-normal">
+                                            {feedback.description}
+                                        </p>
+                                    </CardContent>
+                                    {/* <CardFooter>
+                                        <div
+                                            className="w-full h-4 rounded-full p-2"
+                                            style={{
+                                                background:
+                                                    feedbackFormColors[feedback.color].darkBg,
+                                            }}
+                                        ></div>
+                                    </CardFooter> */}
+                                </Card>
+                            );
                         })}
                     </div>
                     <Toaster />
