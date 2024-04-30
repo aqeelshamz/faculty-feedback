@@ -36,7 +36,6 @@ import { Label } from "@/components/ui/label";
 import {
     Sparkles,
     Plus,
-    Eye,
     Star,
     ListIcon,
     TextCursorInputIcon,
@@ -207,9 +206,9 @@ export default function EditFeedback() {
                 <div className="flex flex-col justify-between space-y-4">
                     <div className="flex justify-between">
                         <div className="flex flex-col justify-between space-y-4">
-                            <div className="flex item-center gap-2">
+                            <div className="flex item-center gap-4">
                                 <Select onValueChange={setCourseId} value={courseId}>
-                                    <SelectTrigger className="w-[180px]">
+                                    <SelectTrigger className="max-w-[200px]">
                                         <SelectValue placeholder="Course" />
                                     </SelectTrigger>
                                     <SelectContent>
@@ -241,7 +240,7 @@ export default function EditFeedback() {
                                 />
                             </div>
                         </div>
-                        <div>
+                        <div className="flex items-center">
                             <Button
                                 variant={"outline"}
                                 onClick={() => {
