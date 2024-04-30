@@ -114,7 +114,14 @@ export default function ViewFeedback() {
             {status.message ?
                 <div className="flex flex-col">
                     <p className="text-2xl flex items-center">{status.success ? <CheckCircle2 className="mr-2" /> : <XCircle className="mr-2" />} {status.message}</p>
-                    <Button className="mt-5" onClick={() => window.location.reload()}> {status.success ? "Submit again" : "Reload"}</Button>
+                    <Button className="mt-10" onClick={() => {
+                        if (status.success) {
+                            window.close();
+                        }
+                        else {
+                            window.location.reload()
+                        }
+                    }}> {status.success ? "Close window" : "Reload"}</Button>
                 </div> : currentStep === -1 ? (
                     <div className="flex flex-col items-center">
                         <h1 className={`text-3xl font-bold`}>{feedback?.title}</h1>
@@ -209,7 +216,7 @@ export default function ViewFeedback() {
                         </Button>
                     </div>
                 )}
-            <div className="flex w-full p-5">
+            {status.success ? <div></div> : <div className="flex w-full p-5">
                 <Button
                     className="mr-2"
                     size={"icon"}
@@ -231,7 +238,7 @@ export default function ViewFeedback() {
                 >
                     <ChevronDown />
                 </Button>
-            </div>
+            </div>}
             <Toaster />
         </div>
     );
