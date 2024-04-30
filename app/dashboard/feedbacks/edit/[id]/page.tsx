@@ -373,9 +373,9 @@ export default function EditFeedback() {
                                                     ),
                                                 )}
                                             </div>
-                                            <div>
+                                            <div className="w-full ml-20">
                                                 <Button
-                                                    className="lg:w-[70%] md:w-[60%] w-[80%] ml-10 mx-auto"
+                                                    className="lg:w-[70%] md:w-[60%] w-[80%] "
                                                     onClick={() => {
                                                         if (!question) return; // Ensure question exists before proceeding
 
