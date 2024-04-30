@@ -188,7 +188,7 @@ export default function EditFeedback() {
     };
 
     return (
-        <div className={"p-4 w-full space-y-8 overflow-y-auto mb-48"}>
+        <div className={"p-4 w-full space-y-8 h-screen overflow-y-auto mb-48"}>
             <div className="flex flex-col gap-y-3">
                 <div className="flex flex-col justify-between space-y-4">
                     <div className="flex justify-between">
