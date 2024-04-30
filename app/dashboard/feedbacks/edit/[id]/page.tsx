@@ -227,7 +227,7 @@ export default function EditFeedback() {
                                 />
                             </div>
                         </div>
-                        <Button variant={"outline"} className=" ml-2" onClick={() => {}}>
+                        <Button variant={"outline"} className=" ml-2" onClick={() => { }}>
                             <Eye />
                         </Button>
                         <Button className="w-44 ml-2" onClick={updateFeedback}>
@@ -296,7 +296,7 @@ export default function EditFeedback() {
                                                 />
                                             </div>
                                             <div className="space-y-2 ml-5">
-                                                {question.options?.map(
+                                                {question.settings.options?.map(
                                                     (option: any, index: number) => (
                                                         <div
                                                             key={index}
@@ -311,7 +311,7 @@ export default function EditFeedback() {
                                                                 className="w-[90%]"
                                                                 value={option}
                                                                 onChange={(e) => {
-                                                                    question.options[index] =
+                                                                    question.settings.options[index] =
                                                                         e.target.value;
 
                                                                     setQuestions([...questions]);
@@ -322,11 +322,11 @@ export default function EditFeedback() {
                                                                 variant={"ghost"}
                                                                 onClick={() => {
                                                                     const updatedOptions = [
-                                                                        ...question.options,
+                                                                        ...question.settings.options,
                                                                     ];
                                                                     updatedOptions.splice(index, 1); // Remove the option at the specified index
                                                                     setQuestions(
-                                                                        (prevQuestions) => {
+                                                                        (prevQuestions: any) => {
                                                                             const updatedQuestions =
                                                                                 [...prevQuestions];
                                                                             updatedQuestions.forEach(
@@ -335,7 +335,7 @@ export default function EditFeedback() {
                                                                                         q ===
                                                                                         question
                                                                                     ) {
-                                                                                        q.options =
+                                                                                        q.settings.options =
                                                                                             updatedOptions;
                                                                                     }
                                                                                 },
@@ -356,11 +356,11 @@ export default function EditFeedback() {
                                                 onClick={() => {
                                                     if (!question) return; // Ensure question exists before proceeding
 
-                                                    const updatedOptions = question.options
-                                                        ? [...question.options, ""]
+                                                    const updatedOptions = question.settings.options
+                                                        ? [...question.settings.options, ""]
                                                         : [""];
 
-                                                    question.options = updatedOptions;
+                                                    question.settings.options = updatedOptions;
                                                     setQuestions([...questions]); // Update the state with the modified questions array
                                                 }}
                                             >
