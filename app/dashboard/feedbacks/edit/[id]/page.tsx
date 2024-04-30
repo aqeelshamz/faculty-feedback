@@ -193,7 +193,6 @@ export default function EditFeedback() {
             .then((response) => {
                 setQuestions([...questions, ...response.data.data]);
                 setGeneratingQuestions(false);
-                updateFeedback();
             })
             .catch((err) => {
                 toast.error(err.response?.data?.message);
