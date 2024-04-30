@@ -60,42 +60,36 @@ export default function StudentDashboard() {
                             return (
                                 <Card
                                     key={index}
-                                    className="cursor-pointer hover:shadow-md duration-75 w-full max-w-xs mr-4"
+                                    className="p-2 flex cursor-pointer hover:shadow-md duration-75 w-full max-w-xs mr-4"
                                 >
-                                    <div className="flex justify-between">
-                                        <CardHeader>
-                                            <CardTitle className="flex">
-                                                <div className="flex mr-2">{feedback.title}</div>
-                                            </CardTitle>
-                                            <CardDescription>
-                                                {feedback.course.name}
-                                            </CardDescription>
-                                        </CardHeader>
-                                        <Button
-                                            variant={"outline"}
-                                            size={"icon"}
-                                            className="m-3"
-                                            onClick={() =>
-                                                window.open(`/feedbacks/view/${feedback._id}`)
-                                            }
-                                        >
-                                            <ExternalLink />
-                                        </Button>
+                                    <div className="w-2 h-full rounded" style={{ background: feedbackFormColors[feedback.color].darkBg }}></div>
+                                    <div className="flex flex-col">
+                                        <div className="flex justify-between">
+                                            <CardHeader>
+                                                <CardTitle className="flex">
+                                                    <div className="flex mr-2">{feedback.title}</div>
+                                                </CardTitle>
+                                                <CardDescription>
+                                                    {feedback.course.name}
+                                                </CardDescription>
+                                            </CardHeader>
+                                            <Button
+                                                variant={"outline"}
+                                                size={"icon"}
+                                                className="m-3"
+                                                onClick={() =>
+                                                    window.open(`/feedbacks/view/${feedback._id}`)
+                                                }
+                                            >
+                                                <ExternalLink />
+                                            </Button>
+                                        </div>
+                                        <CardContent>
+                                            <p className="text-md font-normal">
+                                                {feedback.description}
+                                            </p>
+                                        </CardContent>
                                     </div>
-                                    <CardContent>
-                                        <p className="text-md font-normal">
-                                            {feedback.description}
-                                        </p>
-                                    </CardContent>
-                                    {/* <CardFooter>
-                                        <div
-                                            className="w-full h-4 rounded-full p-2"
-                                            style={{
-                                                background:
-                                                    feedbackFormColors[feedback.color].darkBg,
-                                            }}
-                                        ></div>
-                                    </CardFooter> */}
                                 </Card>
                             );
                         })}
