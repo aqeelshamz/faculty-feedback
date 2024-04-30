@@ -43,7 +43,7 @@ export default function Page() {
             data: {
                 title,
                 description,
-                color: "black",
+                color: "blue",
                 courseId: course,
             },
         };

@@ -41,6 +41,7 @@ import {
     TextCursorInputIcon,
     Text,
     ExternalLink,
+    Loader2,
 } from "lucide-react";
 
 import { Trash2 } from "lucide-react";
@@ -111,7 +112,10 @@ export default function EditFeedback() {
             });
     };
 
+    const [saving, setSaving] = useState(false);
+
     const updateFeedback = async () => {
+        setSaving(true);
         const colorData: any = {
             "#000000": "black",
             "#eb4034": "red",
@@ -140,9 +144,11 @@ export default function EditFeedback() {
             .then((response) => {
                 toast.success(response.data.message);
                 getFeedback(id);
+                setSaving(false);
             })
             .catch((err) => {
                 toast.error(err.response?.data?.message);
+                setSaving(false);
             });
     };
 
@@ -165,7 +171,10 @@ export default function EditFeedback() {
             });
     };
 
+    const [generatingQuestions, setGeneratingQuestions] = useState(false);
+
     const generateQuestions = async () => {
+        setGeneratingQuestions(true);
         const config = {
             method: "POST",
             url: `${serverURL}/feedback/generate-questions-using-ai`,
@@ -175,7 +184,7 @@ export default function EditFeedback() {
             },
             data: {
                 feedbackId: id,
-                prompt,
+                prompt: prompt === "" ? "Ask questions" : prompt,
                 maxQuestions: 3,
             },
         };
@@ -183,12 +192,13 @@ export default function EditFeedback() {
         axios(config)
             .then((response) => {
                 setQuestions([...questions, ...response.data.data]);
+                setGeneratingQuestions(false);
+                updateFeedback();
             })
             .catch((err) => {
                 toast.error(err.response?.data?.message);
+                setGeneratingQuestions(false);
             });
-
-        await updateFeedback();
     };
 
     useEffect(() => {
@@ -231,11 +241,11 @@ export default function EditFeedback() {
                                     circleSize={28}
                                     color={color}
                                     colors={[
-                                        feedbackFormColors["black"]["darkBg"],
-                                        feedbackFormColors["red"]["darkBg"],
-                                        feedbackFormColors["yellow"]["darkBg"],
-                                        feedbackFormColors["green"]["darkBg"],
                                         feedbackFormColors["blue"]["darkBg"],
+                                        feedbackFormColors["red"]["darkBg"],
+                                        feedbackFormColors["green"]["darkBg"],
+                                        feedbackFormColors["yellow"]["darkBg"],
+                                        feedbackFormColors["black"]["darkBg"],
                                     ]}
                                 />
                             </div>
@@ -250,7 +260,9 @@ export default function EditFeedback() {
                                 <ExternalLink />
                             </Button>
                             <Button className="w-44 ml-2" onClick={updateFeedback}>
-                                Save
+                                {
+                                    saving ? <Loader2 className="mr-2 animate-spin" /> : "Save"
+                                }
                             </Button>
                         </div>
                     </div>
@@ -582,8 +594,15 @@ export default function EditFeedback() {
                 </DropdownMenu>
                 <Dialog>
                     <DialogTrigger className="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 bg-primary text-primary-foreground hover:bg-primary/90 max-w-screen-lg w-full item-center bg-gradient-to-r from-indigo-700 to-purple-600 text-white shadow-none focus:ring-4 focus:ring-blue-300 px-7 py-3 focus:outline-none dark:focus:ring-blue-800">
-                        <Sparkles className="mr-2" size={20} />
-                        Generate Questions
+                        {
+                            generatingQuestions ? <div className="flex items-center">
+                                <Loader2 className="mr-2 animate-spin" />
+                                Generating Questions...
+                            </div> : <div className="flex items-center">
+                                <Sparkles className="mr-2" size={20} />
+                                Generate Questions
+                            </div>
+                        }
                     </DialogTrigger>
                     <DialogContent>
                         <DialogHeader>

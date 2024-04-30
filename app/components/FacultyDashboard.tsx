@@ -23,6 +23,7 @@ export default function FacultyDashboard() {
     });
 
     const getAllCounts = async () => {
+        setLoading(true);
         const config = {
             method: "POST",
             url: `${serverURL}/college/get-all-count`,
@@ -35,6 +36,7 @@ export default function FacultyDashboard() {
         axios(config)
             .then((response) => {
                 setAllCounts(response?.data?.data);
+                setLoading(false);
             })
             .catch((err) => {
                 toast.error(err.response?.data?.message);
@@ -74,22 +76,6 @@ export default function FacultyDashboard() {
                             <Loader2 className="mr-2 animate-spin" />
                         ) : (
                             <p className="text-4xl font-bold">{allCounts?.programCount}</p>
-                        )}
-                    </CardContent>
-                </Card>
-                <Card
-                    onClick={() => router.push("/dashboard/faculty")}
-                    className="cursor-pointer hover:shadow-md duration-75 w-full max-w-xs mr-4"
-                >
-                    <div className="p-4 flex justify-between">
-                        <CardTitle className="flex">Batches</CardTitle>
-                        <User className="h-6 w-6" />
-                    </div>
-                    <CardContent>
-                        {loading ? (
-                            <Loader2 className="mr-2 animate-spin" />
-                        ) : (
-                            <p className="text-4xl font-bold">{allCounts?.batchCount}</p>
                         )}
                     </CardContent>
                 </Card>
