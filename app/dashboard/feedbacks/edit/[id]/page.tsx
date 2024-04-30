@@ -32,9 +32,17 @@ import {
     DialogTitle,
     DialogTrigger,
 } from "@/components/ui/dialog";
-import { Slider } from "@/components/ui/slider";
 import { Label } from "@/components/ui/label";
-import { Sparkles, Pen, Plus, Eye, Star, ListIcon, TextCursorInputIcon, Text } from "lucide-react";
+import {
+    Sparkles,
+    Plus,
+    Eye,
+    Star,
+    ListIcon,
+    TextCursorInputIcon,
+    Text,
+    ExternalLink,
+} from "lucide-react";
 
 import { Trash2 } from "lucide-react";
 import { useParams } from "next/navigation";
@@ -43,7 +51,14 @@ import axios from "axios";
 import { Toaster, toast } from "sonner";
 import { Textarea } from "@/components/ui/textarea";
 import { Switch } from "@/components/ui/switch";
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
+import {
+    DropdownMenu,
+    DropdownMenuContent,
+    DropdownMenuItem,
+    DropdownMenuLabel,
+    DropdownMenuSeparator,
+    DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 
 export default function EditFeedback() {
     const { id } = useParams();
@@ -55,8 +70,6 @@ export default function EditFeedback() {
     const [questions, setQuestions] = useState<any>([]);
     const [courses, setCourses] = useState<any>([]);
     const [prompt, setPrompt] = useState("");
-
-    const [isActive, setIsActive] = useState<boolean>(false);
 
     console.log(questions);
 
@@ -228,14 +241,19 @@ export default function EditFeedback() {
                                 />
                             </div>
                         </div>
-                        <Button variant={"outline"} className=" ml-2" onClick={() => {
-                            window.open(`/feedbacks/view/${id}`);
-                        }}>
-                            <Eye />
-                        </Button>
-                        <Button className="w-44 ml-2" onClick={updateFeedback}>
-                            Save
-                        </Button>
+                        <div>
+                            <Button
+                                variant={"outline"}
+                                onClick={() => {
+                                    window.open(`/feedbacks/view/${id}`);
+                                }}
+                            >
+                                <ExternalLink />
+                            </Button>
+                            <Button className="w-44 ml-2" onClick={updateFeedback}>
+                                Save
+                            </Button>
+                        </div>
                     </div>
                     <Input
                         className="text-2xl font-semibold max-w-screen-lg h-15"
@@ -289,7 +307,6 @@ export default function EditFeedback() {
                                             <div className="flex items-center space-x-2">
                                                 <p className="text-lg">{index + 1 + "."}</p>
                                                 <Input
-                                                    className=""
                                                     placeholder="Question"
                                                     value={question.question}
                                                     onChange={(x) => {
@@ -314,8 +331,9 @@ export default function EditFeedback() {
                                                                 className="w-[90%]"
                                                                 value={option}
                                                                 onChange={(e) => {
-                                                                    question.settings.options[index] =
-                                                                        e.target.value;
+                                                                    question.settings.options[
+                                                                        index
+                                                                    ] = e.target.value;
 
                                                                     setQuestions([...questions]);
                                                                 }}
@@ -325,7 +343,8 @@ export default function EditFeedback() {
                                                                 variant={"ghost"}
                                                                 onClick={() => {
                                                                     const updatedOptions = [
-                                                                        ...question.settings.options,
+                                                                        ...question.settings
+                                                                            .options,
                                                                     ];
                                                                     updatedOptions.splice(index, 1); // Remove the option at the specified index
                                                                     setQuestions(
@@ -360,7 +379,8 @@ export default function EditFeedback() {
                                                     onClick={() => {
                                                         if (!question) return; // Ensure question exists before proceeding
 
-                                                        const updatedOptions = question.settings.options
+                                                        const updatedOptions = question.settings
+                                                            .options
                                                             ? [...question.settings.options, ""]
                                                             : [""];
 
@@ -391,7 +411,9 @@ export default function EditFeedback() {
                                                     .map((_, index) => (
                                                         <div
                                                             key={index}
-                                                            className={"flex duration-100 items-center justify-center w-14 h-14 rounded-full border-2 hover:scale-110 cursor-pointer mr-2 text-xl font-semibold"}
+                                                            className={
+                                                                "flex duration-100 items-center justify-center w-14 h-14 rounded-full border-2 hover:scale-110 cursor-pointer mr-2 text-xl font-semibold"
+                                                            }
                                                         >
                                                             {index + 1}
                                                         </div>
@@ -418,19 +440,31 @@ export default function EditFeedback() {
                                                     <SelectGroup>
                                                         <SelectLabel>Question Type</SelectLabel>
                                                         <SelectItem key={index} value={"text"}>
-                                                            <p className="flex items-center"><TextCursorInputIcon className="mr-2" />Text</p>
+                                                            <p className="flex items-center">
+                                                                <TextCursorInputIcon className="mr-2" />
+                                                                Text
+                                                            </p>
                                                         </SelectItem>
                                                         <SelectItem key={index} value={"longtext"}>
-                                                            <p className="flex items-center"><Text className="mr-2" />Long Text</p>
+                                                            <p className="flex items-center">
+                                                                <Text className="mr-2" />
+                                                                Long Text
+                                                            </p>
                                                         </SelectItem>
                                                         <SelectItem
                                                             key={index}
                                                             value={"multiplechoice"}
                                                         >
-                                                            <p className="flex items-center"><ListIcon className="mr-2" />Multiple Choice</p>
+                                                            <p className="flex items-center">
+                                                                <ListIcon className="mr-2" />
+                                                                Multiple Choice
+                                                            </p>
                                                         </SelectItem>
                                                         <SelectItem key={index} value={"rating"}>
-                                                            <p className="flex items-center"><Star className="mr-2" />Rating</p>
+                                                            <p className="flex items-center">
+                                                                <Star className="mr-2" />
+                                                                Rating
+                                                            </p>
                                                         </SelectItem>
                                                     </SelectGroup>
                                                 </SelectContent>
@@ -462,75 +496,89 @@ export default function EditFeedback() {
                                 </div>
                             </div>
                         </CardContent>
-                        <CardFooter className="ml-10"></CardFooter>
                     </Card>
                 );
             })}
             <div className="h-20"></div>
             <div className="fixed bottom-0 right-0 p-10 flex flex-row justify-between item-center max-w-5xl gap-6">
                 <DropdownMenu>
-                    <DropdownMenuTrigger asChild><Button
-                        className="max-w-screen-lg w-full flex h-17"
-                    >
-                        <Plus className="mr-2" size={20} />
-                        New question
-                    </Button>
+                    <DropdownMenuTrigger asChild>
+                        <Button className="max-w-screen-lg w-full flex h-17">
+                            <Plus className="mr-2" size={20} />
+                            New question
+                        </Button>
                     </DropdownMenuTrigger>
                     <DropdownMenuContent>
                         <DropdownMenuLabel>Question Type</DropdownMenuLabel>
                         <DropdownMenuSeparator />
-                        <DropdownMenuItem onClick={() =>
-                            setQuestions([
-                                ...questions,
-                                {
-                                    question: "",
-                                    settings: {
-                                        type: "text",
-                                        required: true,
-                                        options: [],
+                        <DropdownMenuItem
+                            onClick={() =>
+                                setQuestions([
+                                    ...questions,
+                                    {
+                                        question: "",
+                                        settings: {
+                                            type: "text",
+                                            required: true,
+                                            options: [],
+                                        },
                                     },
-                                },
-                            ])
-                        }><TextCursorInputIcon className="mr-2" /> Text</DropdownMenuItem>
-                        <DropdownMenuItem onClick={() =>
-                            setQuestions([
-                                ...questions,
-                                {
-                                    question: "",
-                                    settings: {
-                                        type: "longtext",
-                                        required: true,
-                                        options: [],
+                                ])
+                            }
+                        >
+                            <TextCursorInputIcon className="mr-2" /> Text
+                        </DropdownMenuItem>
+                        <DropdownMenuItem
+                            onClick={() =>
+                                setQuestions([
+                                    ...questions,
+                                    {
+                                        question: "",
+                                        settings: {
+                                            type: "longtext",
+                                            required: true,
+                                            options: [],
+                                        },
                                     },
-                                },
-                            ])
-                        }><Text className="mr-2" /> Long Text</DropdownMenuItem>
-                        <DropdownMenuItem onClick={() =>
-                            setQuestions([
-                                ...questions,
-                                {
-                                    question: "",
-                                    settings: {
-                                        type: "multiplechoice",
-                                        required: true,
-                                        options: [],
+                                ])
+                            }
+                        >
+                            <Text className="mr-2" /> Long Text
+                        </DropdownMenuItem>
+                        <DropdownMenuItem
+                            onClick={() =>
+                                setQuestions([
+                                    ...questions,
+                                    {
+                                        question: "",
+                                        settings: {
+                                            type: "multiplechoice",
+                                            required: true,
+                                            options: [],
+                                        },
                                     },
-                                },
-                            ])
-                        }><ListIcon className="mr-2" /> Multiple Choice</DropdownMenuItem>
-                        <DropdownMenuItem onClick={() =>
-                            setQuestions([
-                                ...questions,
-                                {
-                                    question: "",
-                                    settings: {
-                                        type: "rating",
-                                        required: true,
-                                        options: [],
+                                ])
+                            }
+                        >
+                            <ListIcon className="mr-2" /> Multiple Choice
+                        </DropdownMenuItem>
+                        <DropdownMenuItem
+                            onClick={() =>
+                                setQuestions([
+                                    ...questions,
+                                    {
+                                        question: "",
+                                        settings: {
+                                            type: "rating",
+                                            required: true,
+                                            options: [],
+                                        },
                                     },
-                                },
-                            ])
-                        }><Star className="mr-2" /> Rating</DropdownMenuItem>
+                                ])
+                            }
+                        >
+                            <Star className="mr-2" /> Rating
+                        </DropdownMenuItem>
                     </DropdownMenuContent>
                 </DropdownMenu>
                 <Dialog>
